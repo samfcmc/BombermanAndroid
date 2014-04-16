@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Timer;
+
 /**
  * @author impaler
  * This is the main surface that handles the ontouch events and draws
@@ -23,7 +25,8 @@ public class MainGameSurfaceView extends SurfaceView implements
 	private static final String TAG = MainGameSurfaceView.class.getSimpleName();
 
 	private GameThread thread;
-	//private Droid droid;
+    private Timer timer;
+    private static final int GAME_THREAD_INTERVAL = 30;
 
 	public MainGameSurfaceView(Context context) {
 		super(context);
@@ -35,6 +38,7 @@ public class MainGameSurfaceView extends SurfaceView implements
 		
 		// create the game loop thread
 		thread = new GameThread(getHolder(), this);
+        timer = new Timer();
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
@@ -50,23 +54,12 @@ public class MainGameSurfaceView extends SurfaceView implements
 		// at this point the surface is created and
 		// we can safely start the game loop
 		thread.setRunning(true);
-		thread.start();
+		timer.schedule(thread, 0, GAME_THREAD_INTERVAL);
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.d(TAG, "Surface is being destroyed");
-		// tell the thread to shut down and wait for it to finish
-		// this is a clean shutdown
-		boolean retry = true;
-		while (retry) {
-			try {
-				thread.join();
-				retry = false;
-			} catch (InterruptedException e) {
-				// try again shutting down the thread
-			}
-		}
+        timer.cancel();
 	}
 	
 	@Override
