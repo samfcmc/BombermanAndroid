@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shrinkColumns="*"
+            android:stretchColumns="*"
+            android:background="#ffffff" android:id="@+id/dashboard_panel">
+        <!-- Row 1 with 3 columns -->
+        <TableRow
+                android:id="@+id/table_row1"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            <TextView
+                    android:id="@+id/player_name" android:text="@string/player_name"
+                    android:layout_weight="1" android:background="#dcdcdc"
+                    android:textColor="#000000"
+                    android:padding="20dip" android:gravity="center"/>
+            <TextView
+                    android:id="@+id/player_score" android:text="@string/player_score"
+                    android:layout_weight="1" android:background="#d3d3d3"
+                    android:textColor="#000000"
+                    android:padding="20dip" android:gravity="center"/>
+            <TextView
+                    android:id="@+id/time_left" android:text="@string/time_left"
+                    android:layout_weight="1" android:background="#cac9c9"
+                    android:textColor="#000000"
+                    android:padding="20dip" android:gravity="center"/>
+            <TextView
+                    android:id="@+id/numb_players" android:text="@string/numb_players"
+                    android:layout_weight="1" android:background="#b0b0b0"
+                    android:textColor="#000000"
+                    android:padding="20dip" android:gravity="center"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shrinkColumns="*"
+            android:stretchColumns="*"
+            android:background="#b0b0b0"
+            android:layout_marginTop="425dp"
+            android:id="@+id/control_panel">
+        <TableRow
+                android:id="@+id/table_row2"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            <Button
+                    android:id="@+id/quit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quit_button"
+                    android:layout_column="1"/>
+            <ImageButton
+                    android:id="@+id/up_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="3"
+                    android:src="@drawable/arrow_up"/>
+        </TableRow>
+
+        <TableRow
+                android:id="@+id/table_row3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <Button
+                    android:id="@+id/pause_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pause_button"
+                    android:layout_column="1"/>
+
+            <ImageButton
+                    android:id="@+id/right_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:src="@drawable/arrow_left" />
+
+            <ImageButton
+                    android:id="@+id/down_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="3"
+                    android:src="@drawable/arrow_down" />
+
+            <ImageButton
+                    android:id="@+id/left_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="4"
+                    android:src="@drawable/arrow_right" />
+
+            <Button
+                    android:id="@+id/bomb_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bomb_button"
+                    android:layout_column="5"/>
+
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>

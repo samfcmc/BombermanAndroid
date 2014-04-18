@@ -1,23 +1,30 @@
 package com.cmov.bombermanandroid.app;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.View;
+import android.widget.EditText;
 
-
+//It is a main activity
 public class GameActivity extends ActionBarActivity {
+
+    public final static String EXTRA_MESSAGE = "com.cmov.bombermanandroid.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //loads game activity layout
+        setContentView(R.layout.activity_game);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         // making it full screen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // set our MainGameSurfaceView as the View
-        setContentView(new MainGameSurfaceView(this));
+        //setContentView(new MainGameSurfaceView(this));
     }
 
 
@@ -34,11 +41,30 @@ public class GameActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                openSettings();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    public void playGame(View view) {
+
+        Intent intent = new Intent(this, RunGameActivity.class);
+        //get user nick name
+        EditText editText = (EditText) findViewById(R.id.nick_name);
+        if(editText.getText() != null) {
+            String nick = editText.getText().toString();
+            intent.putExtra(EXTRA_MESSAGE, nick);
+            startActivity(intent);
+        }
+    }
+
+    //this method show the game settings
+    public void openSettings() {
+
     }
 
 }
