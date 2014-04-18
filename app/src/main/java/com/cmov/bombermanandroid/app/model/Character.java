@@ -66,4 +66,7 @@ public class Character extends Drawable {
     public int getOpacity() {
         return 0;
     }
+
+    public void handleActionDown(int x, int y) { this.y++;
+    }
 }

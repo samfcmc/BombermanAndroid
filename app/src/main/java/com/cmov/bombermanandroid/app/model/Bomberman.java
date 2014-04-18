@@ -44,4 +44,5 @@ public class Bomberman extends Character {
     public int getOpacity() {
         return 0;
     }
+
 }

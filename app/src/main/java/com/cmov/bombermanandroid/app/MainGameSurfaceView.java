@@ -5,20 +5,17 @@ package com.cmov.bombermanandroid.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import com.cmov.bombermanandroid.app.model.Bomberman;
 
 import java.util.Timer;
 
-/**
- * @author impaler
- * This is the main surface that handles the ontouch events and draws
- * the image to the screen.
- */
 public class MainGameSurfaceView extends SurfaceView implements
 		SurfaceHolder.Callback {
 
@@ -26,6 +23,7 @@ public class MainGameSurfaceView extends SurfaceView implements
 
 	private GameThread thread;
     private Timer timer;
+    private Bomberman bomberman;
     private static final int GAME_THREAD_INTERVAL = 30;
 
 	public MainGameSurfaceView(Context context) {
@@ -33,8 +31,8 @@ public class MainGameSurfaceView extends SurfaceView implements
 		// adding the callback (this) to the surface holder to intercept events
 		getHolder().addCallback(this);
 
-		// create droid and load bitmap
-		//droid = new Droid(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 50, 50);
+		// create bomberman and load bitmap
+        bomberman = new Bomberman(BitmapFactory.decodeResource(getResources(), R.drawable.bomberman), 50, 50, 3, 1,false);
 		
 		// create the game loop thread
 		thread = new GameThread(getHolder(), this);
@@ -54,6 +52,7 @@ public class MainGameSurfaceView extends SurfaceView implements
 		// at this point the surface is created and
 		// we can safely start the game loop
 		thread.setRunning(true);
+        //setup main activity to run 30 fps
 		timer.schedule(thread, 0, GAME_THREAD_INTERVAL);
 	}
 
@@ -64,9 +63,10 @@ public class MainGameSurfaceView extends SurfaceView implements
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			// delegating event handling to the droid
-			//droid.handleActionDown((int)event.getX(), (int)event.getY());
+			bomberman.handleActionDown((int)event.getX(), (int)event.getY());
 			
 			// check if in the lower part of the screen we exit
 			if (event.getY() > getHeight() - 50) {
@@ -95,6 +95,7 @@ public class MainGameSurfaceView extends SurfaceView implements
 	protected void onDraw(Canvas canvas) {
 		// fills the canvas with black
 		canvas.drawColor(Color.GRAY);
+		bomberman.draw(canvas);
 		//droid.draw(canvas);
 	}
 
