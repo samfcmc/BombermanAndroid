@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -29,22 +30,31 @@ public class MainGameSurfaceView extends SurfaceView implements
     private static final int GAME_THREAD_INTERVAL = 30;
     private GameControls gameControls;
 
-	public MainGameSurfaceView(Context context) {
-		super(context);
-		// adding the callback (this) to the surface holder to intercept events
-		getHolder().addCallback(this);
 
-		// create bomberman and load bitmap
-        bomberman = new Bomberman(BitmapFactory.decodeResource(getResources(), R.drawable.bomberman), 50, 50, 3, 1,false);
-		
+    public MainGameSurfaceView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+
+        getHolder().addCallback(this);
+
+        // create bomberman and load bitmap
+        bomberman = new Bomberman(BitmapFactory.decodeResource(getResources(), R.drawable.bomberman), 0, 0, 3, 1,false);
+
         gameControls = new GameControls(context);
 
-		// create the game loop thread
-		thread = new GameThread(getHolder(), this);
+        // create the game loop thread
+        thread = new GameThread(getHolder(), this);
         timer = new Timer();
-		
-		// make the GamePanel focusable so it can handle events
-		setFocusable(true);
+
+        // make the GamePanel focusable so it can handle events
+        setFocusable(true);
+    }
+
+    public MainGameSurfaceView(Context context, AttributeSet attrs) {
+       this(context, attrs, 0);
+    }
+
+    public MainGameSurfaceView(Context context) {
+        this(context, null, 0);
 	}
 
 	@Override
