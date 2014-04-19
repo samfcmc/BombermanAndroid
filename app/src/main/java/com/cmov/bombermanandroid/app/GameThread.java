@@ -25,13 +25,6 @@ public class GameThread extends TimerTask {
 	// The actual view that handles inputs
 	// and draws to the surface
 	private MainGameSurfaceView gameSurfaceView;
-    private int i = 0;
-
-	// flag to hold game state 
-	private boolean running;
-	public void setRunning(boolean running) {
-		this.running = running;
-	}
 
 	public GameThread(SurfaceHolder surfaceHolder, MainGameSurfaceView gameSurfaceView) {
 		super();
@@ -41,7 +34,6 @@ public class GameThread extends TimerTask {
 
 	@Override
     public void run() {
-        Log.d("Thread", "I am running now " + i++);
         Canvas canvas = null;
         // try locking the canvas for exclusive pixel editing
         // in the surface

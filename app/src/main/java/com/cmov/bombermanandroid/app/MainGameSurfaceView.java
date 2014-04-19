@@ -14,6 +14,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import com.cmov.bombermanandroid.app.model.Bomberman;
 
+import com.cmov.bombermanandroid.app.model.GameControls;
+
 import java.util.Timer;
 
 public class MainGameSurfaceView extends SurfaceView implements
@@ -25,6 +27,7 @@ public class MainGameSurfaceView extends SurfaceView implements
     private Timer timer;
     private Bomberman bomberman;
     private static final int GAME_THREAD_INTERVAL = 30;
+    private GameControls gameControls;
 
 	public MainGameSurfaceView(Context context) {
 		super(context);
@@ -34,6 +37,8 @@ public class MainGameSurfaceView extends SurfaceView implements
 		// create bomberman and load bitmap
         bomberman = new Bomberman(BitmapFactory.decodeResource(getResources(), R.drawable.bomberman), 50, 50, 3, 1,false);
 		
+        gameControls = new GameControls(context);
+
 		// create the game loop thread
 		thread = new GameThread(getHolder(), this);
         timer = new Timer();
@@ -51,8 +56,6 @@ public class MainGameSurfaceView extends SurfaceView implements
 	public void surfaceCreated(SurfaceHolder holder) {
 		// at this point the surface is created and
 		// we can safely start the game loop
-		thread.setRunning(true);
-        //setup main activity to run 30 fps
 		timer.schedule(thread, 0, GAME_THREAD_INTERVAL);
 	}
 
@@ -70,7 +73,7 @@ public class MainGameSurfaceView extends SurfaceView implements
 			
 			// check if in the lower part of the screen we exit
 			if (event.getY() > getHeight() - 50) {
-				thread.setRunning(false);
+				timer.cancel();
 				((Activity)getContext()).finish();
 			} else {
 				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
@@ -94,9 +97,11 @@ public class MainGameSurfaceView extends SurfaceView implements
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// fills the canvas with black
-		canvas.drawColor(Color.GRAY);
+		canvas.drawColor(Color.BLACK);
 		bomberman.draw(canvas);
-		//droid.draw(canvas);
+
+		//Draw controls
+        gameControls.draw(canvas);
 	}
 
 }
