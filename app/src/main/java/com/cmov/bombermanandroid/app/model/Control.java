@@ -1,19 +1,29 @@
 package com.cmov.bombermanandroid.app.model;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-
-import com.cmov.bombermanandroid.app.R;
+import android.graphics.ColorFilter;
 
 /**
  * Control
  */
-public class Control extends Drawable {
+public class Control extends Model {
 
     public Control(Bitmap bitmap) {
         super(bitmap);
     }
 
+    @Override
+    public void setAlpha(int alpha) {
+
+    }
+
+    @Override
+    public void setColorFilter(ColorFilter cf) {
+
+    }
+
+    @Override
+    public int getOpacity() {
+        return 0;
+    }
 }

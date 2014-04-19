@@ -2,28 +2,32 @@ package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 
 /**
  *
  */
-public class Drawable {
+public abstract class Model extends Drawable {
     private Bitmap bitmap;    // the actual bitmap
-    private Position position;
+    private int x;
+    private int y;
     private boolean touched;    // if droid is touched/picked up
 
-    public Drawable(Bitmap bitmap, Position position) {
+    public Model(Bitmap bitmap, int x, int y) {
         this.bitmap = bitmap;
         this.touched = false;
-        this.position = position;
+        this.x = x;
+        this.y = y;
     }
 
-    public Drawable(Bitmap bitmap) {
-        this(bitmap, new Position(0, 0));
+    public Model(Bitmap bitmap) {
+        this(bitmap, 0, 0);
     }
 
+    @Override
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, position.getX() - (bitmap.getWidth() / 2),
-                position.getY() - (bitmap.getHeight() / 2), null);
+        canvas.drawBitmap(bitmap, this.x - (bitmap.getWidth() / 2),
+                this.y - (bitmap.getHeight() / 2), null);
     }
 
     public boolean isTouched() {
@@ -43,8 +47,8 @@ public class Drawable {
     }
 
     public void move(int x, int y) {
-        position.setX(x);
-        position.setY(y);
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -55,8 +59,8 @@ public class Drawable {
      * @param eventY - the event's Y coordinate
      */
     public void handleActionDown(int eventX, int eventY) {
-        if (eventX >= (position.getX() - bitmap.getWidth() / 2) && (eventX <= (position.getX() + bitmap.getWidth() / 2))) {
-            if (eventY >= (position.getY() - bitmap.getHeight() / 2) && (position.getY() <= (position.getY() + bitmap.getHeight() / 2))) {
+        if (eventX >= (this.x - bitmap.getWidth() / 2) && (eventX <= (this.x + bitmap.getWidth() / 2))) {
+            if (eventY >= (this.y - bitmap.getHeight() / 2) && (this.y <= (this.y + bitmap.getHeight() / 2))) {
                 // droid touched
                 setTouched(true);
             } else {

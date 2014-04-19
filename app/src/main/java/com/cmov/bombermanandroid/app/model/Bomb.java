@@ -5,46 +5,17 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
-public class Bomb extends Drawable {
+public class Bomb extends Model  {
 
-    private Bitmap bitmap;
-    private int x;
-    private int y;
     private int spread;
     private int damage;
     private int depth;
 
     public Bomb(Bitmap bitmap, int x, int y, int spread, int damage, int depth){
-        this.bitmap = bitmap;
-        this.x = x;
-        this.y = y;
+        super(bitmap, x, y);
         this.spread = spread;
         this.damage = damage;
         this.depth = depth;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getSpread() {
@@ -69,11 +40,6 @@ public class Bomb extends Drawable {
 
     public void setDepth(int depth) {
         this.depth = depth;
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap,x,y,null);
     }
 
     @Override
