@@ -23,6 +23,8 @@
 
         private static final String TAG = MainGameSurfaceView.class.getSimpleName();
 
+        private float scaleFactor = .5f;
+
         private GameThread thread;
         private Timer timer;
         private static final int GAME_THREAD_INTERVAL = 30;
@@ -108,15 +110,11 @@
 
         @Override
         protected void onDraw(Canvas canvas) {
-
-            // fills the canvas with black
-            canvas.drawColor(Color.BLACK);
-
-            //Draw controls
-            //gameControls.draw(canvas);
-
             //Draw the scenario
+            canvas.save();
             grid.draw(canvas);
+            canvas.scale(scaleFactor,scaleFactor,scaleFactor,scaleFactor);
+            canvas.restore();
         }
 
     }

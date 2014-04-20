@@ -23,9 +23,6 @@ public class RunGameActivity extends ActionBarActivity {
         TextView textView = (TextView) findViewById(R.id.player_name);
         textView.setText(textView.getText()+ " " + nick);
 
-        //TODO: adapt this routine in the new layout
-        //setContentView(new MainGameSurfaceView(this));
-
     }
 
 

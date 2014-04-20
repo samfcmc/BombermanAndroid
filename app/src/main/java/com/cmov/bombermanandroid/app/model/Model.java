@@ -21,8 +21,8 @@ public abstract class Model extends Drawable {
         this.touched = false;
         this.x = x;
         this.y = y;
-        this.tileX = x * bitmap.getHeight();
-        this.tileY = y * bitmap.getWidth();
+        this.tileX = x * bitmap.getWidth();
+        this.tileY = y * bitmap.getHeight();
     }
 
     public Model(Bitmap bitmap) {
@@ -31,8 +31,7 @@ public abstract class Model extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-        Log.d("GameActivity", "Bitmap dimensions - Height : " + this.bitmap.getHeight() + " Width : " + this.bitmap.getWidth());
-        canvas.drawBitmap(bitmap, this.tileX, this.tileY, null);
+       canvas.drawBitmap(bitmap, this.tileX, this.tileY, null);
     }
 
     public boolean isTouched() {

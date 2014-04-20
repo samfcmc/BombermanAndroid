@@ -9,8 +9,8 @@ import com.cmov.bombermanandroid.app.R;
 
 public class Grid {
 
-    public final int HEIGHT = 13;
-    public final int WIDTH = 19;
+    public final int HEIGHT = 7;
+    public final int WIDTH = 7;
 
     private Bitmap bomb;
     private Bitmap bomberman;
