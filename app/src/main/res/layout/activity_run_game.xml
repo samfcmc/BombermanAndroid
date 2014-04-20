@@ -6,8 +6,17 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <com.cmov.bombermanandroid.app.MainGameSurfaceView
+            android:id="@+id/gridSurfaceView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+    </FrameLayout>
+
     <TableLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:shrinkColumns="*"
             android:stretchColumns="*"
@@ -39,6 +48,7 @@
                     android:padding="20dip" android:gravity="center"/>
         </TableRow>
     </TableLayout>
+
 
     <TableLayout
             android:layout_width="match_parent"
