@@ -8,11 +8,13 @@ import android.graphics.drawable.Drawable;
 
 public class Obstacle extends Model {
 
-    private int hitPoints;
+    public boolean isVisible;
+    public int hitPoints;
 
-    public Obstacle(Bitmap bitmap, int x, int y, int hitPoints){
+    public Obstacle(Bitmap bitmap, int x, int y, int hitPoints, boolean isVisible){
         super(bitmap, x, y);
         this.hitPoints = hitPoints;
+        this.isVisible = isVisible;
     }
 
     public int getHitPoints() {

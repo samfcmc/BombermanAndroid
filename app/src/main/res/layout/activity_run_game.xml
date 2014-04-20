@@ -13,12 +13,11 @@
         android:layout_weight="0.43">
 
         <TableLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:shrinkColumns="*"
             android:stretchColumns="*"
-            android:background="#ffffff"
-            >
+            android:background="#ffffff">
             <!-- Row 1 with 3 columns -->
             <TableRow
                 android:id="@+id/table_row1"
@@ -75,7 +74,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/gameSurfaceView" />
-
     </RelativeLayout>
 
     <RelativeLayout

@@ -6,10 +6,12 @@ import android.graphics.ColorFilter;
 
 public class Bomberman extends Character {
 
-    private int lives;
+    public int playerID;
+    public int lives;
 
-    public Bomberman(Bitmap bitmap, int x, int y, int lives, float speed, boolean isDead){
+    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead){
         super(bitmap, x, y, speed, isDead);
+        this.playerID = playerID;
         this.lives = lives;
     }
 
