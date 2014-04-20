@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import com.cmov.bombermanandroid.app.model.Bomberman;
 
 import com.cmov.bombermanandroid.app.model.GameControls;
+import com.cmov.bombermanandroid.app.model.Grid;
 
 import java.util.Timer;
 
@@ -25,25 +26,26 @@ public class MainGameSurfaceView extends SurfaceView implements
 
 	private GameThread thread;
     private Timer timer;
-    private Bomberman bomberman;
     private static final int GAME_THREAD_INTERVAL = 30;
     private GameControls gameControls;
+    private Grid grid;
+
 
 	public MainGameSurfaceView(Context context) {
 		super(context);
 		// adding the callback (this) to the surface holder to intercept events
 		getHolder().addCallback(this);
 
-		// create bomberman and load bitmap
-        bomberman = new Bomberman(BitmapFactory.decodeResource(getResources(), R.drawable.bomberman), 50, 50, 3, 1,false);
-		
-        gameControls = new GameControls(context);
-
+		gameControls = new GameControls(context);
+        grid = new Grid(context);
 		// create the game loop thread
 		thread = new GameThread(getHolder(), this);
         timer = new Timer();
-		
-		// make the GamePanel focusable so it can handle events
+        // load the game settings
+        LoadGame instance = LoadGame.getInstance(context, grid);
+        instance.loadGameSettings();
+        instance.loadGameMap();
+        // make the GamePanel focusable so it can handle events
 		setFocusable(true);
 	}
 
@@ -69,7 +71,7 @@ public class MainGameSurfaceView extends SurfaceView implements
 
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			// delegating event handling to the droid
-			bomberman.handleActionDown((int)event.getX(), (int)event.getY());
+			//bomberman.handleActionDown((int)event.getX(), (int)event.getY());
 			
 			// check if in the lower part of the screen we exit
 			if (event.getY() > getHeight() - 50) {
@@ -96,12 +98,15 @@ public class MainGameSurfaceView extends SurfaceView implements
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		// fills the canvas with black
+
+        // fills the canvas with black
 		canvas.drawColor(Color.BLACK);
-		bomberman.draw(canvas);
 
 		//Draw controls
-        gameControls.draw(canvas);
+        //gameControls.draw(canvas);
+
+        //Draw the scenario
+        grid.draw(canvas);
 	}
 
 }

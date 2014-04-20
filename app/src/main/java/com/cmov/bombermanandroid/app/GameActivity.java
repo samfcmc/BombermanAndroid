@@ -24,7 +24,7 @@ public class GameActivity extends ActionBarActivity {
         // making it full screen
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // set our MainGameSurfaceView as the View
-        //setContentView(new MainGameSurfaceView(this));
+        setContentView(new MainGameSurfaceView(this));
     }
 
 
