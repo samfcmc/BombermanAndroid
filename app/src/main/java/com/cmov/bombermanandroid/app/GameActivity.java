@@ -20,9 +20,6 @@ public class GameActivity extends ActionBarActivity {
         setContentView(R.layout.activity_game);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // making it full screen
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
 
