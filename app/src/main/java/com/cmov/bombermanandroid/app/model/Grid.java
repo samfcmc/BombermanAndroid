@@ -62,6 +62,7 @@ public class Grid {
     }
 
     public void draw(Canvas canvas){
+
         Bitmap background = Bitmap.createScaledBitmap(this.floor, canvas.getWidth(), canvas.getHeight(), false);
         canvas.drawBitmap(background, 0, 0, null);
 
