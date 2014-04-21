@@ -9,8 +9,8 @@ import com.cmov.bombermanandroid.app.R;
 
 public class Grid {
 
-    public final int HEIGHT = 13;
-    public final int WIDTH = 19;
+    public static final int HEIGHT = 10;
+    public static final int WIDTH = 10;
 
     private Bitmap bomb;
     private Bitmap bomberman;
@@ -24,7 +24,7 @@ public class Grid {
     public Grid(Context context){
         this.bomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
         this.bomberman = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomberman);
-        this.floor = BitmapFactory.decodeResource(context.getResources(), R.drawable.grass);
+        this.floor = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
         this.obstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstacle);
         this.robot = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
         this.wall = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
@@ -43,8 +43,7 @@ public class Grid {
     }
 
     public void addFloor(int x, int y){
-        Floor floor = new Floor(this.floor, x, y);
-        this.gameMap[x][y] = floor;
+      this.gameMap[x][y] = null;
     }
 
     public void addObstacle(int x, int y, int hitPoints, boolean isVisible){
@@ -63,10 +62,14 @@ public class Grid {
     }
 
     public void draw(Canvas canvas){
+        Bitmap background = Bitmap.createScaledBitmap(this.floor, canvas.getWidth(), canvas.getHeight(), false);
+        canvas.drawBitmap(background, 0, 0, null);
+
         for(int i = 0; i < HEIGHT; i++){
             for(int j = 0; j < WIDTH; j++){
                 Model model = this.gameMap[i][j];
-                model.draw(canvas);
+                if(model != null)
+                    model.draw(canvas);
             }
         }
     }

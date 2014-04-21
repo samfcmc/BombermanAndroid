@@ -3,7 +3,6 @@ package com.cmov.bombermanandroid.app.model;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 /**
  *
@@ -12,8 +11,6 @@ public abstract class Model extends Drawable {
     private Bitmap bitmap;    // the actual bitmap
     private int x;
     private int y;
-    private int tileX;
-    private int tileY;
     private boolean touched;    // if droid is touched/picked up
 
     public Model(Bitmap bitmap, int x, int y) {
@@ -21,9 +18,7 @@ public abstract class Model extends Drawable {
         this.touched = false;
         this.x = x;
         this.y = y;
-        this.tileX = x * bitmap.getHeight();
-        this.tileY = y * bitmap.getWidth();
-    }
+     }
 
     public Model(Bitmap bitmap) {
         this(bitmap, 0, 0);
@@ -31,8 +26,10 @@ public abstract class Model extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-        Log.d("GameActivity", "Bitmap dimensions - Height : " + this.bitmap.getHeight() + " Width : " + this.bitmap.getWidth());
-        canvas.drawBitmap(bitmap, this.tileX, this.tileY, null);
+        int bitmapWidth = canvas.getWidth() / Grid.WIDTH;
+        int bitmapHeight = canvas.getHeight() / Grid.HEIGHT;
+        Bitmap scaled = Bitmap.createScaledBitmap(this.bitmap, bitmapWidth, bitmapHeight, false);
+        canvas.drawBitmap(scaled, this.x * scaled.getWidth(), this.y * scaled.getHeight(), null);
     }
 
     public boolean isTouched() {
