@@ -1,14 +1,16 @@
 package com.cmov.bombermanandroid.app.commands;
 
+import com.cmov.bombermanandroid.app.model.Movable;
+
 public class CharacterCommand extends Command {
 
-    private Character character;
+    private Movable character;
 
-    public CharacterCommand(Character character) {
+    public CharacterCommand(Movable character) {
         this.character = character;
     }
 
-    public Character getCharacter() {
+    public Movable getCharacter() {
         return character;
     }
 

@@ -22,7 +22,6 @@ public class MainGameSurfaceView extends SurfaceView implements
     private GameThread thread;
     private Timer timer;
     //private GameControls gameControls;
-    private Grid grid;
 
     public MainGameSurfaceView(Context context) {
         super(context);
@@ -44,16 +43,14 @@ public class MainGameSurfaceView extends SurfaceView implements
         // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
         //gameControls = new GameControls(context);
-        grid = new Grid(context);
         // create the game loop thread
         thread = new GameThread(getHolder(), this);
         timer = new Timer();
 
         // load the game settings
-        GameLoader.initGameLoader(context, grid);
         GameLoader instance = GameLoader.getInstance();
-        instance.loadGameSettings();
-        instance.loadGameMap();
+        instance.loadGameSettings(context);
+        instance.loadGameMap(context);
         // make the GamePanel focusable so it can handle events
         setFocusable(true);
     }
@@ -111,7 +108,7 @@ public class MainGameSurfaceView extends SurfaceView implements
     @Override
     protected void onDraw(Canvas canvas) {
         //Draw the scenario
-        grid.draw(canvas);
+        Game.draw(canvas);
     }
 
 }

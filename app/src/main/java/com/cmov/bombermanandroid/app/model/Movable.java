@@ -10,13 +10,13 @@ import com.cmov.bombermanandroid.app.commands.Command;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Character extends Model {
+public class Movable extends Model {
 
     private Queue<Command> receivedCommands;
     private float speed;
     private boolean isDead;
 
-    public Character(Bitmap bitmap, int x, int y, float speed, boolean isDead){
+    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead){
         super(bitmap, x, y);
         this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
@@ -37,6 +37,18 @@ public class Character extends Model {
     @Override
     public int getOpacity() {
         return 0;
+    }
+
+    public void addCommand(Command command) {
+        this.receivedCommands.add(command);
+    }
+
+    public Command popNextCommand() {
+        return this.receivedCommands.remove();
+    }
+
+    public boolean commandsQueueIsEmpty() {
+        return this.receivedCommands.isEmpty();
     }
 
 }

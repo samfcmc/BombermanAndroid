@@ -44,6 +44,7 @@ public class GameThread extends TimerTask {
                     // update game state
                     // render state to the screen
                     // draws the canvas on the panel
+                    Game.processNextCommands();
                     this.gameSurfaceView.onDraw(canvas);
                 }
             }

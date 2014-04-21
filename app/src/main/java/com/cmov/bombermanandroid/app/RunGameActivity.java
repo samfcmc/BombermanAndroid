@@ -3,11 +3,17 @@ package com.cmov.bombermanandroid.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 
+import com.cmov.bombermanandroid.app.commands.RightCommand;
+import com.cmov.bombermanandroid.app.model.Bomberman;
+
 
 public class RunGameActivity extends ActionBarActivity {
+
+    private static final int FIRST_PLAYER = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,9 @@ public class RunGameActivity extends ActionBarActivity {
     }
 
     public void rightPressed(View view) {
+        Bomberman player = Game.getPlayer(FIRST_PLAYER);
+        RightCommand command = new RightCommand(player);
+        player.addCommand(command);
     }
 
     public void bombPressed(View view) {
@@ -73,5 +82,11 @@ public class RunGameActivity extends ActionBarActivity {
     public void quitGame(View view) {
         //will be changed
         finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Game.reset();
     }
 }

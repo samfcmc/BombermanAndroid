@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 
-public class Bomberman extends Character {
+public class Bomberman extends Movable {
 
     public int playerID;
     public int lives;

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
+import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.R;
 
 public class Grid {
@@ -37,8 +38,7 @@ public class Grid {
         this.gameMap[x][y] = bomb;
     }
 
-    public void addBomberman(int x, int y, int playerID, int lives, float speed, boolean isDead){
-        Bomberman bomberman = new Bomberman(this.bomberman, x, y, playerID, lives, speed, isDead);
+    public void addBomberman(int x, int y, Bomberman bomberman){
         this.gameMap[x][y] = bomberman;
     }
 
@@ -51,8 +51,7 @@ public class Grid {
         this.gameMap[x][y] = obstacle;
     }
 
-    public void addRobot(int x, int y, float speed, boolean isDead){
-        Robot robot = new Robot(this.robot, x, y, speed, isDead);
+    public void addRobot(int x, int y, Robot robot){
         this.gameMap[x][y] = robot;
     }
 
@@ -73,5 +72,15 @@ public class Grid {
                     model.draw(canvas);
             }
         }
+    }
+
+    public Model getModel(int l, int c) {
+        return this.gameMap[l][c];
+    }
+
+    public void move(int srcX, int srcY, int destX, int destY) {
+        this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
+        this.gameMap[destX][destY].move(destX, destY);
+        this.gameMap[srcX][srcY] = null;
     }
 }
