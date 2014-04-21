@@ -91,12 +91,14 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/quit_button"
+                    android:onClick="quitGame"
                     android:layout_column="0"/>
             <ImageButton
                     android:id="@+id/up_button"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_column="2"
+                    android:onClick="upPressed"
                     android:src="@drawable/arrow_up"/>
         </TableRow>
 
@@ -111,12 +113,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pause_button"
+                    android:onClick="pauseGame"
                     android:layout_column="0"/>
                 <ImageButton
-                    android:id="@+id/right_button"
+                    android:id="@+id/left_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
+                    android:onClick="leftPressed"
                     android:src="@drawable/arrow_left" />
 
                 <ImageButton
@@ -124,13 +128,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="2"
+                    android:onClick="downPressed"
                     android:src="@drawable/arrow_down" />
 
                 <ImageButton
-                    android:id="@+id/left_button"
+                    android:id="@+id/right_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="3"
+                    android:onClick="rightPressed"
                     android:src="@drawable/arrow_right" />
 
                 <Button
@@ -138,6 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/bomb_button"
+                    android:onClick="bombPressed"
                     android:layout_column="4"/>
             </TableRow>
         </TableLayout>

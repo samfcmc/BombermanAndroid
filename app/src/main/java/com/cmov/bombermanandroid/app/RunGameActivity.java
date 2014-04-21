@@ -3,10 +3,7 @@ package com.cmov.bombermanandroid.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.TextView;
 
 
@@ -30,7 +27,7 @@ public class RunGameActivity extends ActionBarActivity {
 
         //create the text view
         TextView textView = (TextView) findViewById(R.id.player_name);
-        textView.setText(textView.getText()+ " " + nick);
+        textView.setText(textView.getText()+ "\n" + nick);
 
     }
 
@@ -55,4 +52,26 @@ public class RunGameActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void upPressed(View view) {
+    }
+
+    public void downPressed(View view) {
+    }
+
+    public void leftPressed(View view) {
+    }
+
+    public void rightPressed(View view) {
+    }
+
+    public void bombPressed(View view) {
+    }
+
+    public void pauseGame(View view) {
+    }
+
+    public void quitGame(View view) {
+        //will be changed
+        finish();
+    }
 }

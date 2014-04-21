@@ -18,5 +18,11 @@
             android:layout_height="wrap_content"
             android:text="@string/button_play"
             android:onClick="playGame" />
+    <Button
+            style="@style/QuitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quit_button"
+            android:onClick="quitApp" />
 
 </LinearLayout>

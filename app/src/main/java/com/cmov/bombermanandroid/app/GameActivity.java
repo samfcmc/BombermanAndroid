@@ -62,4 +62,7 @@ public class GameActivity extends ActionBarActivity {
 
     }
 
+    public void quitApp(View view) {
+        finish();
+    }
 }
