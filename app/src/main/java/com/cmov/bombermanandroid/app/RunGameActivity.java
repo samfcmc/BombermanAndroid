@@ -27,7 +27,7 @@ public class RunGameActivity extends ActionBarActivity {
 
         //create the text view
         TextView textView = (TextView) findViewById(R.id.player_name);
-        textView.setText(textView.getText()+ " " + nick);
+        textView.setText(textView.getText()+ "\n" + nick);
 
     }
 
@@ -71,5 +71,7 @@ public class RunGameActivity extends ActionBarActivity {
     }
 
     public void quitGame(View view) {
+        //will be changed
+        finish();
     }
 }
