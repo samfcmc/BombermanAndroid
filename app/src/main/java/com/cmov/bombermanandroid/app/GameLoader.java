@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.cmov.bombermanandroid.app.model.Grid;
-import com.cmov.bombermanandroid.app.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.HashMap;
 
-public class LoadGame {
+public class GameLoader {
 
     private final int parameter_index = 0;
     private final int value_index = 1;
@@ -21,17 +20,20 @@ public class LoadGame {
     private final int bomberman_lives = 3;
     private final float bomberman_speed = 2.0f;
 
-    public static LoadGame instance;
+    public static GameLoader instance;
 
     public Map<String, Integer> gameSettings;
-    private Grid grid;
-    private Context context;
+    private static Grid grid;
+    private static Context context;
 
 
-    public LoadGame(Context context, Grid grid) {
-        this.context = context;
-        this.grid = grid;
+    public GameLoader() {
         this.gameSettings = new HashMap<String, Integer>();
+    }
+
+    public static void initGameLoader(Context contextRef, Grid gridRef) {
+        context = contextRef;
+        grid = gridRef;
     }
 
     public void initializeSettings(String s){
@@ -110,9 +112,9 @@ public class LoadGame {
         }
     }
 
-    public static LoadGame getInstance(Context context, Grid grid) {
+    public static GameLoader getInstance() {
         if(instance == null)
-            instance =  new LoadGame(context, grid);
+            instance =  new GameLoader();
         return  instance;
     }
 }
