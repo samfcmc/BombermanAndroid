@@ -22,13 +22,13 @@ public class Game {
     }
 
     public static void processNextCommands() {
-        processNextCommandsInCharacters(players);
-        processNextCommandsInCharacters(enemies);
+        processMovables(players);
+        processMovables(enemies);
     }
 
-    private static void processNextCommandsInCharacters(List<? extends Movable> characters) {
+    private static void processMovables(List<? extends Movable> characters) {
         for (Movable character : characters) {
-            if (!character.commandsQueueIsEmpty()) {
+            if (!character.commandsQueueIsEmpty() && !character.isMoving()) {
                 Command command = character.popNextCommand();
                 command.execute();
             }
@@ -40,7 +40,11 @@ public class Game {
     }
 
     public static void moveRight(Movable character) {
-        grid.move(character.getX(), character.getY(), character.getX() + 1, character.getY());
+        character.startMovingToRight();
+    }
+
+    public static void moveLeft(Movable character) {
+        character.startMovingToLeft();
     }
 
     public static void addPlayer(Bomberman bomberman) {

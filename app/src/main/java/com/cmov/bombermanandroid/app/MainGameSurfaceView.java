@@ -17,11 +17,9 @@ public class MainGameSurfaceView extends SurfaceView implements
         SurfaceHolder.Callback {
 
     private static final String TAG = MainGameSurfaceView.class.getSimpleName();
-    private static final int GAME_THREAD_INTERVAL = 30;
     private float scaleFactor = .5f;
     private GameThread thread;
     private Timer timer;
-    //private GameControls gameControls;
 
     public MainGameSurfaceView(Context context) {
         super(context);
@@ -64,7 +62,7 @@ public class MainGameSurfaceView extends SurfaceView implements
     public void surfaceCreated(SurfaceHolder holder) {
         // at this point the surface is created and
         // we can safely start the game loop
-        timer.schedule(thread, 0, GAME_THREAD_INTERVAL);
+        timer.schedule(thread, 0, GameThread.INTERVAL);
     }
 
     @Override

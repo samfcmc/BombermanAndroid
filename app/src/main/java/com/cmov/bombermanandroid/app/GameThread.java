@@ -26,6 +26,11 @@ public class GameThread extends TimerTask {
 	// and draws to the surface
 	private MainGameSurfaceView gameSurfaceView;
 
+    /*
+     * Interval to execute this timer task (in milliseconds)
+     */
+    public static final int INTERVAL = 30;
+
 	public GameThread(SurfaceHolder surfaceHolder, MainGameSurfaceView gameSurfaceView) {
 		super();
 		this.surfaceHolder = surfaceHolder;

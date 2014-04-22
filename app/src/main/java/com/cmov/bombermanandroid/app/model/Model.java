@@ -26,10 +26,15 @@ public abstract class Model extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
+        Bitmap scaled = getScaledBitmap(canvas);
+        canvas.drawBitmap(scaled, this.x * scaled.getWidth(), this.y * scaled.getHeight(), null);
+    }
+
+    public Bitmap getScaledBitmap(Canvas canvas) {
         int bitmapWidth = canvas.getWidth() / Grid.WIDTH;
         int bitmapHeight = canvas.getHeight() / Grid.HEIGHT;
         Bitmap scaled = Bitmap.createScaledBitmap(this.bitmap, bitmapWidth, bitmapHeight, false);
-        canvas.drawBitmap(scaled, this.x * scaled.getWidth(), this.y * scaled.getHeight(), null);
+        return scaled;
     }
 
     public boolean isTouched() {

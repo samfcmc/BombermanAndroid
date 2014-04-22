@@ -3,8 +3,8 @@ package com.cmov.bombermanandroid.app.model;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 
+import com.cmov.bombermanandroid.app.GameThread;
 import com.cmov.bombermanandroid.app.commands.Command;
 
 import java.util.LinkedList;
@@ -15,13 +15,88 @@ public class Movable extends Model {
     private Queue<Command> receivedCommands;
     private float speed;
     private boolean isDead;
+    private boolean isMoving;
+
+    /*
+     * This coordinates will just be used to perform the
+     * animated movement...
+     */
+    private int movingX;
+    private int movingY;
+    private float deltaX;
+    private float deltaY;
 
     public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead){
         super(bitmap, x, y);
         this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
         this.isDead = isDead;
+        this.isMoving = false;
+        this.movingX = 0;
+        this.movingY = 0;
+        this.deltaX = 0;
+        this.deltaY = 0;
 
+    }
+
+    public boolean isMoving() {
+        return isMoving;
+    }
+
+    private void startMoving() {
+        this.isMoving = true;
+        this.deltaX = 0;
+        this.deltaY = 0;
+        this.movingX = 0;
+        this.movingY = 0;
+    }
+
+    private void stopMoving() {
+        this.isMoving = false;
+    }
+
+    public void startMovingToRight() {
+        startMoving();
+        this.movingX = 1;
+    }
+
+    public void startMovingToLeft() {
+        startMoving();
+        this.movingX = -1;
+    }
+
+    public void draw(Canvas canvas) {
+        if(this.isMoving) {
+            Bitmap scaled = getScaledBitmap(canvas);
+            this.deltaX += (GameThread.INTERVAL * this.speed * scaled.getWidth()*2) / 1000;
+            this.deltaY += (GameThread.INTERVAL * this.speed * scaled.getHeight()) / 1000;
+            float posX = getX() * scaled.getWidth() + this.movingX * deltaX;
+            float posY = getY() * scaled.getHeight() + this.movingY * deltaY;
+            canvas.drawBitmap(scaled, posX, posY, null);
+
+            //Check if we must stop the movement
+            if(shouldStop(posX, posY, scaled)) {
+                stopMoving();
+                updatePositionAfterMovement();
+            }
+        }
+        else {
+            super.draw(canvas);
+        }
+    }
+
+    private boolean shouldStop(float x, float y, Bitmap scaledBitmap) {
+        return (x >= getX() * scaledBitmap.getWidth() + scaledBitmap.getWidth()) ||
+                (x <= getX() * scaledBitmap.getWidth() - scaledBitmap.getWidth());
+    }
+
+    private void updatePositionAfterMovement() {
+        setX(getX() + this.movingX);
+        setY(getY() + this.movingY);
+    }
+
+    public void setMoving(boolean isMoving) {
+        this.isMoving = isMoving;
     }
 
     @Override

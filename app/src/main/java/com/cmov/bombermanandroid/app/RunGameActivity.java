@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 
+import com.cmov.bombermanandroid.app.commands.LeftCommand;
 import com.cmov.bombermanandroid.app.commands.RightCommand;
 import com.cmov.bombermanandroid.app.model.Bomberman;
 
@@ -65,6 +66,9 @@ public class RunGameActivity extends ActionBarActivity {
     }
 
     public void leftPressed(View view) {
+        Bomberman player = Game.getPlayer(FIRST_PLAYER);
+        LeftCommand command = new LeftCommand(player);
+        player.addCommand(command);
     }
 
     public void rightPressed(View view) {
