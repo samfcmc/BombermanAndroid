@@ -13,51 +13,37 @@ public class Grid {
     public static final int HEIGHT = 10;
     public static final int WIDTH = 10;
 
-    private Bitmap bomb;
-    private Bitmap bomberman;
-    private Bitmap floor;
-    private Bitmap obstacle;
-    private Bitmap robot;
-    private Bitmap wall;
+    Bitmap floor;
 
     private Model[][] gameMap;
 
     public Grid(Context context){
-        this.bomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
-        this.bomberman = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomberman);
-        this.floor = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-        this.obstacle = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstacle);
-        this.robot = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy);
-        this.wall = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
-
-        this.gameMap = new Model[HEIGHT][WIDTH];
+       this.floor = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+       this.gameMap = new Model[HEIGHT][WIDTH];
     }
 
-    public void addBomb(int x, int y, int spread, int damage, int depth){
-        Bomb bomb = new Bomb(this.bomb, x, y, spread, damage, depth);
-        this.gameMap[x][y] = bomb;
+    public void addBomb(Bomb bomb){
+        this.gameMap[bomb.getX()][bomb.getY()] = bomb;
     }
 
-    public void addBomberman(int x, int y, Bomberman bomberman){
-        this.gameMap[x][y] = bomberman;
+    public void addBomberman(Bomberman bomberman){
+        this.gameMap[bomberman.getX()][bomberman.getY()] = bomberman;
     }
 
     public void addFloor(int x, int y){
       this.gameMap[x][y] = null;
     }
 
-    public void addObstacle(int x, int y, int hitPoints, boolean isVisible){
-        Obstacle obstacle = new Obstacle(this.obstacle, x, y, hitPoints, isVisible);
-        this.gameMap[x][y] = obstacle;
+    public void addObstacle(Obstacle obstacle){
+       this.gameMap[obstacle.getX()][obstacle.getY()] = obstacle;
     }
 
-    public void addRobot(int x, int y, Robot robot){
-        this.gameMap[x][y] = robot;
+    public void addRobot(Robot robot){
+        this.gameMap[robot.getX()][robot.getY()] = robot;
     }
 
-    public void addWall(int x, int y){
-        Wall wall = new Wall(this.wall, x, y);
-        this.gameMap[x][y] = wall;
+    public void addWall(Wall wall){
+      this.gameMap[wall.getX()][wall.getY()] = wall;
     }
 
     public void draw(Canvas canvas){
@@ -72,10 +58,6 @@ public class Grid {
                     model.draw(canvas);
             }
         }
-    }
-
-    public Model getModel(int l, int c) {
-        return this.gameMap[l][c];
     }
 
     public void move(int srcX, int srcY, int destX, int destY) {

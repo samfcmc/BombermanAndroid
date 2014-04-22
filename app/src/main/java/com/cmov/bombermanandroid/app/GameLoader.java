@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.cmov.bombermanandroid.app.model.Bomberman;
 import com.cmov.bombermanandroid.app.model.Grid;
+import com.cmov.bombermanandroid.app.model.Obstacle;
 import com.cmov.bombermanandroid.app.model.Robot;
+import com.cmov.bombermanandroid.app.model.Wall;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -92,19 +94,22 @@ public class GameLoader {
                             this.grid.addFloor(i, j);
                             break;
                         case 'O':
-                            this.grid.addObstacle(i, j, obstacle_hit_points, true);
+                            Obstacle obstacle = new Obstacle(BitmapLib.getObstacleBitmap(context), i, j, obstacle_hit_points, true);
+                            this.grid.addObstacle(obstacle);
                             break;
                         case 'R':
-                            Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, (float) this.gameSettings.get("RS"), false);
-                            this.grid.addRobot(i, j, robot);
+                            Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, this.gameSettings.get("RS"), false);
+                            this.grid.addRobot(robot);
                             Game.addEnemy(robot);
+
                             break;
                         case 'W':
-                            this.grid.addWall(i, j);
+                            Wall wall = new Wall(BitmapLib.getWallBitmap(context), i, j);
+                            this.grid.addWall(wall);
                             break;
                         default:
-                            Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context), i, j, (int) tiles[j], bomberman_lives, bomberman_speed, false);
-                            this.grid.addBomberman(i, j, bomberman);
+                            Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context), i, j, Character.getNumericValue(tiles[j]), bomberman_lives, bomberman_speed, false);
+                            this.grid.addBomberman(bomberman);
                             Game.addPlayer(bomberman);
                             break;
                     }
