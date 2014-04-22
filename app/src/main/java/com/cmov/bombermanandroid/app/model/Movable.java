@@ -26,7 +26,7 @@ public class Movable extends Model {
     private float deltaX;
     private float deltaY;
 
-    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead){
+    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead) {
         super(bitmap, x, y);
         this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
@@ -41,6 +41,10 @@ public class Movable extends Model {
 
     public boolean isMoving() {
         return isMoving;
+    }
+
+    public void setMoving(boolean isMoving) {
+        this.isMoving = isMoving;
     }
 
     private void startMoving() {
@@ -65,38 +69,45 @@ public class Movable extends Model {
         this.movingX = -1;
     }
 
+    public void startMovingToUp() {
+        startMoving();
+        this.movingY = -1;
+    }
+
+    public void startMovingToDown() {
+        startMoving();
+        this.movingY = 1;
+    }
+
     public void draw(Canvas canvas) {
-        if(this.isMoving) {
+        if (this.isMoving) {
             Bitmap scaled = getScaledBitmap(canvas);
-            this.deltaX += (GameThread.INTERVAL * this.speed * scaled.getWidth()*2) / 1000;
+            this.deltaX += (GameThread.INTERVAL * this.speed * scaled.getWidth()) / 1000;
             this.deltaY += (GameThread.INTERVAL * this.speed * scaled.getHeight()) / 1000;
             float posX = getX() * scaled.getWidth() + this.movingX * deltaX;
             float posY = getY() * scaled.getHeight() + this.movingY * deltaY;
             canvas.drawBitmap(scaled, posX, posY, null);
 
             //Check if we must stop the movement
-            if(shouldStop(posX, posY, scaled)) {
+            if (shouldStop(posX, posY, scaled)) {
                 stopMoving();
                 updatePositionAfterMovement();
             }
-        }
-        else {
+        } else {
             super.draw(canvas);
         }
     }
 
     private boolean shouldStop(float x, float y, Bitmap scaledBitmap) {
         return (x >= getX() * scaledBitmap.getWidth() + scaledBitmap.getWidth()) ||
-                (x <= getX() * scaledBitmap.getWidth() - scaledBitmap.getWidth());
+                (x <= getX() * scaledBitmap.getWidth() - scaledBitmap.getWidth()) ||
+                (y <= getY() * scaledBitmap.getHeight() - scaledBitmap.getHeight()) ||
+                (y >= getY() * scaledBitmap.getHeight() + scaledBitmap.getHeight());
     }
 
     private void updatePositionAfterMovement() {
         setX(getX() + this.movingX);
         setY(getY() + this.movingY);
-    }
-
-    public void setMoving(boolean isMoving) {
-        this.isMoving = isMoving;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.cmov.bombermanandroid.app.commands;
 
+import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.model.Movable;
 
 public class UpCommand extends CharacterCommand {
@@ -10,6 +11,6 @@ public class UpCommand extends CharacterCommand {
 
     @Override
     public void execute() {
-
+        Game.moveUp(getCharacter());
     }
 }

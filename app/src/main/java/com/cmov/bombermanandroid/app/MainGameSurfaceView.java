@@ -37,7 +37,6 @@ public class MainGameSurfaceView extends SurfaceView implements
     }
 
     public void init(Context context) {
-        Log.d("Run game", "Init surface");
         // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
         //gameControls = new GameControls(context);
@@ -73,7 +72,6 @@ public class MainGameSurfaceView extends SurfaceView implements
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             // delegating event handling to the droid
             //bomberman.handleActionDown((int)event.getX(), (int)event.getY());

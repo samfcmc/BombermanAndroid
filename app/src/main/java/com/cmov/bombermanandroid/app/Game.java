@@ -47,6 +47,14 @@ public class Game {
         character.startMovingToLeft();
     }
 
+    public static void moveUp(Movable character) {
+        character.startMovingToUp();
+    }
+
+    public static  void moveDown(Movable character) {
+        character.startMovingToDown();
+    }
+
     public static void addPlayer(Bomberman bomberman) {
         players.add(bomberman);
     }
