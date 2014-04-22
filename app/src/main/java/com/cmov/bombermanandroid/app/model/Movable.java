@@ -1,9 +1,8 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
+import android.graphics.Rect;
 
 import com.cmov.bombermanandroid.app.commands.Command;
 
@@ -13,18 +12,18 @@ import java.util.Queue;
 public class Movable extends Model {
 
     private Queue<Command> receivedCommands;
+    private Rect rect;
     private float speed;
     private boolean isDead;
 
     public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead){
-        super(bitmap, x, y);
+        super(bitmap, x, y, true);
         this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
         this.isDead = isDead;
-
     }
 
-    @Override
+   @Override
     public void setAlpha(int i) {
 
     }

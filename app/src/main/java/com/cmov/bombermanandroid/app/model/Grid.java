@@ -1,6 +1,7 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.content.Context;
+import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -64,5 +65,9 @@ public class Grid {
         this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
         this.gameMap[destX][destY].move(destX, destY);
         this.gameMap[srcX][srcY] = null;
+    }
+
+    public Model getModel(int x, int y){
+        return this.gameMap[x][y];
     }
 }

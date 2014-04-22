@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable;
 public class Wall extends Model {
 
     public Wall(Bitmap bitmap, int x, int y){
-        super(bitmap, x, y);
+        super(bitmap, x, y, true);
     }
 
     @Override

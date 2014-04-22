@@ -12,7 +12,7 @@ public class Obstacle extends Model {
     public int hitPoints;
 
     public Obstacle(Bitmap bitmap, int x, int y, int hitPoints, boolean isVisible){
-        super(bitmap, x, y);
+        super(bitmap, x, y, true);
         this.hitPoints = hitPoints;
         this.isVisible = isVisible;
     }
