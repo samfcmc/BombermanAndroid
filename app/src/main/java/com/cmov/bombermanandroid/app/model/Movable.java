@@ -84,8 +84,8 @@ public class Movable extends Model {
             Bitmap scaled = getScaledBitmap(canvas);
             this.deltaX += (GameThread.INTERVAL * this.speed * scaled.getWidth()) / 1000;
             this.deltaY += (GameThread.INTERVAL * this.speed * scaled.getHeight()) / 1000;
-            float posX = getX() * scaled.getWidth() + this.movingX * deltaX;
-            float posY = getY() * scaled.getHeight() + this.movingY * deltaY;
+            float posX = getRealX(scaled) + this.movingX * deltaX;
+            float posY = getRealY(scaled) + this.movingY * deltaY;
             canvas.drawBitmap(scaled, posX, posY, null);
 
             //Check if we must stop the movement
