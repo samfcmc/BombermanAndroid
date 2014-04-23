@@ -2,28 +2,22 @@ package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
-/**
- *
- */
 public abstract class Model extends Drawable {
     private Bitmap bitmap;    // the actual bitmap
     private int x;
     private int y;
     private boolean touched;
     private boolean isCollidable;
-    private Rect rect;
 
     public Model(Bitmap bitmap, int x, int y, boolean isCollidable) {
         this.bitmap = bitmap;
         this.touched = false;
         this.x = x;
         this.y = y;
+
         this.isCollidable = isCollidable;
     }
 
@@ -33,10 +27,15 @@ public abstract class Model extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
+       Bitmap scaled = getScaledBitmap(canvas);
+       canvas.drawBitmap(scaled, this.x, this.y, null);
+    }
+
+    public Bitmap getScaledBitmap(Canvas canvas){
         int bitmapWidth = canvas.getWidth() / Grid.WIDTH;
         int bitmapHeight = canvas.getHeight() / Grid.HEIGHT;
         Bitmap scaled = Bitmap.createScaledBitmap(this.bitmap, bitmapWidth, bitmapHeight, false);
-        canvas.drawBitmap(scaled, this.x * scaled.getWidth(), this.y * scaled.getHeight(), null);
+        return scaled;
     }
 
     public boolean isTouched() {
@@ -53,14 +52,6 @@ public abstract class Model extends Drawable {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
-    }
-
-    public Rect getRect() {
-        return rect;
-    }
-
-    public void setRect(Rect rect) {
-        this.rect = rect;
     }
 
     public boolean isCollidable() {

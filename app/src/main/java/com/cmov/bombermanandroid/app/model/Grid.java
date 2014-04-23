@@ -70,4 +70,12 @@ public class Grid {
     public Model getModel(int x, int y){
         return this.gameMap[x][y];
     }
+
+    public void setModel(Canvas canvas, Model model){
+        Bitmap scaled = model.getScaledBitmap(canvas);
+        int gridL = model.getY() / scaled.getHeight();
+        int gridC = model.getX() / scaled.getWidth();
+        this.gameMap[gridL][gridC] = model;
+    }
+
 }
