@@ -4,24 +4,24 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
-/**
- *
- */
 public abstract class Model extends Drawable {
     private Bitmap bitmap;    // the actual bitmap
     private int x;
     private int y;
-    private boolean touched;    // if droid is touched/picked up
+    private boolean touched;
+    private boolean isCollidable;
 
-    public Model(Bitmap bitmap, int x, int y) {
+    public Model(Bitmap bitmap, int x, int y, boolean isCollidable) {
         this.bitmap = bitmap;
         this.touched = false;
         this.x = x;
         this.y = y;
-     }
+
+        this.isCollidable = isCollidable;
+    }
 
     public Model(Bitmap bitmap) {
-        this(bitmap, 0, 0);
+        this(bitmap, 0, 0, false);
     }
 
     @Override
@@ -30,7 +30,8 @@ public abstract class Model extends Drawable {
         canvas.drawBitmap(scaled, getRealX(scaled), getRealY(scaled), null);
     }
 
-    public Bitmap getScaledBitmap(Canvas canvas) {
+
+    public Bitmap getScaledBitmap(Canvas canvas){
         int bitmapWidth = canvas.getWidth() / Grid.WIDTH;
         int bitmapHeight = canvas.getHeight() / Grid.HEIGHT;
         Bitmap scaled = Bitmap.createScaledBitmap(this.bitmap, bitmapWidth, bitmapHeight, false);
@@ -59,6 +60,14 @@ public abstract class Model extends Drawable {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public boolean isCollidable() {
+        return isCollidable;
+    }
+
+    public void setCollidable(boolean isCollidable) {
+        this.isCollidable = isCollidable;
     }
 
     public void move(int x, int y) {

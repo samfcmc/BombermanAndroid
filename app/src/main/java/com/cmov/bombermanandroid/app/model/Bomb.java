@@ -12,7 +12,7 @@ public class Bomb extends Model  {
     private int depth;
 
     public Bomb(Bitmap bitmap, int x, int y, int spread, int damage, int depth){
-        super(bitmap, x, y);
+        super(bitmap, x, y, false);
         this.spread = spread;
         this.damage = damage;
         this.depth = depth;

@@ -11,6 +11,6 @@ public class Robot extends Enemy {
 
     @Override
     public void draw(Canvas canvas) {
-        super.draw(canvas);
+       super.draw(canvas);
     }
 }

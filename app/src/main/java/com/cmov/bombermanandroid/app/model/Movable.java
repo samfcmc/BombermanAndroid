@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 
+
 import com.cmov.bombermanandroid.app.GameThread;
 import com.cmov.bombermanandroid.app.commands.Command;
 
@@ -26,17 +27,12 @@ public class Movable extends Model {
     private float deltaX;
     private float deltaY;
 
-    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead) {
-        super(bitmap, x, y);
+
+    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead){
+        super(bitmap, x, y, true);
         this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
         this.isDead = isDead;
-        this.isMoving = false;
-        this.movingX = 0;
-        this.movingY = 0;
-        this.deltaX = 0;
-        this.deltaY = 0;
-
     }
 
     public boolean isMoving() {
@@ -97,7 +93,6 @@ public class Movable extends Model {
             super.draw(canvas);
         }
     }
-
     private boolean shouldStop(float x, float y, Bitmap scaledBitmap) {
         return (x >= getX() * scaledBitmap.getWidth() + scaledBitmap.getWidth()) ||
                 (x <= getX() * scaledBitmap.getWidth() - scaledBitmap.getWidth()) ||
@@ -110,7 +105,8 @@ public class Movable extends Model {
         setY(getY() + this.movingY);
     }
 
-    @Override
+
+   @Override
     public void setAlpha(int i) {
 
     }
