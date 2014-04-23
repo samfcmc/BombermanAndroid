@@ -1,8 +1,6 @@
 package com.cmov.bombermanandroid.app;
 
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.util.Log;
 
 import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.model.Bomberman;
@@ -15,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-
-    private enum Directions {LEFT, RIGHT, UP, DOWN}
 
     private static List<Bomberman> players = new ArrayList<Bomberman>();
     private static List<Enemy> enemies = new ArrayList<Enemy>();
@@ -45,19 +41,31 @@ public class Game {
     }
 
     public static void moveRight(Movable character) {
-        character.startMovingToRight();
+        if(!checkRightCollision(character)){
+            character.startMovingToRight();
+            grid.updateGrid(character.getX(), character.getY(), character.getX() + 1, character.getY());
+        }
     }
 
     public static void moveLeft(Movable character) {
-        character.startMovingToLeft();
+        if(!checkLeftCollision(character)){
+            character.startMovingToLeft();
+            grid.updateGrid(character.getX(), character.getY(), character.getX() - 1, character.getY());
+        }
     }
 
     public static void moveUp(Movable character) {
-        character.startMovingToUp();
+        if(!checkUpCollision(character)){
+            character.startMovingToUp();
+            grid.updateGrid(character.getX(), character.getY(), character.getX(), character.getY() - 1);
+        }
     }
 
     public static  void moveDown(Movable character) {
-        character.startMovingToDown();
+        if(!checkDownCollision(character)){
+            character.startMovingToDown();
+            grid.updateGrid(character.getX(), character.getY(), character.getX(), character.getY() + 1);
+        }
     }
 
     public static void addPlayer(Bomberman bomberman) {
@@ -77,28 +85,32 @@ public class Game {
         grid.draw(canvas);
     }
 
-    private static boolean checkCollision(Movable character, Directions direction){
-
-        Model model;
-
-        switch (direction){
-            case LEFT :
-                model = grid.getModel(character.getX() - 1, character.getY());
-                break;
-            case RIGHT :
-                model = grid.getModel(character.getX() + 1, character.getY());
-                break;
-            case UP :
-                model = grid.getModel(character.getX(), character.getY() + 1);
-                break;
-            case DOWN :
-                model = grid.getModel(character.getX(), character.getY() - 1);
-                break;
-            default :
-                model = null;
-                break;
+    public static boolean checkRightCollision(Movable character){
+        Model model = grid.getModel(character.getX() + 1, character.getY());
+        if(model == null){
+            return false;
         }
+        else return model.isCollidable();
+    }
 
+    public static boolean checkLeftCollision(Movable character){
+        Model model = grid.getModel(character.getX() - 1, character.getY());
+        if(model == null){
+            return false;
+        }
+        else return model.isCollidable();
+    }
+
+    public static boolean checkUpCollision(Movable character){
+        Model model = grid.getModel(character.getX(), character.getY() - 1);
+        if(model == null){
+            return false;
+        }
+        else return model.isCollidable();
+    }
+
+    public static boolean checkDownCollision(Movable character){
+        Model model = grid.getModel(character.getX(), character.getY() + 1);
         if(model == null){
             return false;
         }

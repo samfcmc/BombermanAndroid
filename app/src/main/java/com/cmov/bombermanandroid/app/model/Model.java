@@ -16,7 +16,6 @@ public abstract class Model extends Drawable {
         this.touched = false;
         this.x = x;
         this.y = y;
-
         this.isCollidable = isCollidable;
     }
 

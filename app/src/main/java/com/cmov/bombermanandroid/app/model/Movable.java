@@ -3,6 +3,7 @@ package com.cmov.bombermanandroid.app.model;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.util.Log;
 
 
 import com.cmov.bombermanandroid.app.GameThread;
@@ -105,8 +106,7 @@ public class Movable extends Model {
         setY(getY() + this.movingY);
     }
 
-
-   @Override
+    @Override
     public void setAlpha(int i) {
 
     }

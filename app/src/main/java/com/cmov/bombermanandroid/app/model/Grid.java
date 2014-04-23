@@ -5,6 +5,7 @@ import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.R;
@@ -61,21 +62,12 @@ public class Grid {
         }
     }
 
-    public void move(int srcX, int srcY, int destX, int destY) {
+    public void updateGrid(int srcX, int srcY, int destX, int destY) {
         this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
-        this.gameMap[destX][destY].move(destX, destY);
         this.gameMap[srcX][srcY] = null;
     }
 
     public Model getModel(int x, int y){
         return this.gameMap[x][y];
     }
-
-    public void setModel(Canvas canvas, Model model){
-        Bitmap scaled = model.getScaledBitmap(canvas);
-        int gridL = model.getY() / scaled.getHeight();
-        int gridC = model.getX() / scaled.getWidth();
-        this.gameMap[gridL][gridC] = model;
-    }
-
 }
