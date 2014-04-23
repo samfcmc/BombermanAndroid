@@ -6,8 +6,22 @@ import android.graphics.drawable.Drawable;
 
 public abstract class Model extends Drawable {
     private Bitmap bitmap;    // the actual bitmap
+
+    /*
+     * Coordinates X and Y in the game grid
+     */
     private int x;
     private int y;
+
+    /*
+     *  After drawing
+     */
+    private float lastDrawX;
+    private float lastDrawY;
+
+    /*
+     *
+     */
     private boolean touched;
     private boolean isCollidable;
 
@@ -16,6 +30,8 @@ public abstract class Model extends Drawable {
         this.touched = false;
         this.x = x;
         this.y = y;
+        this.lastDrawX = 0;
+        this.lastDrawY = 0;
 
         this.isCollidable = isCollidable;
     }
@@ -27,11 +43,27 @@ public abstract class Model extends Drawable {
     @Override
     public void draw(Canvas canvas) {
         Bitmap scaled = getScaledBitmap(canvas);
-        canvas.drawBitmap(scaled, getRealX(scaled), getRealY(scaled), null);
+        float drawX = getDrawX(scaled);
+        float drawY = getDrawY(scaled);
+        canvas.drawBitmap(scaled, drawX, drawY, null);
+        afterDraw(drawX, drawY);
     }
 
+    private void afterDraw(float x, float y) {
+        this.lastDrawX = x;
+        this.lastDrawY = y;
+    }
 
-    public Bitmap getScaledBitmap(Canvas canvas){
+    /*
+     * Methods to calculate the coordinates (in the canvas)
+     * where the model will be drawn
+     */
+    protected abstract float getDrawX(Bitmap scaledBitmap);
+
+    protected abstract float getDrawY(Bitmap scaledBitmap);
+
+
+    public Bitmap getScaledBitmap(Canvas canvas) {
         int bitmapWidth = canvas.getWidth() / Grid.WIDTH;
         int bitmapHeight = canvas.getHeight() / Grid.HEIGHT;
         Bitmap scaled = Bitmap.createScaledBitmap(this.bitmap, bitmapWidth, bitmapHeight, false);
@@ -89,6 +121,14 @@ public abstract class Model extends Drawable {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    protected float getLastDrawX() {
+        return lastDrawX;
+    }
+
+    protected float getLastDrawY() {
+        return lastDrawY;
     }
 
     /**

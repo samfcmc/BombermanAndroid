@@ -13,24 +13,4 @@ public class Enemy extends Movable {
         super(bitmap, x, y, speed, isDead);
     }
 
-
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-    }
-
-    @Override
-    public void setAlpha(int i) {
-
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
-
-    @Override
-    public int getOpacity() {
-        return 0;
-    }
 }

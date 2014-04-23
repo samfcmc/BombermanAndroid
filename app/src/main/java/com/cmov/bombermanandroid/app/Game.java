@@ -1,8 +1,6 @@
 package com.cmov.bombermanandroid.app;
 
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.util.Log;
 
 import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.model.Bomberman;
@@ -26,16 +24,21 @@ public class Game {
         grid = grid1;
     }
 
-    public static void processNextCommands() {
-        processMovables(players);
-        processMovables(enemies);
+    public static void update(Canvas canvas) {
+        updateMovables(players, canvas);
+        updateMovables(enemies, canvas);
     }
 
-    private static void processMovables(List<? extends Movable> characters) {
+    private static void updateMovables(List<? extends Movable> characters, Canvas canvas) {
         for (Movable character : characters) {
             if (!character.commandsQueueIsEmpty() && !character.isMoving()) {
                 Command command = character.popNextCommand();
                 command.execute();
+            }
+            else if(character.isMoving()) {
+                if(character.shouldStop(character.getScaledBitmap(canvas))) {
+                    character.stopAndUpdatePosition(grid);
+                }
             }
         }
     }

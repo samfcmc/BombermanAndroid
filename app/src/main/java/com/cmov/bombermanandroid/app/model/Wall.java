@@ -6,24 +6,10 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
 
-public class Wall extends Model {
+public class Wall extends StaticModel {
 
     public Wall(Bitmap bitmap, int x, int y){
         super(bitmap, x, y, true);
     }
 
-    @Override
-    public void setAlpha(int i) {
-
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
-
-    @Override
-    public int getOpacity() {
-        return 0;
-    }
 }

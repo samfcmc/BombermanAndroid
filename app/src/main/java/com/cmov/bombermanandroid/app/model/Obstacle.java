@@ -6,7 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
 
-public class Obstacle extends Model {
+public class Obstacle extends StaticModel {
 
     public boolean isVisible;
     public int hitPoints;
@@ -23,20 +23,5 @@ public class Obstacle extends Model {
 
     public void setHitPoints(int hitPoints) {
         this.hitPoints = hitPoints;
-    }
-
-    @Override
-    public void setAlpha(int i) {
-
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
-
-    @Override
-    public int getOpacity() {
-        return 0;
     }
 }

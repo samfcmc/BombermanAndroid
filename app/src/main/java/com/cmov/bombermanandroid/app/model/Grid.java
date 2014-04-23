@@ -63,7 +63,6 @@ public class Grid {
 
     public void move(int srcX, int srcY, int destX, int destY) {
         this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
-        this.gameMap[destX][destY].move(destX, destY);
         this.gameMap[srcX][srcY] = null;
     }
 

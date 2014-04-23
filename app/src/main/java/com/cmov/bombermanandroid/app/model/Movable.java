@@ -1,9 +1,7 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-
 
 import com.cmov.bombermanandroid.app.GameThread;
 import com.cmov.bombermanandroid.app.commands.Command;
@@ -27,12 +25,15 @@ public class Movable extends Model {
     private float deltaX;
     private float deltaY;
 
-
-    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead){
+    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead) {
         super(bitmap, x, y, true);
         this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
         this.isDead = isDead;
+        this.deltaX = 0;
+        this.deltaY = 0;
+        this.movingX = 0;
+        this.movingY = 0;
     }
 
     public boolean isMoving() {
@@ -45,14 +46,14 @@ public class Movable extends Model {
 
     private void startMoving() {
         this.isMoving = true;
-        this.deltaX = 0;
-        this.deltaY = 0;
-        this.movingX = 0;
-        this.movingY = 0;
     }
 
     private void stopMoving() {
         this.isMoving = false;
+        this.movingX = 0;
+        this.movingY = 0;
+        this.deltaX = 0;
+        this.deltaY = 0;
     }
 
     public void startMovingToRight() {
@@ -75,38 +76,49 @@ public class Movable extends Model {
         this.movingY = 1;
     }
 
-    public void draw(Canvas canvas) {
-        if (this.isMoving) {
-            Bitmap scaled = getScaledBitmap(canvas);
-            this.deltaX += (GameThread.INTERVAL * this.speed * scaled.getWidth()) / 1000;
-            this.deltaY += (GameThread.INTERVAL * this.speed * scaled.getHeight()) / 1000;
-            float posX = getRealX(scaled) + this.movingX * deltaX;
-            float posY = getRealY(scaled) + this.movingY * deltaY;
-            canvas.drawBitmap(scaled, posX, posY, null);
-
-            //Check if we must stop the movement
-            if (shouldStop(posX, posY, scaled)) {
-                stopMoving();
-                updatePositionAfterMovement();
-            }
+    @Override
+    protected float getDrawX(Bitmap scaledBitmap) {
+        if (this.movingX != 0) {
+            this.deltaX += (GameThread.INTERVAL * this.speed * scaledBitmap.getWidth()) / 1000;
+            return getRealX(scaledBitmap) + this.movingX * deltaX;
         } else {
-            super.draw(canvas);
+            return getRealX(scaledBitmap);
         }
     }
-    private boolean shouldStop(float x, float y, Bitmap scaledBitmap) {
-        return (x >= getX() * scaledBitmap.getWidth() + scaledBitmap.getWidth()) ||
-                (x <= getX() * scaledBitmap.getWidth() - scaledBitmap.getWidth()) ||
-                (y <= getY() * scaledBitmap.getHeight() - scaledBitmap.getHeight()) ||
-                (y >= getY() * scaledBitmap.getHeight() + scaledBitmap.getHeight());
+
+    @Override
+    protected float getDrawY(Bitmap scaledBitmap) {
+        if (this.movingY != 0) {
+            this.deltaY += (GameThread.INTERVAL * this.speed * scaledBitmap.getHeight()) / 1000;
+            return getRealY(scaledBitmap) + this.movingY * deltaY;
+        } else {
+            return getRealY(scaledBitmap);
+        }
     }
 
-    private void updatePositionAfterMovement() {
-        setX(getX() + this.movingX);
-        setY(getY() + this.movingY);
+    public boolean shouldStop(Bitmap scaledBitmap) {
+        float x = getLastDrawX();
+        float y = getLastDrawY();
+        int realX = getRealX(scaledBitmap);
+        int realY = getRealY(scaledBitmap);
+
+        return (x >= realX + scaledBitmap.getWidth()) ||
+                (x <= realX - scaledBitmap.getWidth()) ||
+                (y <= realY - scaledBitmap.getHeight()) ||
+                (y >= realY + scaledBitmap.getHeight());
+    }
+
+    public void stopAndUpdatePosition(Grid grid) {
+        int newX = getX() + this.movingX;
+        int newY = getY() + this.movingY;
+        grid.move(getX(), getY(), newX, newY);
+        setX(newX);
+        setY(newY);
+        stopMoving();
     }
 
 
-   @Override
+    @Override
     public void setAlpha(int i) {
 
     }

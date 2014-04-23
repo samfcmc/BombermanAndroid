@@ -9,8 +9,4 @@ public class Robot extends Enemy {
         super(bitmap, x, y, speed, isDead);
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-       super.draw(canvas);
-    }
 }

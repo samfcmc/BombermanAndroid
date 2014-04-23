@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
-public class Bomb extends Model  {
+public class Bomb extends StaticModel  {
 
     private int spread;
     private int damage;
@@ -42,18 +42,4 @@ public class Bomb extends Model  {
         this.depth = depth;
     }
 
-    @Override
-    public void setAlpha(int i) {
-
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
-
-    @Override
-    public int getOpacity() {
-        return 0;
-    }
 }
