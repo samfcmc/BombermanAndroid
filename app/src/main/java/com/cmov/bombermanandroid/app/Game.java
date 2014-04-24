@@ -43,28 +43,24 @@ public class Game {
     public static void moveRight(Movable character) {
         if(!checkRightCollision(character)){
             character.startMovingToRight();
-            grid.updateGrid(character.getX(), character.getY(), character.getX() + 1, character.getY());
         }
     }
 
     public static void moveLeft(Movable character) {
         if(!checkLeftCollision(character)){
             character.startMovingToLeft();
-            grid.updateGrid(character.getX(), character.getY(), character.getX() - 1, character.getY());
         }
     }
 
     public static void moveUp(Movable character) {
         if(!checkUpCollision(character)){
             character.startMovingToUp();
-            grid.updateGrid(character.getX(), character.getY(), character.getX(), character.getY() - 1);
         }
     }
 
     public static  void moveDown(Movable character) {
         if(!checkDownCollision(character)){
             character.startMovingToDown();
-            grid.updateGrid(character.getX(), character.getY(), character.getX(), character.getY() + 1);
         }
     }
 
@@ -88,32 +84,105 @@ public class Game {
     public static boolean checkRightCollision(Movable character){
         Model model = grid.getModel(character.getX() + 1, character.getY());
         if(model == null){
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX() + 1, character.getY());
             return false;
         }
-        else return model.isCollidable();
+        else if(model.isCollidable()){
+            return true;
+        }
+        else return checkDeadlyRightCollision(character, (Movable) model);
+    }
+
+    private static boolean checkDeadlyRightCollision(Movable character, Movable model) {
+        if( !character.isEnemy() && model.isEnemy() ){
+            // Bomberman suicides himself
+            grid.updateGridAfterBombermanSuicides(character.getX(), character.getY());
+            return false;
+        }
+        else if( character.isEnemy() && !model.isEnemy()){
+            // Bomberman was killed
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX() + 1, character.getY());
+            return false;
+        }
+        else return true;
     }
 
     public static boolean checkLeftCollision(Movable character){
         Model model = grid.getModel(character.getX() - 1, character.getY());
         if(model == null){
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX() - 1, character.getY());
             return false;
         }
-        else return model.isCollidable();
+        else if(model.isCollidable()){
+            return true;
+        }
+        else return checkDeadlyLeftCollision(character, (Movable) model);
     }
+
+    private static boolean checkDeadlyLeftCollision(Movable character, Movable model) {
+        if( !character.isEnemy() && model.isEnemy() ){
+            // Bomberman suicides himself
+            grid.updateGridAfterBombermanSuicides(character.getX(),character.getY());
+            return false;
+        }
+        else if( character.isEnemy() && !model.isEnemy()){
+            // Bomberman was killed
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX() - 1, character.getY());
+            return false;
+        }
+        else return true;
+    }
+
 
     public static boolean checkUpCollision(Movable character){
         Model model = grid.getModel(character.getX(), character.getY() - 1);
         if(model == null){
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX(), character.getY() - 1);
             return false;
         }
-        else return model.isCollidable();
+        else if(model.isCollidable()){
+            return true;
+        }
+        else return checkDeadlyUpCollision(character, (Movable) model);
+     }
+
+    private static boolean checkDeadlyUpCollision(Movable character, Movable model) {
+        if( !character.isEnemy() && model.isEnemy() ){
+            // Bomberman suicide himself
+            grid.updateGridAfterBombermanSuicides(character.getX(), character.getY());
+            return false;
+        }
+        else if( character.isEnemy() && !model.isEnemy()){
+            // Bomberman was killed
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX(), character.getY() - 1);
+            return false;
+        }
+        else return true;
     }
 
     public static boolean checkDownCollision(Movable character){
         Model model = grid.getModel(character.getX(), character.getY() + 1);
         if(model == null){
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX(), character.getY() + 1);
             return false;
         }
-        else return model.isCollidable();
+        else if(model.isCollidable()){
+            return true;
+        }
+        else return checkDeadlyDownCollision(character, (Movable) model);
+    }
+
+    private static boolean checkDeadlyDownCollision(Movable character, Movable model) {
+        if( !character.isEnemy() && model.isEnemy() ){
+            // Bomberman suicide himself
+            grid.updateGridAfterBombermanSuicides(character.getX(), character.getY());
+            return false;
+        }
+        else if( character.isEnemy() && !model.isEnemy()){
+            // Bomberman was killed
+            grid.updateGridAfterMovement(character.getX(), character.getY(), character.getX(), character.getY() + 1);
+            return false;
+        }
+        else return true;
     }
 }

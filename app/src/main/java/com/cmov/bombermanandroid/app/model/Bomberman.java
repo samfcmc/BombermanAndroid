@@ -9,8 +9,8 @@ public class Bomberman extends Movable {
     public int playerID;
     public int lives;
 
-    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead){
-        super(bitmap, x, y, speed, isDead);
+    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed){
+        super(bitmap, x, y, speed, false);
         this.playerID = playerID;
         this.lives = lives;
     }

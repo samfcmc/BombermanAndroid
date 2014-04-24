@@ -98,7 +98,7 @@ public class GameLoader {
                             this.grid.addObstacle(obstacle);
                             break;
                         case 'R':
-                            Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, this.gameSettings.get("RS"), false);
+                            Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, this.gameSettings.get("RS"));
                             this.grid.addRobot(robot);
                             Game.addEnemy(robot);
 
@@ -108,7 +108,7 @@ public class GameLoader {
                             this.grid.addWall(wall);
                             break;
                         default:
-                            Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context), i, j, Character.getNumericValue(tiles[j]), bomberman_lives, bomberman_speed, false);
+                            Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context), i, j, Character.getNumericValue(tiles[j]), bomberman_lives, bomberman_speed);
                             this.grid.addBomberman(bomberman);
                             Game.addPlayer(bomberman);
                             break;

@@ -62,10 +62,15 @@ public class Grid {
         }
     }
 
-    public void updateGrid(int srcX, int srcY, int destX, int destY) {
+    public void updateGridAfterMovement(int srcX, int srcY, int destX, int destY) {
         this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
         this.gameMap[srcX][srcY] = null;
     }
+
+    public void updateGridAfterBombermanSuicides(int srcX, int srcY){
+        this.gameMap[srcX][srcY] = null;
+    }
+
 
     public Model getModel(int x, int y){
         return this.gameMap[x][y];

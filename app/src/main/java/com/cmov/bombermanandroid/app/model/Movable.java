@@ -16,7 +16,7 @@ public class Movable extends Model {
 
     private Queue<Command> receivedCommands;
     private float speed;
-    private boolean isDead;
+    private boolean isEnemy;
     private boolean isMoving;
 
     /*
@@ -29,11 +29,15 @@ public class Movable extends Model {
     private float deltaY;
 
 
-    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead){
-        super(bitmap, x, y, true);
+    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isEnemy){
+        super(bitmap, x, y, false);
         this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
-        this.isDead = isDead;
+        this.isEnemy = isEnemy;
+    }
+
+    public boolean isEnemy() {
+        return isEnemy;
     }
 
     public boolean isMoving() {
