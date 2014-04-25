@@ -16,21 +16,22 @@ public class Movable extends Model {
     private boolean isDead;
     private boolean isMoving;
 
+    private static final int MOVE_RIGHT = 1;
+    private static final int MOVE_LEFT = -1;
+    private static final int MOVE_UP = -1;
+    private static final int MOVE_DOWN = 1;
+
     /*
      * This coordinates will just be used to perform the
      * animated movement...
      */
     private int movingX;
     private int movingY;
-    private float deltaX;
-    private float deltaY;
 
     public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead) {
         super(bitmap, x, y, true);
         this.speed = speed;
         this.isDead = isDead;
-        this.deltaX = 0;
-        this.deltaY = 0;
         this.movingX = 0;
         this.movingY = 0;
     }
@@ -44,16 +45,24 @@ public class Movable extends Model {
     }
 
     private void startMoving() {
+        this.movingX = 0;
+        this.movingY = 0;
         this.isMoving = true;
+        commandStarted();
+    }
+
+    private void commandStarted() {
+        this.receivedCommand = null;
     }
 
     public void stopMoving() {
-        this.isMoving = false;
         this.movingX = 0;
         this.movingY = 0;
-        this.deltaX = 0;
-        this.deltaY = 0;
-        commandExecuted();
+        this.isMoving = false;
+    }
+
+    public void cancelMovement() {
+        this.isMoving = false;
     }
 
     public void startMovingToRight() {
@@ -87,8 +96,8 @@ public class Movable extends Model {
     @Override
     protected float getDrawX(Bitmap scaledBitmap) {
         if (this.movingX != 0) {
-            this.deltaX += (GameThread.INTERVAL * this.speed * scaledBitmap.getWidth()) / 1000;
-            return getRealX(scaledBitmap) + this.movingX * deltaX;
+            float delta = (GameThread.INTERVAL * this.speed * scaledBitmap.getWidth()) / 1000;
+            return getLastDrawX() + this.movingX * delta;
         } else {
             return getRealX(scaledBitmap);
         }
@@ -97,8 +106,8 @@ public class Movable extends Model {
     @Override
     protected float getDrawY(Bitmap scaledBitmap) {
         if (this.movingY != 0) {
-            this.deltaY += (GameThread.INTERVAL * this.speed * scaledBitmap.getHeight()) / 1000;
-            return getRealY(scaledBitmap) + this.movingY * deltaY;
+            float delta = (GameThread.INTERVAL * this.speed * scaledBitmap.getHeight()) / 1000;
+            return getLastDrawY() + this.movingY * delta;
         } else {
             return getRealY(scaledBitmap);
         }
@@ -129,7 +138,7 @@ public class Movable extends Model {
         this.receivedCommand = command;
     }
 
-    public Command getCommand() {
+    public CharacterCommand getCommand() {
         return this.receivedCommand;
     }
 
