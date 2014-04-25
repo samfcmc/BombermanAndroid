@@ -35,7 +35,7 @@ public class Game {
     private static void updateMovables(List<? extends Movable> characters, Canvas canvas) {
         for (Movable character : characters) {
             if (!(character.getCommand() == null) && !character.isMoving()) {
-                Command command = character.getCommand();
+                CharacterCommand command = character.getCommand();
                 command.execute();
             } else if (character.isMoving()) {
                 if (character.shouldStop(character.getScaledBitmap(canvas))) {
@@ -78,8 +78,10 @@ public class Game {
      */
     public static void generateCommandForEnemies() {
         for (Movable enemy : enemies) {
-            CharacterCommand randomCommand = generateRandomCommand(enemy);
-            enemy.setCommand(randomCommand);
+            if(!enemy.isMoving()) {
+                CharacterCommand randomCommand = generateRandomCommand(enemy);
+                enemy.setCommand(randomCommand);
+            }
         }
     }
 
