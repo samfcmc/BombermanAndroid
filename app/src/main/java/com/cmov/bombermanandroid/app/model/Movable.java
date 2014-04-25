@@ -44,9 +44,9 @@ public class Movable extends Model {
         this.isMoving = isMoving;
     }
 
-    private void startMoving() {
-        this.movingX = 0;
-        this.movingY = 0;
+    private void startMoving(int movingX, int movingY) {
+        this.movingX = movingX;
+        this.movingY = movingY;
         this.isMoving = true;
         commandStarted();
     }
@@ -66,23 +66,27 @@ public class Movable extends Model {
     }
 
     public void startMovingToRight() {
-        startMoving();
-        this.movingX = 1;
+        startMoving(MOVE_RIGHT, 0);
     }
 
     public void startMovingToLeft() {
-        startMoving();
-        this.movingX = -1;
+        startMoving(MOVE_LEFT, 0);
     }
 
     public void startMovingToUp() {
-        startMoving();
-        this.movingY = -1;
+        startMoving(0, MOVE_UP);
     }
 
     public void startMovingToDown() {
-        startMoving();
-        this.movingY = 1;
+        startMoving(0, MOVE_DOWN);
+    }
+
+    private boolean isMovingInHorizontal() {
+        return this.movingX != 0;
+    }
+
+    private boolean isMovingInVertical() {
+        return this.movingY != 0;
     }
 
     public int getXAfterMovement() {
@@ -95,7 +99,7 @@ public class Movable extends Model {
 
     @Override
     protected float getDrawX(Bitmap scaledBitmap) {
-        if (this.movingX != 0) {
+        if (isMovingInHorizontal()) {
             float delta = (GameThread.INTERVAL * this.speed * scaledBitmap.getWidth()) / 1000;
             return getLastDrawX() + this.movingX * delta;
         } else {
@@ -105,7 +109,7 @@ public class Movable extends Model {
 
     @Override
     protected float getDrawY(Bitmap scaledBitmap) {
-        if (this.movingY != 0) {
+        if (isMovingInVertical()) {
             float delta = (GameThread.INTERVAL * this.speed * scaledBitmap.getHeight()) / 1000;
             return getLastDrawY() + this.movingY * delta;
         } else {
