@@ -14,8 +14,5 @@ public class LeftCommand extends CharacterCommand {
         if (!Game.checkCollision(getCharacter(), getCharacter().getX() - 1, getCharacter().getY())) {
             getCharacter().startMovingToLeft();
         }
-        else {
-            getCharacter().stopMoving();
-        }
     }
 }

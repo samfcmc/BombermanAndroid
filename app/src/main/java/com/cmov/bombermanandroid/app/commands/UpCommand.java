@@ -14,8 +14,5 @@ public class UpCommand extends CharacterCommand {
         if (!Game.checkCollision(getCharacter(), getCharacter().getX(), getCharacter().getY() - 1)) {
             getCharacter().startMovingToUp();
         }
-        else {
-            getCharacter().stopMoving();
-        }
     }
 }

@@ -5,22 +5,17 @@ import android.graphics.ColorFilter;
 
 import com.cmov.bombermanandroid.app.commands.CharacterCommand;
 import com.cmov.bombermanandroid.app.threads.GameThread;
-import com.cmov.bombermanandroid.app.commands.Command;
-
-import java.util.LinkedList;
 
 public class Movable extends Model {
-
-    private CharacterCommand receivedCommand;
-    private float speed;
-    private boolean isDead;
-    private boolean isMoving;
 
     private static final int MOVE_RIGHT = 1;
     private static final int MOVE_LEFT = -1;
     private static final int MOVE_UP = -1;
     private static final int MOVE_DOWN = 1;
-
+    private CharacterCommand receivedCommand;
+    private float speed;
+    private boolean isDead;
+    private boolean isMoving;
     /*
      * This coordinates will just be used to perform the
      * animated movement...
@@ -44,11 +39,17 @@ public class Movable extends Model {
         this.isMoving = isMoving;
     }
 
-    private void startMoving(int movingX, int movingY) {
-        this.movingX = movingX;
-        this.movingY = movingY;
-        this.isMoving = true;
-        commandStarted();
+    private void tryStartMoving(int movingX, int movingY) {
+        if (!this.isMoving) {
+            this.movingX = movingX;
+            this.movingY = movingY;
+            this.isMoving = true;
+            commandStarted();
+        }
+    }
+
+    private boolean wantsToMoveInSameDirection(int movingX, int movingY) {
+        return (isMovingInHorizontal() && this.movingX != 0) || (isMovingInVertical() && this.movingY != 0);
     }
 
     private void commandStarted() {
@@ -66,19 +67,19 @@ public class Movable extends Model {
     }
 
     public void startMovingToRight() {
-        startMoving(MOVE_RIGHT, 0);
+        tryStartMoving(MOVE_RIGHT, 0);
     }
 
     public void startMovingToLeft() {
-        startMoving(MOVE_LEFT, 0);
+        tryStartMoving(MOVE_LEFT, 0);
     }
 
     public void startMovingToUp() {
-        startMoving(0, MOVE_UP);
+        tryStartMoving(0, MOVE_UP);
     }
 
     public void startMovingToDown() {
-        startMoving(0, MOVE_DOWN);
+        tryStartMoving(0, MOVE_DOWN);
     }
 
     private boolean isMovingInHorizontal() {
@@ -138,12 +139,12 @@ public class Movable extends Model {
         stopMoving();
     }
 
-    public void setCommand(CharacterCommand command) {
-        this.receivedCommand = command;
-    }
-
     public CharacterCommand getCommand() {
         return this.receivedCommand;
+    }
+
+    public void setCommand(CharacterCommand command) {
+        this.receivedCommand = command;
     }
 
     private void commandExecuted() {

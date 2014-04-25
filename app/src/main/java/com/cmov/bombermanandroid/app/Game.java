@@ -34,10 +34,11 @@ public class Game {
 
     private static void updateMovables(List<? extends Movable> characters, Canvas canvas) {
         for (Movable character : characters) {
-            if (!(character.getCommand() == null) && !character.isMoving()) {
+            if (!(character.getCommand() == null)) {
                 CharacterCommand command = character.getCommand();
                 command.execute();
-            } else if (character.isMoving()) {
+            }
+            if (character.isMoving()) {
                 if (character.shouldStop(character.getScaledBitmap(canvas))) {
                     character.stopAndUpdatePosition(grid);
                 }

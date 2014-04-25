@@ -14,9 +14,6 @@ public class DownCommand extends CharacterCommand {
         if (!Game.checkCollision(getCharacter(), getCharacter().getX(), getCharacter().getY() + 1)) {
             getCharacter().startMovingToDown();
         }
-        else {
-            getCharacter().stopMoving();
-        }
     }
 }
 
