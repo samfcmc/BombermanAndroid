@@ -11,6 +11,8 @@ public class LeftCommand extends CharacterCommand {
 
     @Override
     public void execute() {
-        Game.moveLeft(getCharacter());
+        if (!Game.checkCollision(getCharacter(), getCharacter().getX() - 1, getCharacter().getY())) {
+            getCharacter().startMovingToLeft();
+        }
     }
 }

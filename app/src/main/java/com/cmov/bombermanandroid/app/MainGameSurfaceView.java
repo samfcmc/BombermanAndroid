@@ -9,7 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.cmov.bombermanandroid.app.model.Grid;
+import com.cmov.bombermanandroid.app.threads.EnemiesThread;
+import com.cmov.bombermanandroid.app.threads.GameThread;
 
 import java.util.Timer;
 
@@ -17,8 +18,8 @@ public class MainGameSurfaceView extends SurfaceView implements
         SurfaceHolder.Callback {
 
     private static final String TAG = MainGameSurfaceView.class.getSimpleName();
-    private float scaleFactor = .5f;
     private GameThread thread;
+    private EnemiesThread enemiesThread;
     private Timer timer;
 
     public MainGameSurfaceView(Context context) {
@@ -41,8 +42,9 @@ public class MainGameSurfaceView extends SurfaceView implements
         getHolder().addCallback(this);
         //gameControls = new GameControls(context);
         // create the game loop thread
-        thread = new GameThread(getHolder(), this);
-        timer = new Timer();
+        this.thread = new GameThread(getHolder(), this);
+        this.enemiesThread = new EnemiesThread();
+        this.timer = new Timer();
 
         // load the game settings
         GameLoader instance = GameLoader.getInstance();
@@ -61,13 +63,24 @@ public class MainGameSurfaceView extends SurfaceView implements
     public void surfaceCreated(SurfaceHolder holder) {
         // at this point the surface is created and
         // we can safely start the game loop
-        timer.schedule(thread, 0, GameThread.INTERVAL);
+        //setWillNotDraw(false);
+        launchThreads();
+    }
+
+    private void launchThreads() {
+        this.timer.schedule(this.thread, 0, GameThread.INTERVAL);
+        this.timer.schedule(this.enemiesThread, 0, EnemiesThread.INTERVAL);
+    }
+
+    private void cancelThreads() {
+        this.thread.cancel();
+        this.enemiesThread.cancel();
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        thread.cancel();
-        timer.cancel();
+        cancelThreads();
+        this.timer.cancel();
     }
 
     @Override
@@ -105,6 +118,10 @@ public class MainGameSurfaceView extends SurfaceView implements
     protected void onDraw(Canvas canvas) {
         //Draw the scenario
         Game.draw(canvas);
+    }
+
+    public void performDraw(Canvas canvas) {
+        onDraw(canvas);
     }
 
 }

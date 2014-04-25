@@ -2,9 +2,8 @@ package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
 import android.graphics.ColorFilter;
-import android.util.Log;
 
-import com.cmov.bombermanandroid.app.GameThread;
+import com.cmov.bombermanandroid.app.threads.GameThread;
 import com.cmov.bombermanandroid.app.commands.Command;
 
 import java.util.LinkedList;
@@ -77,6 +76,14 @@ public class Movable extends Model {
         this.movingY = 1;
     }
 
+    public int getXAfterMovement() {
+        return getX() + this.movingX;
+    }
+
+    public int getYAfterMovement() {
+        return getY() + this.movingY;
+    }
+
     @Override
     protected float getDrawX(Bitmap scaledBitmap) {
         if (this.movingX != 0) {
@@ -110,8 +117,8 @@ public class Movable extends Model {
     }
 
     public void stopAndUpdatePosition(Grid grid) {
-        int newX = getX() + this.movingX;
-        int newY = getY() + this.movingY;
+        int newX = getXAfterMovement();
+        int newY = getYAfterMovement();
         grid.updateGrid(getX(), getY(), newX, newY);
         setX(newX);
         setY(newY);

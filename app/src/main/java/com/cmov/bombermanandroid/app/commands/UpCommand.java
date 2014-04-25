@@ -11,6 +11,8 @@ public class UpCommand extends CharacterCommand {
 
     @Override
     public void execute() {
-        Game.moveUp(getCharacter());
+        if (!Game.checkCollision(getCharacter(), getCharacter().getX(), getCharacter().getY() - 1)) {
+            getCharacter().startMovingToUp();
+        }
     }
 }
