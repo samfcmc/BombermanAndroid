@@ -3,10 +3,8 @@ package com.cmov.bombermanandroid.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
-
 import com.cmov.bombermanandroid.app.commands.DownCommand;
 import com.cmov.bombermanandroid.app.commands.LeftCommand;
 import com.cmov.bombermanandroid.app.commands.RightCommand;
@@ -86,6 +84,7 @@ public class RunGameActivity extends ActionBarActivity {
     }
 
     public void bombPressed(View view) {
+        Game.dropBomb(FIRST_PLAYER);
     }
 
     public void pauseGame(View view) {

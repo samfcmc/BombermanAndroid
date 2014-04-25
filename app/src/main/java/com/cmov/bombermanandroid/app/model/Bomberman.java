@@ -1,8 +1,7 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
+import com.cmov.bombermanandroid.app.BitmapLib;
 
 public class Bomberman extends Movable {
 
@@ -23,8 +22,10 @@ public class Bomberman extends Movable {
         this.lives = lives;
     }
 
-    public void dropBomb(){
-
+    public void dropBomb(Grid grid){
+        Bomb bomb = new
+                Bomb(BitmapLib.getBombBitmap(),this.getX()+1,this.getY(),0,0,0,2f);
+        grid.addBomb(bomb);
     }
 
 }

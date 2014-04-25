@@ -67,10 +67,14 @@ public class GameLoader {
 
     }
 
+    private void loadOtherFeatures(Context context) {
+        BitmapLib.loadBomb(context);
+        BitmapLib.loadBombExplosion(context);
+    }
+
     public void loadGameMap(Context context) {
-
         Log.d("GameActivity", "Loading Map ....");
-
+        loadOtherFeatures(context);
         int i = 0;
 
         InputStream is = context.getResources().openRawResource(R.raw.level_1_layout);

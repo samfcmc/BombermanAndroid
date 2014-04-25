@@ -6,8 +6,24 @@ import android.graphics.BitmapFactory;
 
 public class BitmapLib {
 
-    public static Bitmap getBombBitmap(Context context) {
-        return BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
+    static private Bitmap bombBitmap;
+    static private Bitmap bombExplosionBitmap;
+
+
+    public static void loadBomb(Context context) {
+        bombBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
+    }
+
+    public static void loadBombExplosion(Context context) {
+        bombExplosionBitmap= BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb_explosion);
+    }
+
+    public static Bitmap getBombExplosionBitmap() {
+        return bombExplosionBitmap;
+    }
+
+    public static Bitmap getBombBitmap() {
+        return bombBitmap;
     }
 
     public static Bitmap getRobotBitmap(Context context) {

@@ -45,6 +45,10 @@ public class Game {
         return players.get(player);
     }
 
+    public static void dropBomb(int player) {
+        getPlayer(player).dropBomb(grid);
+    }
+
     public static void moveRight(Movable character) {
         if(!checkRightCollision(character)){
             character.startMovingToRight();
