@@ -2,6 +2,7 @@ package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
 import android.graphics.ColorFilter;
+import android.util.Log;
 
 import com.cmov.bombermanandroid.app.GameThread;
 import com.cmov.bombermanandroid.app.commands.Command;
@@ -48,7 +49,7 @@ public class Movable extends Model {
         this.isMoving = true;
     }
 
-    private void stopMoving() {
+    public void stopMoving() {
         this.isMoving = false;
         this.movingX = 0;
         this.movingY = 0;
@@ -111,26 +112,10 @@ public class Movable extends Model {
     public void stopAndUpdatePosition(Grid grid) {
         int newX = getX() + this.movingX;
         int newY = getY() + this.movingY;
-        grid.move(getX(), getY(), newX, newY);
+        grid.updateGrid(getX(), getY(), newX, newY);
         setX(newX);
         setY(newY);
         stopMoving();
-    }
-
-
-    @Override
-    public void setAlpha(int i) {
-
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-
-    }
-
-    @Override
-    public int getOpacity() {
-        return 0;
     }
 
     public void addCommand(Command command) {
@@ -145,4 +130,18 @@ public class Movable extends Model {
         return this.receivedCommands.isEmpty();
     }
 
+    @Override
+    public void setAlpha(int alpha) {
+
+    }
+
+    @Override
+    public void setColorFilter(ColorFilter cf) {
+
+    }
+
+    @Override
+    public int getOpacity() {
+        return 0;
+    }
 }

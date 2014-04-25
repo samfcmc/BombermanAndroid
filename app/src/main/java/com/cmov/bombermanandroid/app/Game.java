@@ -14,8 +14,6 @@ import java.util.List;
 
 public class Game {
 
-    private enum Directions {LEFT, RIGHT, UP, DOWN}
-
     private static List<Bomberman> players = new ArrayList<Bomberman>();
     private static List<Enemy> enemies = new ArrayList<Enemy>();
     private static Grid grid;
@@ -48,19 +46,27 @@ public class Game {
     }
 
     public static void moveRight(Movable character) {
-        character.startMovingToRight();
+        if(!checkRightCollision(character)){
+            character.startMovingToRight();
+        }
     }
 
     public static void moveLeft(Movable character) {
-        character.startMovingToLeft();
+        if(!checkLeftCollision(character)){
+            character.startMovingToLeft();
+        }
     }
 
     public static void moveUp(Movable character) {
-        character.startMovingToUp();
+        if(!checkUpCollision(character)){
+            character.startMovingToUp();
+        }
     }
 
     public static  void moveDown(Movable character) {
-        character.startMovingToDown();
+        if(!checkDownCollision(character)){
+            character.startMovingToDown();
+        }
     }
 
     public static void addPlayer(Bomberman bomberman) {
@@ -80,28 +86,32 @@ public class Game {
         grid.draw(canvas);
     }
 
-    private static boolean checkCollision(Movable character, Directions direction){
-
-        Model model;
-
-        switch (direction){
-            case LEFT :
-                model = grid.getModel(character.getX() - 1, character.getY());
-                break;
-            case RIGHT :
-                model = grid.getModel(character.getX() + 1, character.getY());
-                break;
-            case UP :
-                model = grid.getModel(character.getX(), character.getY() + 1);
-                break;
-            case DOWN :
-                model = grid.getModel(character.getX(), character.getY() - 1);
-                break;
-            default :
-                model = null;
-                break;
+    public static boolean checkRightCollision(Movable character){
+        Model model = grid.getModel(character.getX() + 1, character.getY());
+        if(model == null){
+            return false;
         }
+        else return model.isCollidable();
+    }
 
+    public static boolean checkLeftCollision(Movable character){
+        Model model = grid.getModel(character.getX() - 1, character.getY());
+        if(model == null){
+            return false;
+        }
+        else return model.isCollidable();
+    }
+
+    public static boolean checkUpCollision(Movable character){
+        Model model = grid.getModel(character.getX(), character.getY() - 1);
+        if(model == null){
+            return false;
+        }
+        else return model.isCollidable();
+    }
+
+    public static boolean checkDownCollision(Movable character){
+        Model model = grid.getModel(character.getX(), character.getY() + 1);
         if(model == null){
             return false;
         }

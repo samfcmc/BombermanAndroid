@@ -32,7 +32,6 @@ public abstract class Model extends Drawable {
         this.y = y;
         this.lastDrawX = 0;
         this.lastDrawY = 0;
-
         this.isCollidable = isCollidable;
     }
 
