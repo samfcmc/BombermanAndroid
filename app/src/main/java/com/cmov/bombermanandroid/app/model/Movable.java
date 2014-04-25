@@ -3,15 +3,15 @@ package com.cmov.bombermanandroid.app.model;
 import android.graphics.Bitmap;
 import android.graphics.ColorFilter;
 
+import com.cmov.bombermanandroid.app.commands.CharacterCommand;
 import com.cmov.bombermanandroid.app.threads.GameThread;
 import com.cmov.bombermanandroid.app.commands.Command;
 
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class Movable extends Model {
 
-    private Queue<Command> receivedCommands;
+    private CharacterCommand receivedCommand;
     private float speed;
     private boolean isDead;
     private boolean isMoving;
@@ -27,7 +27,6 @@ public class Movable extends Model {
 
     public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead) {
         super(bitmap, x, y, true);
-        this.receivedCommands = new LinkedList<Command>();
         this.speed = speed;
         this.isDead = isDead;
         this.deltaX = 0;
@@ -54,6 +53,7 @@ public class Movable extends Model {
         this.movingY = 0;
         this.deltaX = 0;
         this.deltaY = 0;
+        commandExecuted();
     }
 
     public void startMovingToRight() {
@@ -125,16 +125,16 @@ public class Movable extends Model {
         stopMoving();
     }
 
-    public void addCommand(Command command) {
-        this.receivedCommands.add(command);
+    public void setCommand(CharacterCommand command) {
+        this.receivedCommand = command;
     }
 
-    public Command popNextCommand() {
-        return this.receivedCommands.remove();
+    public Command getCommand() {
+        return this.receivedCommand;
     }
 
-    public boolean commandsQueueIsEmpty() {
-        return this.receivedCommands.isEmpty();
+    private void commandExecuted() {
+        this.receivedCommand = null;
     }
 
     @Override

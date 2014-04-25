@@ -2,6 +2,7 @@ package com.cmov.bombermanandroid.app;
 
 import android.graphics.Canvas;
 
+import com.cmov.bombermanandroid.app.commands.CharacterCommand;
 import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.commands.DownCommand;
 import com.cmov.bombermanandroid.app.commands.LeftCommand;
@@ -33,8 +34,8 @@ public class Game {
 
     private static void updateMovables(List<? extends Movable> characters, Canvas canvas) {
         for (Movable character : characters) {
-            if (!character.commandsQueueIsEmpty() && !character.isMoving()) {
-                Command command = character.popNextCommand();
+            if (!(character.getCommand() == null) && !character.isMoving()) {
+                Command command = character.getCommand();
                 command.execute();
             } else if (character.isMoving()) {
                 if (character.shouldStop(character.getScaledBitmap(canvas))) {
@@ -77,14 +78,14 @@ public class Game {
      */
     public static void generateCommandForEnemies() {
         for (Movable enemy : enemies) {
-            Command randomCommand = generateRandomCommand(enemy);
-            enemy.addCommand(randomCommand);
+            CharacterCommand randomCommand = generateRandomCommand(enemy);
+            enemy.setCommand(randomCommand);
         }
     }
 
-    private static Command generateRandomCommand(Movable character) {
+    private static CharacterCommand generateRandomCommand(Movable character) {
         int rand = (int) (Math.random() * 4);
-        Command command;
+        CharacterCommand command;
         switch (rand) {
             case 0:
                 command = new UpCommand(character);

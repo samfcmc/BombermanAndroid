@@ -3,7 +3,6 @@ package com.cmov.bombermanandroid.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.*;
 import android.widget.TextView;
 
@@ -64,25 +63,25 @@ public class RunGameActivity extends ActionBarActivity {
     public void upPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         UpCommand command = new UpCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void downPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         DownCommand command = new DownCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void leftPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         LeftCommand command = new LeftCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void rightPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         RightCommand command = new RightCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void bombPressed(View view) {
