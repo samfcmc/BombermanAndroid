@@ -13,6 +13,8 @@ public class RightCommand extends CharacterCommand {
 
     @Override
     public void execute() {
-        Game.moveRight(getCharacter());
+        if (!Game.checkCollision(getCharacter(), getCharacter().getX() + 1, getCharacter().getY())) {
+            getCharacter().startMovingToRight();
+        }
     }
 }

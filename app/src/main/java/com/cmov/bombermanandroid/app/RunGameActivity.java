@@ -62,25 +62,25 @@ public class RunGameActivity extends ActionBarActivity {
     public void upPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         UpCommand command = new UpCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void downPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         DownCommand command = new DownCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void leftPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         LeftCommand command = new LeftCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void rightPressed(View view) {
         Bomberman player = Game.getPlayer(FIRST_PLAYER);
         RightCommand command = new RightCommand(player);
-        player.addCommand(command);
+        player.setCommand(command);
     }
 
     public void bombPressed(View view) {

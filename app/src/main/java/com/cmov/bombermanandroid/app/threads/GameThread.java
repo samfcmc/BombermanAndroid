@@ -1,10 +1,13 @@
 /**
  * 
  */
-package com.cmov.bombermanandroid.app;
+package com.cmov.bombermanandroid.app.threads;
 
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+
+import com.cmov.bombermanandroid.app.Game;
+import com.cmov.bombermanandroid.app.MainGameSurfaceView;
 
 import java.util.TimerTask;
 
@@ -49,7 +52,8 @@ public class GameThread extends TimerTask {
                     // render state to the screen
                     // draws the canvas on the panel
                     Game.update(canvas);
-                    this.gameSurfaceView.onDraw(canvas);
+                    //this.gameSurfaceView.draw(canvas);
+                    this.gameSurfaceView.performDraw(canvas);
                 }
             }
         } finally {
