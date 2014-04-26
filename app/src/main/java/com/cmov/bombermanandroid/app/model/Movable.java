@@ -6,6 +6,9 @@ import android.graphics.ColorFilter;
 import com.cmov.bombermanandroid.app.commands.CharacterCommand;
 import com.cmov.bombermanandroid.app.threads.GameThread;
 
+/**
+ * The type Movable.
+ */
 public class Movable extends Model {
 
     private static final int MOVE_RIGHT = 1;
@@ -22,62 +25,120 @@ public class Movable extends Model {
      */
     private int movingX;
     private int movingY;
+    private int stopX;
+    private int stopY;
 
+    /**
+     * Instantiates a new Movable.
+     *
+     * @param bitmap the bitmap
+     * @param x      the x
+     * @param y      the y
+     * @param speed  the speed
+     * @param isDead the is dead
+     */
     public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead) {
         super(bitmap, x, y, true);
         this.speed = speed;
         this.isDead = isDead;
         this.movingX = 0;
         this.movingY = 0;
+        this.stopX = 0;
+        this.stopY = 0;
     }
 
+    /**
+     * Is moving.
+     *
+     * @return the boolean
+     */
     public boolean isMoving() {
         return isMoving;
     }
 
+    /**
+     * Sets moving.
+     *
+     * @param isMoving the is moving
+     */
     public void setMoving(boolean isMoving) {
         this.isMoving = isMoving;
     }
 
     private void tryStartMoving(int movingX, int movingY) {
-        if (!this.isMoving) {
-            this.movingX = movingX;
-            this.movingY = movingY;
-            this.isMoving = true;
-            commandStarted();
+        /*
+         * If it's the same direction should not be in the same way
+         * If it's already moving and the command it's the same we should
+         * execute it in the future and wait for the current one finishes first
+         */
+        if (wantsToMoveInSameDirection(movingX, movingY) && !wantsToMoveInSameWay(movingX, movingY)) {
+            startMoving(movingX, movingY, getX(), getY());
+        } else if (!this.isMoving) {
+            startMoving(movingX, movingY, getX() + movingX, getY() + movingY);
         }
     }
 
+    private void startMoving(int movingX, int movingY, int stopX, int stopY) {
+        this.stopX = stopX;
+        this.stopY = stopY;
+        this.movingX = movingX;
+        this.movingY = movingY;
+        this.isMoving = true;
+        commandStarted();
+    }
+
     private boolean wantsToMoveInSameDirection(int movingX, int movingY) {
-        return (isMovingInHorizontal() && this.movingX != 0) || (isMovingInVertical() && this.movingY != 0);
+        return (isMovingInHorizontal() && movingX != 0) || (isMovingInVertical() && movingY != 0);
+    }
+
+    private boolean wantsToMoveInSameWay(int movingX, int movingY) {
+        return (this.movingX == movingX) && (this.movingY == movingY);
     }
 
     private void commandStarted() {
         this.receivedCommand = null;
     }
 
+    /**
+     * Stop moving.
+     */
     public void stopMoving() {
         this.movingX = 0;
         this.movingY = 0;
         this.isMoving = false;
     }
 
+    /**
+     * Cancel movement.
+     */
     public void cancelMovement() {
         this.isMoving = false;
     }
 
+    /**
+     * Start moving to right.
+     */
     public void startMovingToRight() {
         tryStartMoving(MOVE_RIGHT, 0);
     }
 
+    /**
+     * Start moving to left.
+     */
     public void startMovingToLeft() {
         tryStartMoving(MOVE_LEFT, 0);
     }
 
+    /**
+     * Start moving to up.
+     */
     public void startMovingToUp() {
         tryStartMoving(0, MOVE_UP);
     }
 
+    /**
+     * Start moving to down.
+     */
     public void startMovingToDown() {
         tryStartMoving(0, MOVE_DOWN);
     }
@@ -90,12 +151,22 @@ public class Movable extends Model {
         return this.movingY != 0;
     }
 
+    /**
+     * Gets x after movement.
+     *
+     * @return the x after movement
+     */
     public int getXAfterMovement() {
-        return getX() + this.movingX;
+        return this.stopX;
     }
 
+    /**
+     * Gets y after movement.
+     *
+     * @return the y after movement
+     */
     public int getYAfterMovement() {
-        return getY() + this.movingY;
+        return this.stopY;
     }
 
     @Override
@@ -118,31 +189,48 @@ public class Movable extends Model {
         }
     }
 
+    /**
+     * Should stop.
+     *
+     * @param scaledBitmap the scaled bitmap
+     * @return the boolean
+     */
     public boolean shouldStop(Bitmap scaledBitmap) {
-        float x = getLastDrawX();
-        float y = getLastDrawY();
-        int realX = getRealX(scaledBitmap);
-        int realY = getRealY(scaledBitmap);
+        float x = this.movingX * getLastDrawX();
+        float y = this.movingY * getLastDrawY();
+        int toStopX = this.movingX * this.stopX * scaledBitmap.getWidth();
+        int toStopY = this.movingY * this.stopY * scaledBitmap.getHeight();
 
-        return (x >= realX + scaledBitmap.getWidth()) ||
-                (x <= realX - scaledBitmap.getWidth()) ||
-                (y <= realY - scaledBitmap.getHeight()) ||
-                (y >= realY + scaledBitmap.getHeight());
+        return ((x >= toStopX) && isMovingInHorizontal()) ||
+                ((y >= toStopY) && isMovingInVertical());
     }
 
+    /**
+     * Stop and update position.
+     *
+     * @param grid the grid
+     */
     public void stopAndUpdatePosition(Grid grid) {
-        int newX = getXAfterMovement();
-        int newY = getYAfterMovement();
-        grid.updateGrid(getX(), getY(), newX, newY);
-        setX(newX);
-        setY(newY);
+        grid.updateGrid(getX(), getY(), this.stopX, this.stopY);
+        setX(this.stopX);
+        setY(this.stopY);
         stopMoving();
     }
 
+    /**
+     * Gets command.
+     *
+     * @return the command
+     */
     public CharacterCommand getCommand() {
         return this.receivedCommand;
     }
 
+    /**
+     * Sets command.
+     *
+     * @param command the command
+     */
     public void setCommand(CharacterCommand command) {
         this.receivedCommand = command;
     }

@@ -3,7 +3,6 @@ package com.cmov.bombermanandroid.app;
 import android.graphics.Canvas;
 
 import com.cmov.bombermanandroid.app.commands.CharacterCommand;
-import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.commands.DownCommand;
 import com.cmov.bombermanandroid.app.commands.LeftCommand;
 import com.cmov.bombermanandroid.app.commands.RightCommand;
@@ -68,8 +67,14 @@ public class Game {
     }
 
     public static boolean checkCollision(Movable character, int x, int y) {
-        Model model = grid.getModel(x, y);
-        if (model == null) {
+        Model model;
+        if (character.isMoving()) {
+            model = grid.getModel(character.getXAfterMovement(), character.getYAfterMovement());
+        } else {
+            model = grid.getModel(x, y);
+        }
+
+        if (model == null || model == character) {
             return false;
         } else return model.isCollidable();
     }
@@ -79,7 +84,7 @@ public class Game {
      */
     public static void generateCommandForEnemies() {
         for (Movable enemy : enemies) {
-            if(!enemy.isMoving()) {
+            if (!enemy.isMoving()) {
                 CharacterCommand randomCommand = generateRandomCommand(enemy);
                 enemy.setCommand(randomCommand);
             }
