@@ -1,73 +1,144 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.content.Context;
-import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.Log;
 
-import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.R;
 
+/**
+ * The type Grid.
+ */
 public class Grid {
 
+    /**
+     * The grid's HEIGHT (in number of cells).
+     */
     public static final int HEIGHT = 10;
+    /**
+     * The grid's WIDTH (in number of cells).
+     */
     public static final int WIDTH = 10;
 
+    /**
+     * The Floor.
+     */
     Bitmap floor;
 
     private Model[][] gameMap;
 
-    public Grid(Context context){
-       this.floor = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-       this.gameMap = new Model[HEIGHT][WIDTH];
+    /**
+     * Instantiates a new Grid.
+     *
+     * @param context the context
+     */
+    public Grid(Context context) {
+        this.floor = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        this.gameMap = new Model[HEIGHT][WIDTH];
     }
 
-    public void addBomb(Bomb bomb){
+    /**
+     * Add bomb.
+     *
+     * @param bomb the bomb
+     */
+    public void addBomb(Bomb bomb) {
         this.gameMap[bomb.getX()][bomb.getY()] = bomb;
     }
 
-    public void addBomberman(Bomberman bomberman){
+    /**
+     * Add bomberman.
+     *
+     * @param bomberman the bomberman
+     */
+    public void addBomberman(Bomberman bomberman) {
         this.gameMap[bomberman.getX()][bomberman.getY()] = bomberman;
     }
 
-    public void addFloor(int x, int y){
-      this.gameMap[x][y] = null;
+    /**
+     * Add floor.
+     *
+     * @param x the x
+     * @param y the y
+     */
+    public void addFloor(int x, int y) {
+        this.gameMap[x][y] = null;
     }
 
-    public void addObstacle(Obstacle obstacle){
-       this.gameMap[obstacle.getX()][obstacle.getY()] = obstacle;
+    /**
+     * Add obstacle.
+     *
+     * @param obstacle the obstacle
+     */
+    public void addObstacle(Obstacle obstacle) {
+        this.gameMap[obstacle.getX()][obstacle.getY()] = obstacle;
     }
 
-    public void addRobot(Robot robot){
+    /**
+     * Add robot.
+     *
+     * @param robot the robot
+     */
+    public void addRobot(Robot robot) {
         this.gameMap[robot.getX()][robot.getY()] = robot;
     }
 
-    public void addWall(Wall wall){
-      this.gameMap[wall.getX()][wall.getY()] = wall;
+    /**
+     * Add wall.
+     *
+     * @param wall the wall
+     */
+    public void addWall(Wall wall) {
+        this.gameMap[wall.getX()][wall.getY()] = wall;
     }
 
-    public void draw(Canvas canvas){
+    /**
+     * Draw void.
+     *
+     * @param canvas the canvas
+     */
+    public void draw(Canvas canvas) {
 
         Bitmap background = Bitmap.createScaledBitmap(this.floor, canvas.getWidth(), canvas.getHeight(), false);
         canvas.drawBitmap(background, 0, 0, null);
 
-        for(int i = 0; i < HEIGHT; i++){
-            for(int j = 0; j < WIDTH; j++){
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
                 Model model = this.gameMap[i][j];
-                if(model != null)
+                if (model != null)
                     model.draw(canvas);
             }
         }
     }
 
+
+    /**
+     * Update grid.
+     * <p/>
+     * If scrX == destX and scrY == destY nothing happens
+     *
+     * @param srcX  the source x
+     * @param srcY  the source y
+     * @param destX the destination x
+     * @param destY the destination y
+     */
     public void updateGrid(int srcX, int srcY, int destX, int destY) {
-        this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
-        this.gameMap[srcX][srcY] = null;
+        if (!((srcX == destX) && (srcY == destY))) {
+            this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
+            this.gameMap[srcX][srcY] = null;
+        }
+
     }
 
-    public Model getModel(int x, int y){
+    /**
+     * Get a model in a given position.
+     *
+     * @param x the x
+     * @param y the y
+     * @return the model
+     */
+    public Model getModel(int x, int y) {
         return this.gameMap[x][y];
     }
 }
