@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.*;
 import android.widget.TextView;
+
+import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.commands.DownCommand;
 import com.cmov.bombermanandroid.app.commands.LeftCommand;
 import com.cmov.bombermanandroid.app.commands.RightCommand;
+import com.cmov.bombermanandroid.app.commands.TurnPauseOnOffCommand;
 import com.cmov.bombermanandroid.app.commands.UpCommand;
 import com.cmov.bombermanandroid.app.model.Bomberman;
 
@@ -35,7 +38,6 @@ public class RunGameActivity extends ActionBarActivity {
         //create the text view
         TextView textView = (TextView) findViewById(R.id.player_name);
         textView.setText(textView.getText()+ "\n" + nick);
-
     }
 
 
@@ -88,6 +90,8 @@ public class RunGameActivity extends ActionBarActivity {
     }
 
     public void pauseGame(View view) {
+        Command command = new TurnPauseOnOffCommand();
+        Game.addCommand(command);
     }
 
     public void quitGame(View view) {
