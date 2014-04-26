@@ -17,6 +17,7 @@ public class Game {
     private static List<Bomberman> players = new ArrayList<Bomberman>();
     private static List<Enemy> enemies = new ArrayList<Enemy>();
     private static Grid grid;
+    private static GameCollision gameCollision;
 
     public static void setGrid(Grid grid1) {
         grid = grid1;
