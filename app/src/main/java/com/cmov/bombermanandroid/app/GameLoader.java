@@ -18,17 +18,18 @@ import java.util.Map;
 
 public class GameLoader {
 
+    private static final int PARAMETER_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final int OBSTACLE_HIT_POINTS = 1;
+    private static final int BOMBERMAN_LIVES = 3;
+    private static final float BOMBERMAN_SPEED = 2.0f;
+    private static final int MAX_PLAYERS = 3;
     public static GameLoader instance;
     private static Grid grid;
-    private final int parameter_index = 0;
-    private final int value_index = 1;
-    private final int obstacle_hit_points = 1;
-    private final int bomberman_lives = 3;
-    private final float bomberman_speed = 2.0f;
     public Map<String, Integer> gameSettings;
 
 
-    public GameLoader() {
+    private GameLoader() {
         this.gameSettings = new HashMap<String, Integer>();
     }
 
@@ -42,8 +43,8 @@ public class GameLoader {
     public void initializeSettings(String s) {
         Log.d("GameActivity", "Parameters line : " + s);
         String[] parameters = s.split(" ");
-        String parameter = parameters[parameter_index];
-        int value = Integer.parseInt(parameters[value_index]);
+        String parameter = parameters[PARAMETER_INDEX];
+        int value = Integer.parseInt(parameters[VALUE_INDEX]);
         this.gameSettings.put(parameter, value);
     }
 
@@ -95,26 +96,19 @@ public class GameLoader {
                 for (int j = 0; j < this.grid.WIDTH; j++)
                     switch (tiles[j]) {
                         case '-':
-                            this.grid.addFloor(i, j);
+                            addFloor(i, j);
                             break;
                         case 'O':
-                            Obstacle obstacle = new Obstacle(BitmapLib.getObstacleBitmap(context), i, j, obstacle_hit_points, true);
-                            this.grid.addObstacle(obstacle);
+                            addObstacle(i, j, context);
                             break;
                         case 'R':
-                            Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, this.gameSettings.get("RS"), false);
-                            this.grid.addRobot(robot);
-                            Game.addEnemy(robot);
-
+                            addRobot(i, j, context);
                             break;
                         case 'W':
-                            Wall wall = new Wall(BitmapLib.getWallBitmap(context), i, j);
-                            this.grid.addWall(wall);
+                            addWall(i, j, context);
                             break;
                         default:
-                            Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context), i, j, Character.getNumericValue(tiles[j]), bomberman_lives, bomberman_speed, false);
-                            this.grid.addBomberman(bomberman);
-                            Game.addPlayer(bomberman);
+                            addBomberman(i, j, context, tiles);
                             break;
                     }
                 i++;
@@ -125,5 +119,38 @@ public class GameLoader {
         } catch (IOException e) {
             Log.d("GameActivity", "Catches Exception " + e.getMessage());
         }
+    }
+
+    private void addFloor(int i, int j) {
+        this.grid.addFloor(i, j);
+    }
+
+    private void addObstacle(int i, int j, Context context) {
+        Obstacle obstacle = new Obstacle(BitmapLib.getObstacleBitmap(context), i, j, OBSTACLE_HIT_POINTS, true);
+        this.grid.addObstacle(obstacle);
+    }
+
+    private void addRobot(int i, int j, Context context) {
+        Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, this.gameSettings.get("RS"), false);
+        this.grid.addRobot(robot);
+        Game.addEnemy(robot);
+    }
+
+    private void addWall(int i, int j, Context context) {
+        Wall wall = new Wall(BitmapLib.getWallBitmap(context), i, j);
+        this.grid.addWall(wall);
+    }
+
+    private void addBomberman(int i, int j, Context context, char[] tiles) {
+        int playerNumber = Character.getNumericValue(tiles[j]);
+
+        if (playerNumber > MAX_PLAYERS || playerNumber == -1) {
+            throw new RuntimeException("Wrong input value");
+        }
+
+        Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context, playerNumber), i,
+                j, playerNumber, BOMBERMAN_LIVES, BOMBERMAN_SPEED, false);
+        this.grid.addBomberman(bomberman);
+        Game.addPlayer(bomberman);
     }
 }

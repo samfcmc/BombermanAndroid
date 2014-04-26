@@ -34,6 +34,11 @@ public class BitmapLib {
         return BitmapFactory.decodeResource(context.getResources(), R.drawable.bomberman);
     }
 
+    public static Bitmap getBombermanBitmap(Context context, int player) {
+        //TODO: Add a bitmap for each player number
+        return getBombermanBitmap(context);
+    }
+
     public static Bitmap getObstacleBitmap(Context context){
         return  BitmapFactory.decodeResource(context.getResources(), R.drawable.obstacle);
     }
