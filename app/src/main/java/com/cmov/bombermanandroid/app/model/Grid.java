@@ -15,11 +15,11 @@ public class Grid {
     /**
      * The grid's HEIGHT (in number of cells).
      */
-    public static final int HEIGHT = 10;
+    public static final int HEIGHT = 19;
     /**
      * The grid's WIDTH (in number of cells).
      */
-    public static final int WIDTH = 10;
+    public static final int WIDTH = 19;
 
     /**
      * The Floor.

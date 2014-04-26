@@ -3,6 +3,7 @@ package com.cmov.bombermanandroid.app.model;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public abstract class Model extends Drawable {
     private Bitmap bitmap;    // the actual bitmap
