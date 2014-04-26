@@ -206,7 +206,7 @@ public class Movable extends Model {
     }
 
     /**
-     * Stop and update position.
+     * Stop and updateGameState position.
      *
      * @param grid the grid
      */

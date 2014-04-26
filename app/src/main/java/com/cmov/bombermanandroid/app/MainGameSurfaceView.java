@@ -19,7 +19,6 @@ public class MainGameSurfaceView extends SurfaceView implements
 
     private static final String TAG = MainGameSurfaceView.class.getSimpleName();
     private GameThread thread;
-    private EnemiesThread enemiesThread;
     private Timer timer;
 
     public MainGameSurfaceView(Context context) {
@@ -43,7 +42,6 @@ public class MainGameSurfaceView extends SurfaceView implements
         //gameControls = new GameControls(context);
         // create the game loop thread
         this.thread = new GameThread(getHolder(), this);
-        this.enemiesThread = new EnemiesThread();
         this.timer = new Timer();
 
         // load the game settings
@@ -69,12 +67,10 @@ public class MainGameSurfaceView extends SurfaceView implements
 
     private void launchThreads() {
         this.timer.schedule(this.thread, 0, GameThread.INTERVAL);
-        this.timer.schedule(this.enemiesThread, 0, EnemiesThread.INTERVAL);
     }
 
     private void cancelThreads() {
         this.thread.cancel();
-        this.enemiesThread.cancel();
     }
 
     @Override

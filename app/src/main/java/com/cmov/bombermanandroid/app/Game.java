@@ -1,8 +1,10 @@
 package com.cmov.bombermanandroid.app;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 
 import com.cmov.bombermanandroid.app.commands.CharacterCommand;
+import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.commands.DownCommand;
 import com.cmov.bombermanandroid.app.commands.LeftCommand;
 import com.cmov.bombermanandroid.app.commands.RightCommand;
@@ -12,23 +14,45 @@ import com.cmov.bombermanandroid.app.model.Enemy;
 import com.cmov.bombermanandroid.app.model.Grid;
 import com.cmov.bombermanandroid.app.model.Model;
 import com.cmov.bombermanandroid.app.model.Movable;
+import com.cmov.bombermanandroid.app.text.PauseText;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class Game {
 
     private static List<Bomberman> players = new ArrayList<Bomberman>();
     private static List<Enemy> enemies = new ArrayList<Enemy>();
+    private static boolean paused = false;
+    private static PauseText pauseText = new PauseText(Color.WHITE);
+    private static Queue<Command> commands = new LinkedList<Command>();
     private static Grid grid;
 
     public static void setGrid(Grid grid1) {
         grid = grid1;
     }
 
-    public static void update(Canvas canvas) {
-        updateMovables(players, canvas);
-        updateMovables(enemies, canvas);
+    public static void updateGameState(Canvas canvas) {
+        processCommands();
+
+        if(!paused) {
+            updateMovables(players, canvas);
+            updateMovables(enemies, canvas);
+            generateCommandForEnemies();
+        }
+    }
+
+    private static void processCommands() {
+        if(!commands.isEmpty()) {
+            Command command = commands.remove();
+            command.execute();
+        }
+    }
+
+    public static void addCommand(Command command) {
+        commands.add(command);
     }
 
     private static void updateMovables(List<? extends Movable> characters, Canvas canvas) {
@@ -43,6 +67,14 @@ public class Game {
                 }
             }
         }
+    }
+
+    public static boolean isPaused() {
+        return paused;
+    }
+
+    public static void setPaused(boolean paused) {
+        Game.paused = paused;
     }
 
     public static Bomberman getPlayer(int player) {
@@ -67,7 +99,12 @@ public class Game {
     }
 
     public static void draw(Canvas canvas) {
-        grid.draw(canvas);
+        if(paused) {
+            pauseText.draw(canvas);
+        }
+        else {
+            grid.draw(canvas);
+        }
     }
 
     public static boolean checkCollision(Movable character, int x, int y) {
@@ -115,4 +152,5 @@ public class Game {
 
         return command;
     }
+
 }

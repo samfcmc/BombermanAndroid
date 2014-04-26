@@ -31,7 +31,7 @@ public class GameThread extends TimerTask {
     /*
      * Interval to execute this timer task (in milliseconds)
      */
-    public static final int INTERVAL = 30;
+    public static final int INTERVAL = 20;
 
 	public GameThread(SurfaceHolder surfaceHolder, MainGameSurfaceView gameSurfaceView) {
 		super();
@@ -48,11 +48,10 @@ public class GameThread extends TimerTask {
             canvas = this.surfaceHolder.lockCanvas();
             if(canvas != null) {
                 synchronized (surfaceHolder) {
-                    // update game state
+                    // updateGameState game state
+                    Game.updateGameState(canvas);
                     // render state to the screen
                     // draws the canvas on the panel
-                    Game.update(canvas);
-                    //this.gameSurfaceView.draw(canvas);
                     this.gameSurfaceView.performDraw(canvas);
                 }
             }
