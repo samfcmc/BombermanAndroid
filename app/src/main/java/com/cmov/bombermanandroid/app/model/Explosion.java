@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Explosion extends Model {
 
@@ -110,10 +109,8 @@ public class Explosion extends Model {
     public void draw(Canvas canvas) {
         if(this.state == STATE_DEAD) return;
         // where to draw the sprite
-        Log.d(TAG, "x: " + getX() + " y: " + getY());
         int realX = getRealX(getScaledBitmap(canvas));
         int realY = getRealY(getScaledBitmap(canvas));
-        Log.d(TAG, "real x: " + realX + " real y: " + realY);
         Rect destRect = new Rect(realX, realY, realX + spriteWidth, realY + spriteHeight);
         canvas.drawBitmap(this.getBitmap(), sourceRect, destRect, null);
     }

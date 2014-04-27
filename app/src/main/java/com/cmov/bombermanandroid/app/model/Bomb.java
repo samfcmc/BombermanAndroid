@@ -1,44 +1,90 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+import com.cmov.bombermanandroid.app.threads.ExplosionThread;
+
+import java.util.Timer;
 
 public class Bomb extends StaticModel  {
 
-    private int spread;
-    private int damage;
-    private int depth;
-    private float timeRemaining;
+    public static final String TAG = Bomb.class.getSimpleName();
 
-    public Bomb(Bitmap bitmap, int x, int y, int spread, int damage, int depth, float timeRemaining){
+    private int range;
+    private int duration;
+    private float timeout;
+    private Grid grid;
+    private Bomberman bomberman;
+
+    private Timer timer;
+    private ExplosionThread explosionThread;
+   // private List<ExplosionThread> explosionThreads;
+
+    public Bomb(Bitmap bitmap, int x, int y, int range, int duration, int timeout, Grid grid, Bomberman bomberman){
         super(bitmap, x, y, false);
-        this.spread = spread;
-        this.damage = damage;
-        this.depth = depth;
-        this.timeRemaining = timeRemaining;
+        this.range = range;
+        this.duration = duration;
+        this.timeout = timeout;
+        this.grid = grid;
+        this.timer = new Timer();
+        this.explosionThread = null;
+        this.bomberman = bomberman;
+     //   this.explosionThreads = new ArrayList<ExplosionThread>();
     }
 
-    public int getSpread() {
-        return spread;
+    public int getRange() {
+        return range;
     }
 
-    public void setSpread(int spread) {
-        this.spread = spread;
+    public int getDuration() {
+        return duration;
     }
 
-    public int getDamage() {
-        return damage;
+    public float getTimeout() {
+        return timeout;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public Grid getGrid() { return this.grid; }
+
+    public Timer getTimer() {
+        return timer;
     }
 
-    public int getDepth() {
-        return depth;
+
+    public void setUpTimer() {
+
+        if(timer != null) {
+            timer.cancel();
+        }
+
+        timer = new Timer();
+
+        try{
+            explosionThread = new ExplosionThread(this);
+
+
+
+            timer.schedule(explosionThread, (long) getTimeout() * 1000);
+        } catch(Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
+    public void implanted() {
+        Log.d(TAG, "Bomb has exploded successfully");
+        //TODO: activate another thread here.
     }
 
+    public void updade(long l) {
+        if (explosionThread == null || explosionThread.getExplosion() == null) return;
+
+        Explosion explosion = explosionThread.getExplosion();
+        if (explosion.isAlive()) {
+            explosion.update(l);
+        } else {
+            //notify bomberman which he's able to implant another bomb
+            bomberman.setBomb(null);
+        }
+
+    }
 }

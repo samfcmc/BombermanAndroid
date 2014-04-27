@@ -1,6 +1,5 @@
 package com.cmov.bombermanandroid.app;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import com.cmov.bombermanandroid.app.commands.*;
@@ -21,7 +20,6 @@ public class Game {
     private static PauseText pauseText = new PauseText(Color.WHITE);
     private static Queue<Command> commands = new LinkedList<Command>();
     private static Grid grid;
-    private static Explosion explosion;
 
     public static void setGrid(Grid grid1) {
         grid = grid1;
@@ -31,14 +29,26 @@ public class Game {
         processCommands();
 
         if(!paused) {
-            if (explosion != null && explosion.isAlive()) {
-                explosion.update(System.currentTimeMillis());
-            }
             updateMovables(players, canvas);
             updateMovables(enemies, canvas);
+            //updatePlayers();
+            updateBomb(0);
             generateCommandForEnemies();
         }
     }
+
+    private static void updateBomb(int player) {
+        Bomberman bomberman = players.get(player);
+        bomberman.update(System.currentTimeMillis());
+    }
+
+  /*  private static void updatePlayers() {
+        for(Bomberman player : players) {
+            if(player.hasBomb()){
+                updateBomb(player.playerID);
+            }
+        }
+    }*/
 
     private static void processCommands() {
         if(!commands.isEmpty()) {
@@ -79,9 +89,6 @@ public class Game {
 
     public static void dropBomb(int player) {
         getPlayer(player).dropBomb(grid);
-        explosion = new Explosion(BitmapLib.getBombExplosionBitmap(),
-                getPlayer(player).getX()+1, getPlayer(player).getY(),true,4,8);
-        grid.addExplosion(explosion);
     }
 
     public static void addPlayer(Bomberman bomberman) {

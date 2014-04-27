@@ -2,12 +2,7 @@ package com.cmov.bombermanandroid.app;
 
 import android.content.Context;
 import android.util.Log;
-
-import com.cmov.bombermanandroid.app.model.Bomberman;
-import com.cmov.bombermanandroid.app.model.Grid;
-import com.cmov.bombermanandroid.app.model.Obstacle;
-import com.cmov.bombermanandroid.app.model.Robot;
-import com.cmov.bombermanandroid.app.model.Wall;
+import com.cmov.bombermanandroid.app.model.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,21 +13,34 @@ import java.util.Map;
 
 public class GameLoader {
 
+    public static final String TAG = GameLoader.class.getSimpleName();
+
     private static final int PARAMETER_INDEX = 0;
     private static final int VALUE_INDEX = 1;
     private static final int OBSTACLE_HIT_POINTS = 1;
     private static final int BOMBERMAN_LIVES = 3;
     private static final float BOMBERMAN_SPEED = 2.0f;
     private static final int MAX_PLAYERS = 3;
-    public static GameLoader instance;
-    private static Grid grid;
-    public Map<String, Integer> gameSettings;
 
-
-    private GameLoader() {
-        this.gameSettings = new HashMap<String, Integer>();
+    public static enum GAME_SETTINGS {
+        LN, //Level Name
+        GD, //Game Duration
+        ET, //Explosion Timeout
+        ED, //Explosion Duration
+        ER, //Explosion Range
+        RS, //Robot Speed (cells/second)
+        PR, //Point per Robot Killed
+        PO  //Points per Opponent Killed
     }
 
+    private Map<GAME_SETTINGS, Integer> gameSettings;
+
+    private static GameLoader instance;
+    private static Grid grid;
+
+    private GameLoader() {
+        this.gameSettings = new HashMap<GAME_SETTINGS, Integer>();
+    }
 
     public static GameLoader getInstance() {
         if (instance == null)
@@ -40,17 +48,25 @@ public class GameLoader {
         return instance;
     }
 
+    public void addSetting(GAME_SETTINGS key, int value) {
+        this.gameSettings.put(key, value);
+    }
+
+    public int getSetting(GAME_SETTINGS key) {
+        return this.gameSettings.get(key);
+    }
+
     public void initializeSettings(String s) {
-        Log.d("GameActivity", "Parameters line : " + s);
+        Log.d(TAG, "Parameters line : " + s);
         String[] parameters = s.split(" ");
         String parameter = parameters[PARAMETER_INDEX];
         int value = Integer.parseInt(parameters[VALUE_INDEX]);
-        this.gameSettings.put(parameter, value);
+        addSetting(GAME_SETTINGS.valueOf(parameter), value);
     }
 
     public void loadGameSettings(Context context) {
 
-        Log.d("GameActivity", "Loading Settings ....");
+        Log.d(TAG, "Loading Settings ....");
 
         InputStream is = context.getResources().openRawResource(R.raw.level_1);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -63,7 +79,7 @@ public class GameLoader {
                 line = br.readLine();
             }
         } catch (IOException e) {
-            Log.d("GameActivity", "Catches Exception " + e.getMessage());
+            Log.d(TAG, "Catches Exception " + e.getMessage());
         }
 
     }
@@ -74,7 +90,7 @@ public class GameLoader {
     }
 
     public void loadGameMap(Context context) {
-        Log.d("GameActivity", "Loading Map ....");
+        Log.d(TAG, "Loading Map ....");
         loadOtherFeatures(context);
         int i = 0;
 
@@ -92,7 +108,7 @@ public class GameLoader {
                 char[] tiles = line.toCharArray();
                 // Reads the entire line
                 // Fill the grid with the elements
-                Log.d("GameActivity", "Adding the tiles ....");
+                Log.d(TAG, "Adding the tiles ....");
                 for (int j = 0; j < this.grid.WIDTH; j++)
                     switch (tiles[j]) {
                         case '-':
@@ -117,7 +133,7 @@ public class GameLoader {
 
 
         } catch (IOException e) {
-            Log.d("GameActivity", "Catches Exception " + e.getMessage());
+            Log.d(TAG, "Catches Exception " + e.getMessage());
         }
     }
 
@@ -131,7 +147,7 @@ public class GameLoader {
     }
 
     private void addRobot(int i, int j, Context context) {
-        Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, this.gameSettings.get("RS"), false);
+        Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, getSetting(GameLoader.GAME_SETTINGS.RS), false);
         this.grid.addRobot(robot);
         Game.addEnemy(robot);
     }
