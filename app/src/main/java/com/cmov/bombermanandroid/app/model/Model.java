@@ -3,9 +3,11 @@ package com.cmov.bombermanandroid.app.model;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 public abstract class Model extends Drawable {
+
+    public static final String TAG = Model.class.getSimpleName();
+
     private Bitmap bitmap;    // the actual bitmap
 
     /*
@@ -25,6 +27,9 @@ public abstract class Model extends Drawable {
      */
     private boolean touched;
     private boolean isCollidable;
+
+    private float bitmapWidth;
+    private float bitmapHeight;
 
     public Model(Bitmap bitmap, int x, int y, boolean isCollidable) {
         this.bitmap = bitmap;
@@ -59,17 +64,26 @@ public abstract class Model extends Drawable {
      * where the model will be drawn
      */
     protected abstract float getDrawX(Bitmap scaledBitmap);
-
     protected abstract float getDrawY(Bitmap scaledBitmap);
 
+    //this method calculates the length of each square on
+    public void setTileSize(Canvas canvas) {
+        Grid.calculateTileSize(canvas.getWidth(),canvas.getHeight());
+        setBitmapWidth(Grid.TILE_WIDHT);
+        setBitmapHeight(Grid.TILE_HEIGHT);
+    }
 
     public Bitmap getScaledBitmap(Canvas canvas) {
-        int bitmapWidth = canvas.getWidth() / Grid.WIDTH;
-        int bitmapHeight = canvas.getHeight() / Grid.HEIGHT;
-        Bitmap scaled = Bitmap.createScaledBitmap(this.bitmap, bitmapWidth, bitmapHeight, false);
+        //this method should be called only once
+        setTileSize(canvas);
+        Bitmap scaled = Bitmap.createScaledBitmap(this.getBitmap(), (int)bitmapWidth, (int)bitmapHeight, true);
         return scaled;
     }
 
+    public float getBitmapWidth() { return bitmapWidth; }
+    public float getBitmapHeight() { return bitmapHeight; }
+    public void setBitmapWidth(float bitmapWidth) { this.bitmapWidth = bitmapWidth; }
+    public void setBitmapHeight(float bitmapHeight) { this.bitmapHeight = bitmapHeight; }
     public int getRealX(Bitmap scaledBitmap) {
         return this.x * scaledBitmap.getWidth();
     }

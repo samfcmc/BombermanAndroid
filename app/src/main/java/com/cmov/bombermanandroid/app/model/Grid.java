@@ -21,6 +21,10 @@ public class Grid {
      */
     public static final int WIDTH = 19;
 
+    public static float TILE_WIDHT;
+
+    public static float TILE_HEIGHT;
+
     /**
      * The Floor.
      */
@@ -47,6 +51,7 @@ public class Grid {
         this.gameMap[bomb.getX()][bomb.getY()] = bomb;
     }
 
+    public void addExplosion(Explosion explosion) { this.gameMap[explosion.getX()][explosion.getY()] = explosion; }
     /**
      * Add bomberman.
      *
@@ -140,5 +145,21 @@ public class Grid {
      */
     public Model getModel(int x, int y) {
         return this.gameMap[x][y];
+    }
+
+    //this method calculates the width of the tile given a canvas size
+    public static float getTileWidth(float canvasWidth) {
+        TILE_WIDHT = canvasWidth / Grid.WIDTH;
+        return canvasWidth / Grid.WIDTH;
+    }
+    //this method calculates the height of the tile given a canvas size
+    public static float getTileHeight(float canvasHeight) {
+        TILE_HEIGHT = canvasHeight / Grid.WIDTH;
+        return canvasHeight / Grid.WIDTH;
+    }
+
+    public static void calculateTileSize(float canvasWidth, float canvasHeight) {
+        TILE_WIDHT = canvasWidth / Grid.WIDTH;
+        TILE_HEIGHT = canvasHeight / Grid.WIDTH;
     }
 }

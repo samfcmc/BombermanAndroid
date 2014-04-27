@@ -26,6 +26,7 @@ public class Bomberman extends Movable {
         Bomb bomb = new
                 Bomb(BitmapLib.getBombBitmap(),this.getX()+1,this.getY(),0,0,0,2f);
         grid.addBomb(bomb);
+
     }
 
 }

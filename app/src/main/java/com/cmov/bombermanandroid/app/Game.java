@@ -1,25 +1,17 @@
 package com.cmov.bombermanandroid.app;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-
-import com.cmov.bombermanandroid.app.commands.CharacterCommand;
-import com.cmov.bombermanandroid.app.commands.Command;
-import com.cmov.bombermanandroid.app.commands.DownCommand;
-import com.cmov.bombermanandroid.app.commands.LeftCommand;
-import com.cmov.bombermanandroid.app.commands.RightCommand;
-import com.cmov.bombermanandroid.app.commands.UpCommand;
-import com.cmov.bombermanandroid.app.model.Bomberman;
-import com.cmov.bombermanandroid.app.model.Enemy;
-import com.cmov.bombermanandroid.app.model.Grid;
-import com.cmov.bombermanandroid.app.model.Model;
-import com.cmov.bombermanandroid.app.model.Movable;
+import com.cmov.bombermanandroid.app.commands.*;
+import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.text.PauseText;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
 
 public class Game {
 
@@ -29,6 +21,7 @@ public class Game {
     private static PauseText pauseText = new PauseText(Color.WHITE);
     private static Queue<Command> commands = new LinkedList<Command>();
     private static Grid grid;
+    private static Explosion explosion;
 
     public static void setGrid(Grid grid1) {
         grid = grid1;
@@ -38,6 +31,9 @@ public class Game {
         processCommands();
 
         if(!paused) {
+            if (explosion != null && explosion.isAlive()) {
+                explosion.update(System.currentTimeMillis());
+            }
             updateMovables(players, canvas);
             updateMovables(enemies, canvas);
             generateCommandForEnemies();
@@ -83,6 +79,9 @@ public class Game {
 
     public static void dropBomb(int player) {
         getPlayer(player).dropBomb(grid);
+        explosion = new Explosion(BitmapLib.getBombExplosionBitmap(),
+                getPlayer(player).getX()+1, getPlayer(player).getY(),true,4,8);
+        grid.addExplosion(explosion);
     }
 
     public static void addPlayer(Bomberman bomberman) {
