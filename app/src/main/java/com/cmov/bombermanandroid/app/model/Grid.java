@@ -30,7 +30,7 @@ public class Grid {
      */
     Bitmap floor;
 
-    private Model[][] gameMap;
+    private Cell[][] gameMap;
 
     /**
      * Instantiates a new Grid.
@@ -39,7 +39,14 @@ public class Grid {
      */
     public Grid(Context context) {
         this.floor = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-        this.gameMap = new Model[HEIGHT][WIDTH];
+        this.gameMap = new Cell[HEIGHT][WIDTH];
+        // Initialize all grid positions with cells
+        for (int i = 0; i < HEIGHT; i++){
+            for (int j = 0; j < WIDTH; j++){
+                this.gameMap[i][j] = new Cell();
+            }
+        }
+
     }
 
     /**
@@ -48,17 +55,17 @@ public class Grid {
      * @param bomb the bomb
      */
     public void addBomb(Bomb bomb) {
-        this.gameMap[bomb.getX()][bomb.getY()] = bomb;
+        this.gameMap[bomb.getY()][bomb.getX()].addModel(bomb);
     }
 
-    public void addExplosion(Explosion explosion) { this.gameMap[explosion.getX()][explosion.getY()] = explosion; }
+    public void addExplosion(Explosion explosion) { this.gameMap[explosion.getY()][explosion.getX()].addModel(explosion); }
     /**
      * Add bomberman.
      *
      * @param bomberman the bomberman
      */
     public void addBomberman(Bomberman bomberman) {
-        this.gameMap[bomberman.getX()][bomberman.getY()] = bomberman;
+        this.gameMap[bomberman.getY()][bomberman.getX()].addModel(bomberman);
     }
 
     /**
@@ -67,9 +74,7 @@ public class Grid {
      * @param x the x
      * @param y the y
      */
-    public void addFloor(int x, int y) {
-        this.gameMap[x][y] = null;
-    }
+    public void addFloor(int x, int y) { return;}
 
     /**
      * Add obstacle.
@@ -77,7 +82,7 @@ public class Grid {
      * @param obstacle the obstacle
      */
     public void addObstacle(Obstacle obstacle) {
-        this.gameMap[obstacle.getX()][obstacle.getY()] = obstacle;
+        this.gameMap[obstacle.getY()][obstacle.getX()].addModel(obstacle);
     }
 
     /**
@@ -86,7 +91,7 @@ public class Grid {
      * @param robot the robot
      */
     public void addRobot(Robot robot) {
-        this.gameMap[robot.getX()][robot.getY()] = robot;
+        this.gameMap[robot.getY()][robot.getX()].addModel(robot);
     }
 
     /**
@@ -95,7 +100,7 @@ public class Grid {
      * @param wall the wall
      */
     public void addWall(Wall wall) {
-        this.gameMap[wall.getX()][wall.getY()] = wall;
+        this.gameMap[wall.getY()][wall.getX()].addModel(wall);
     }
 
     /**
@@ -110,9 +115,9 @@ public class Grid {
 
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                Model model = this.gameMap[i][j];
-                if (model != null)
-                    model.draw(canvas);
+                Cell cell = this.gameMap[i][j];
+                if (cell != null)
+                    cell.draw(canvas);
             }
         }
     }
@@ -130,8 +135,8 @@ public class Grid {
      */
     public void updateGrid(int srcX, int srcY, int destX, int destY) {
         if (!((srcX == destX) && (srcY == destY))) {
-            this.gameMap[destX][destY] = this.gameMap[srcX][srcY];
-            this.gameMap[srcX][srcY] = null;
+            this.gameMap[destY][destX] = this.gameMap[srcY][srcX];
+            this.gameMap[srcY][srcX] = new Cell();
         }
 
     }
@@ -144,7 +149,10 @@ public class Grid {
      * @return the model
      */
     public Model getModel(int x, int y) {
-        return this.gameMap[x][y];
+        if(this.gameMap[y][x].isEmpty()) {
+            return null;
+        }
+        else return this.gameMap[y][x].getModels().get(0);
     }
 
     //this method calculates the width of the tile given a canvas size
