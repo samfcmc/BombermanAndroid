@@ -6,10 +6,7 @@ import com.cmov.bombermanandroid.app.commands.*;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.text.PauseText;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 
 public class Game {
@@ -19,6 +16,7 @@ public class Game {
     private static boolean paused = false;
     private static PauseText pauseText = new PauseText(Color.WHITE);
     private static Queue<Command> commands = new LinkedList<Command>();
+    private static Queue<Bomb> bombs = new LinkedList<Bomb>();
     private static Grid grid;
 
     public static void setGrid(Grid grid1) {
@@ -31,24 +29,22 @@ public class Game {
         if(!paused) {
             updateMovables(players, canvas);
             updateMovables(enemies, canvas);
-            //updatePlayers();
-            updateBomb(0);
+            updateBombs();
             generateCommandForEnemies();
         }
     }
 
-    private static void updateBomb(int player) {
-        Bomberman bomberman = players.get(player);
-        bomberman.update(System.currentTimeMillis());
-    }
-
-  /*  private static void updatePlayers() {
-        for(Bomberman player : players) {
-            if(player.hasBomb()){
-                updateBomb(player.playerID);
+    private static void updateBombs() {
+        Iterator<Bomb> iterator = bombs.iterator();
+        while (iterator.hasNext()) {
+            Bomb bomb = iterator.next();
+            if(bomb.isTriggered()) {
+                bomb.updade(System.currentTimeMillis());
+            } else {
+                iterator.remove();
             }
         }
-    }*/
+    }
 
     private static void processCommands() {
         if(!commands.isEmpty()) {
@@ -88,7 +84,7 @@ public class Game {
     }
 
     public static void dropBomb(int player) {
-        getPlayer(player).dropBomb(grid);
+        getPlayer(player).dropBomb(grid, bombs, System.currentTimeMillis());
     }
 
     public static void addPlayer(Bomberman bomberman) {

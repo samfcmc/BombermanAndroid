@@ -165,5 +165,4 @@ public abstract class Model extends Drawable {
         }
     }
 
-
 }

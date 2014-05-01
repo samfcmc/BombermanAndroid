@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 //This class calculates cross explosion
-public class CrossPoint implements ExplosionLogic {
+public class CrossPoint extends ExplosionLogic {
 
     public static final int N = 0; //North
     public static final int S = 1; //South
@@ -17,7 +17,7 @@ public class CrossPoint implements ExplosionLogic {
     private int sourceX;
     private int sourceY;
 
-    CrossPoint() {
+    public CrossPoint() {
         this.axisPoints = new ArrayList<List<Point2D>>(4);
         this.axisPoints.add(new ArrayList<Point2D>());
         this.axisPoints.add(new ArrayList<Point2D>());

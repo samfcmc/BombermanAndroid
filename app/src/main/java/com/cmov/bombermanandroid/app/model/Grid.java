@@ -4,8 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-
 import com.cmov.bombermanandroid.app.R;
+import com.cmov.bombermanandroid.app.logic.ExplosionLogic;
+import com.cmov.bombermanandroid.app.logic.Point2D;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Grid.
@@ -155,19 +159,22 @@ public class Grid {
         else return this.gameMap[y][x].getModels().get(0);
     }
 
-    //this method calculates the width of the tile given a canvas size
-    public static float getTileWidth(float canvasWidth) {
-        TILE_WIDHT = canvasWidth / Grid.WIDTH;
-        return canvasWidth / Grid.WIDTH;
-    }
-    //this method calculates the height of the tile given a canvas size
-    public static float getTileHeight(float canvasHeight) {
-        TILE_HEIGHT = canvasHeight / Grid.WIDTH;
-        return canvasHeight / Grid.WIDTH;
-    }
-
     public static void calculateTileSize(float canvasWidth, float canvasHeight) {
         TILE_WIDHT = canvasWidth / Grid.WIDTH;
         TILE_HEIGHT = canvasHeight / Grid.WIDTH;
+    }
+
+    public boolean isWall(int x, int y) { return  this.getModel(x,y) instanceof Wall; }
+
+    //given a point (x,y) a range and a calculator
+    // this method returns all crossed except those which represent a wall
+    public List<Point2D> getCrossedPoints(int x, int y, int range, ExplosionLogic calculator) {
+        List<Point2D> points = new ArrayList<Point2D>();
+        for(Point2D point : calculator.calculatePoints(x,y,range)){
+            if(!this.isWall(point.getX(),point.getY())) {
+                points.add(point);
+            }
+        }
+        return points;
     }
 }

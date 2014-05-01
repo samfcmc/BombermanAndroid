@@ -26,6 +26,11 @@ public class Point2D {
         this.y = y;
     }
 
+    public void incXX(int inc) { this.x += inc; }
+
+    public void incYY(int inc) { this.y += inc; }
+
+
     @Override
     public String toString() {
         return "[" + x + ", " + y + "]";

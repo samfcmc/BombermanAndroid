@@ -4,25 +4,19 @@ import android.graphics.Bitmap;
 import com.cmov.bombermanandroid.app.BitmapLib;
 import com.cmov.bombermanandroid.app.GameLoader;
 
+import java.util.Queue;
+
 public class Bomberman extends Movable {
 
     public int playerID;
     public int lives;
-    private Bomb bomb;
+    private long lastBomb;
 
     public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead){
         super(bitmap, x, y, speed, isDead);
         this.playerID = playerID;
         this.lives = lives;
-        this.bomb = null;
-    }
-
-    public void setBomb(Bomb bomb) {
-        this.bomb = bomb;
-    }
-
-    public boolean hasBomb() {
-        return bomb != null;
+        this.lastBomb = 0;
     }
 
     public int getLives() {
@@ -33,29 +27,32 @@ public class Bomberman extends Movable {
         this.lives = lives;
     }
 
-    public void dropBomb(Grid grid){
-        if(!hasBomb()) {
-            //to get game static configuration
-            GameLoader gameLoader = GameLoader.getInstance();
-            this.bomb = new
+    public long getLastBomb() { return this.lastBomb; }
+
+    public void dropBomb(Grid grid, Queue<Bomb> bombs, long dt){
+        long timePassed = dt - lastBomb;
+        //get timeout
+        GameLoader gameLoader = GameLoader.getInstance();
+        long explosionTimeout = (long) 1000 * gameLoader.getSetting(GameLoader.GAME_SETTINGS.ET); //timeout
+
+       if(timePassed > explosionTimeout) {
+            Bomb bomb = new
                     Bomb(BitmapLib.getBombBitmap(),
                     this.getX() + 1, //implant the bomb in the next tile
-                                     // TODO: put the bomb in the same(x,y) than bomberman
+                    // TODO: put the bomb in the same(x,y) than bomberman
                     this.getY(),
                     gameLoader.getSetting(GameLoader.GAME_SETTINGS.ER), //range
                     gameLoader.getSetting(GameLoader.GAME_SETTINGS.ED), //duration
-                    gameLoader.getSetting(GameLoader.GAME_SETTINGS.ET), //timeout
+                    explosionTimeout, //timeout
                     grid,   //the current grid
-                    this);  //The bomberman itself to be able to notify that bomb was implanted
+                    dt);
+            //add bomb in the grid
             grid.addBomb(bomb);
-            //activate the bomb timer
-            bomb.setUpTimer();
-        }
+            //create explosions
+            bomb.createExplosions();
+            bombs.add(bomb);
+            this.lastBomb = dt;
+       }
     }
 
-    public void update(long l) {
-        if(hasBomb()) {
-            bomb.updade(l);
-        }
-    }
 }

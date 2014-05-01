@@ -83,6 +83,7 @@ public class Explosion extends Model {
     public boolean isDead() {
         return this.state == STATE_DEAD;
     }
+    public void setAlive() { this.state = STATE_ALIVE; }
     // the update method for the Explosion
     public void update(long gameTime) {
         if(this.state != STATE_DEAD) {
@@ -139,4 +140,5 @@ public class Explosion extends Model {
     public int getOpacity() {
         return 0;
     }
+
 }
