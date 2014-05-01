@@ -112,19 +112,19 @@ public class GameLoader {
                 for (int j = 0; j < this.grid.WIDTH; j++)
                     switch (tiles[j]) {
                         case '-':
-                            addFloor(i, j);
+                            addFloor(j, i);
                             break;
                         case 'O':
-                            addObstacle(i, j, context);
+                            addObstacle(j, i, context);
                             break;
                         case 'R':
-                            addRobot(i, j, context);
+                            addRobot(j, i, context);
                             break;
                         case 'W':
-                            addWall(i, j, context);
+                            addWall(j, i, context);
                             break;
                         default:
-                            addBomberman(i, j, context, tiles);
+                            addBomberman(j, i, context, tiles);
                             break;
                     }
                 i++;
@@ -137,35 +137,35 @@ public class GameLoader {
         }
     }
 
-    private void addFloor(int i, int j) {
-        this.grid.addFloor(i, j);
+    private void addFloor(int x, int y) {
+        this.grid.addFloor(x, y);
     }
 
-    private void addObstacle(int i, int j, Context context) {
-        Obstacle obstacle = new Obstacle(BitmapLib.getObstacleBitmap(context), i, j, OBSTACLE_HIT_POINTS, true);
+    private void addObstacle(int x, int y, Context context) {
+        Obstacle obstacle = new Obstacle(BitmapLib.getObstacleBitmap(context), x, y, OBSTACLE_HIT_POINTS, true);
         this.grid.addObstacle(obstacle);
     }
 
-    private void addRobot(int i, int j, Context context) {
-        Robot robot = new Robot(BitmapLib.getRobotBitmap(context), i, j, getSetting(GameLoader.GAME_SETTINGS.RS), false);
+    private void addRobot(int x, int y, Context context) {
+        Robot robot = new Robot(BitmapLib.getRobotBitmap(context), x, y, getSetting(GameLoader.GAME_SETTINGS.RS), false);
         this.grid.addRobot(robot);
         Game.addEnemy(robot);
     }
 
-    private void addWall(int i, int j, Context context) {
-        Wall wall = new Wall(BitmapLib.getWallBitmap(context), i, j);
+    private void addWall(int x, int y, Context context) {
+        Wall wall = new Wall(BitmapLib.getWallBitmap(context), x, y);
         this.grid.addWall(wall);
     }
 
-    private void addBomberman(int i, int j, Context context, char[] tiles) {
-        int playerNumber = Character.getNumericValue(tiles[j]);
+    private void addBomberman(int x, int y, Context context, char[] tiles) {
+        int playerNumber = Character.getNumericValue(tiles[x]);
 
         if (playerNumber > MAX_PLAYERS || playerNumber == -1) {
             throw new RuntimeException("Wrong input value");
         }
 
-        Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context, playerNumber), i,
-                j, playerNumber, BOMBERMAN_LIVES, BOMBERMAN_SPEED, false);
+        Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context, playerNumber), x,
+                y, playerNumber, BOMBERMAN_LIVES, BOMBERMAN_SPEED, false);
         this.grid.addBomberman(bomberman);
         Game.addPlayer(bomberman);
     }
