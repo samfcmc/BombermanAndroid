@@ -211,7 +211,7 @@ public class Movable extends Model {
      * @param grid the grid
      */
     public void stopAndUpdatePosition(Grid grid) {
-        grid.updateGrid(getX(), getY(), this.stopX, this.stopY);
+        grid.updateGrid(getX(), getY(), this.stopX, this.stopY, this);
         setX(this.stopX);
         setY(this.stopY);
         stopMoving();

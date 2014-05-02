@@ -43,13 +43,15 @@ public class Bomb extends StaticModel  {
     }
 
     void createCrossedExplosion() {
-        List<Point2D> calculedPoints =
+        List<Point2D> calculatedPoints =
                 grid.getCrossedPoints(getX(),getY(),range,new CrossPoint());
 
-        for(Point2D point2D : calculedPoints){
-            explosions.add(new Explosion(bitmap,
+        for(Point2D point2D : calculatedPoints){
+            Explosion explosion = new Explosion(bitmap,
                     point2D.getX(),point2D.getY(),false,
-                    duration,EXPLOSION_FRAMES));
+                    duration,EXPLOSION_FRAMES);
+            explosions.add(explosion);
+            grid.addExplosion(explosion);
         }
     }
 
@@ -59,7 +61,20 @@ public class Bomb extends StaticModel  {
         createCrossedExplosion();
     }
 
-    public void updadeExplosion(long dt) {
+    public void testExplosionEffect(Explosion explosion){
+        if (this.grid.isBomb(explosion.getX(), explosion.getY())) {
+            Bomb bomb = (Bomb) grid.getModel(explosion.getX(),explosion.getY());
+            bomb.explode();
+        } else {
+            this.grid.removeCell(explosion);
+        }
+    }
+
+    private void explode() {
+        this.timeout = 0;
+    }
+
+    public void updateExplosion(long dt) {
         long passedTime = dt - this.timeDropped;
         //if the bomb timeout is running out then triggers the bomb!!
         if (passedTime >= this.timeout) {
@@ -67,10 +82,11 @@ public class Bomb extends StaticModel  {
             while (iterator.hasNext()) {
                 Explosion explosion = iterator.next();
                 if(explosion.isAlive()) {
-                    grid.addExplosion(explosion);
                     explosion.update(dt);
                 } else {
                     //remove
+                    //testExplosionEffect(explosion);
+                    grid.removeCell(explosion);
                     iterator.remove();
                     Log.d(TAG, "Explosion at (" + explosion.getX() + "," + explosion.getY() + ") was removed.");
                 }
@@ -83,7 +99,7 @@ public class Bomb extends StaticModel  {
 
         if(passed < realDuration) {
             Log.d(TAG, "updating bomb");
-            updadeExplosion(dt);
+            updateExplosion(dt);
         }else {
         //bomb terminates
         this.triggered = false;
@@ -92,5 +108,9 @@ public class Bomb extends StaticModel  {
 
         public boolean isTriggered() {
         return triggered;
+    }
+
+    public long getTimeout() {
+        return timeout;
     }
 }

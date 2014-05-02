@@ -29,6 +29,10 @@ public class Cell {
         this.models.add(model);
     }
 
+    public void removeModel(Model model) {
+        this.models.remove(model);
+    }
+
     public void draw(Canvas canvas){
         for(Model model : this.models){
             model.draw(canvas);

@@ -2,9 +2,11 @@ package com.cmov.bombermanandroid.app;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.util.Log;
 import com.cmov.bombermanandroid.app.commands.*;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.text.PauseText;
+import com.cmov.bombermanandroid.app.threads.ExplosionThread;
 
 import java.util.*;
 
@@ -41,6 +43,8 @@ public class Game {
             if(bomb.isTriggered()) {
                 bomb.updade(System.currentTimeMillis());
             } else {
+                Log.d("Game", "remove bomb: " + bomb.getX() + " " + bomb.getY());
+                grid.removeCell(bomb);
                 iterator.remove();
             }
         }
@@ -84,7 +88,10 @@ public class Game {
     }
 
     public static void dropBomb(int player) {
-        getPlayer(player).dropBomb(grid, bombs, System.currentTimeMillis());
+        Bomb bomb = getPlayer(player).dropBomb(grid, bombs, System.currentTimeMillis());
+        if (bomb != null) {
+            new Timer().schedule(new ExplosionThread(bomb), bomb.getTimeout());
+        }
     }
 
     public static void addPlayer(Bomberman bomberman) {

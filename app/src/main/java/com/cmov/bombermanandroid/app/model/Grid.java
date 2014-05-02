@@ -137,10 +137,11 @@ public class Grid {
      * @param destX the destination x
      * @param destY the destination y
      */
-    public void updateGrid(int srcX, int srcY, int destX, int destY) {
+    public void updateGrid(int srcX, int srcY, int destX, int destY, Model model) {
         if (!((srcX == destX) && (srcY == destY))) {
-            this.gameMap[destY][destX] = this.gameMap[srcY][srcX];
-            this.gameMap[srcY][srcX] = new Cell();
+            this.gameMap[destY][destX].addModel(model);
+            this.gameMap[srcY][srcX].removeModel(model);
+            //this.gameMap[srcY][srcX] = new Cell();
         }
 
     }
@@ -177,4 +178,13 @@ public class Grid {
         }
         return points;
     }
+
+    public void removeCell(Model model) {
+        this.gameMap[model.getY()][model.getX()].removeModel(model);
+    }
+
+    public boolean isBomb(int x, int y) {
+        return getModel(x,y) instanceof Bomb;
+    }
+
 }

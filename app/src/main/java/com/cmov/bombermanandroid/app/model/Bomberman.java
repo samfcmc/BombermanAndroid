@@ -29,17 +29,17 @@ public class Bomberman extends Movable {
 
     public long getLastBomb() { return this.lastBomb; }
 
-    public void dropBomb(Grid grid, Queue<Bomb> bombs, long dt){
+    public Bomb dropBomb(Grid grid, Queue<Bomb> bombs, long dt){
+        Bomb bomb = null;
         long timePassed = dt - lastBomb;
         //get timeout
         GameLoader gameLoader = GameLoader.getInstance();
         long explosionTimeout = (long) 1000 * gameLoader.getSetting(GameLoader.GAME_SETTINGS.ET); //timeout
 
        if(timePassed > explosionTimeout) {
-            Bomb bomb = new
+            bomb = new
                     Bomb(BitmapLib.getBombBitmap(),
-                    this.getX() + 1, //implant the bomb in the next tile
-                    // TODO: put the bomb in the same(x,y) than bomberman
+                    this.getX(), //implant the bomb
                     this.getY(),
                     gameLoader.getSetting(GameLoader.GAME_SETTINGS.ER), //range
                     gameLoader.getSetting(GameLoader.GAME_SETTINGS.ED), //duration
@@ -48,11 +48,9 @@ public class Bomberman extends Movable {
                     dt);
             //add bomb in the grid
             grid.addBomb(bomb);
-            //create explosions
-            bomb.createExplosions();
             bombs.add(bomb);
             this.lastBomb = dt;
        }
+        return bomb;
     }
-
 }
