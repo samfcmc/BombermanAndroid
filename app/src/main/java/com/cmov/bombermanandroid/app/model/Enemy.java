@@ -12,4 +12,9 @@ public abstract class Enemy extends Movable {
         super(bitmap, x, y, speed, isDead);
     }
 
+    @Override
+    public void afterExplosion(Explosion explosion) {
+        Bomberman player = explosion.getBomb().getBomberman();
+        player.killedEnemy();
+    }
 }

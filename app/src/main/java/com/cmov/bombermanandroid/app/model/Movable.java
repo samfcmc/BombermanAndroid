@@ -190,9 +190,12 @@ public abstract class Movable extends Model {
     }
 
     @Override
-    public void touchedByExplosion() {
+    public void touchedByExplosion(Explosion explosion) {
         die();
+        afterExplosion(explosion);
     }
+
+    public abstract void afterExplosion(Explosion explosion);
 
     /**
      * Should stop.

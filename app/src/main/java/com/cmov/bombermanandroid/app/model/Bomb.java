@@ -24,9 +24,9 @@ public class Bomb extends StaticModel {
     private boolean triggered;
     private long realDuration;
     private Bitmap bitmap;
+    private Bomberman bomberman;
 
-
-    public Bomb(Bitmap bitmap, int x, int y, int range, int duration, long timeout, Grid grid, long timeDropped) {
+    public Bomb(Bitmap bitmap, int x, int y, int range, int duration, long timeout, Grid grid, long timeDropped, Bomberman bomberman) {
         super(bitmap, x, y, false);
         this.range = range;
         this.duration = duration;
@@ -38,6 +38,7 @@ public class Bomb extends StaticModel {
 
         this.explosions = new LinkedList<Explosion>();
         this.bitmap = BitmapLib.getBombExplosionBitmap();
+        this.bomberman = bomberman;
     }
 
     void createCrossedExplosion() {
@@ -47,7 +48,7 @@ public class Bomb extends StaticModel {
         for (Point2D point2D : calculatedPoints) {
             Explosion explosion = new Explosion(bitmap,
                     point2D.getX(), point2D.getY(), false,
-                    duration, EXPLOSION_FRAMES);
+                    duration, EXPLOSION_FRAMES, this);
             explosions.add(explosion);
             grid.addExplosion(explosion);
         }
@@ -110,8 +111,12 @@ public class Bomb extends StaticModel {
         return timeout;
     }
 
+    public Bomberman getBomberman() {
+        return bomberman;
+    }
+
     @Override
-    public void touchedByExplosion() {
+    public void touchedByExplosion(Explosion explosion) {
         //Nothing happens
     }
 }

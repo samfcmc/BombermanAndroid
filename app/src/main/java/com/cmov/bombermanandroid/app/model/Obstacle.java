@@ -26,7 +26,7 @@ public class Obstacle extends StaticModel {
     }
 
     @Override
-    public void touchedByExplosion() {
+    public void touchedByExplosion(Explosion explosion) {
         //TODO: We should destroy it
     }
 }
