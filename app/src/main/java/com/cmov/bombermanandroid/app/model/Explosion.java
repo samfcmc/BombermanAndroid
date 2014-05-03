@@ -22,8 +22,9 @@ public class Explosion extends Model {
     private int spriteHeight;	// the height of the sprite
 
     private int state;          // the state of the explosion
+    private Bomb bomb;
 
-    public Explosion(Bitmap bitmap, int x, int y, boolean isCollidable, int fps, int frameCount) {
+    public Explosion(Bitmap bitmap, int x, int y, boolean isCollidable, int fps, int frameCount, Bomb bomb) {
         super(bitmap, x, y, isCollidable);
         //dirty hack
         bitmap = scale(bitmap, frameCount);
@@ -36,6 +37,7 @@ public class Explosion extends Model {
         sourceRect = new Rect(0, 0, spriteWidth, spriteHeight);
         framePeriod = 1000 / fps;
         frameTicker = 0l;
+        this.bomb = bomb;
     }
 
     public Rect getSourceRect() {
@@ -127,16 +129,20 @@ public class Explosion extends Model {
     }
 
     @Override
-    public void touchedByExplosion() {
-        //Explosion should not touch in itself... It would be weird
+    public void touchedByExplosion(Explosion explosion) {
+        //Explosion should not touch itself... It would be weird
     }
 
     protected void touchInModels(Grid grid) {
         Cell cell = grid.getCell(getY(), getX());
 
         for(Model model : cell.getModels()) {
-            model.touchedByExplosion();
+            model.touchedByExplosion(this);
         }
+    }
+
+    public Bomb getBomb() {
+        return bomb;
     }
 
     @Override

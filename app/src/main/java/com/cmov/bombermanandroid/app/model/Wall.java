@@ -13,7 +13,7 @@ public class Wall extends StaticModel {
     }
 
     @Override
-    public void touchedByExplosion() {
+    public void touchedByExplosion(Explosion explosion) {
         //The walls are badass and nothing can destroy them :)
     }
 }

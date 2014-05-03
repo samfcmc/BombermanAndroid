@@ -165,6 +165,6 @@ public abstract class Model extends Drawable {
         }
     }
 
-    public abstract void touchedByExplosion();
+    public abstract void touchedByExplosion(Explosion explosion);
 
 }

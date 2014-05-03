@@ -3,6 +3,7 @@ package com.cmov.bombermanandroid.app.logic;
 import android.graphics.Bitmap;
 import com.cmov.bombermanandroid.app.BitmapLib;
 import com.cmov.bombermanandroid.app.GameLoader;
+import com.cmov.bombermanandroid.app.model.Bomb;
 import com.cmov.bombermanandroid.app.model.Explosion;
 import com.cmov.bombermanandroid.app.model.Grid;
 
@@ -131,7 +132,8 @@ public class CrossedExplosion extends ExplosionCalculator {
 
 
     @Override
-    public List<Explosion> calculateExplosion(int sourceX, int sourceY, int range, Grid grid) {
+    public List<Explosion> calculateExplosion(int sourceX, int sourceY, int range, Grid grid,
+                                              Bomb bomb) {
         List<Explosion> explosions = new ArrayList<Explosion>();
 
         for(Point2D point : this.calculatePoints(sourceX, sourceY, range)) {
@@ -139,7 +141,7 @@ public class CrossedExplosion extends ExplosionCalculator {
             if(!grid.isWall(point.getX(),point.getY())) {
                 Explosion explosion = new Explosion(bitmap,
                         point.getX(), point.getY(), false,
-                        duration, EXPLOSION_FRAMES);
+                        duration, EXPLOSION_FRAMES, bomb);
 
                 explosions.add(explosion);
                 //showing explosions to the grid

@@ -4,11 +4,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.cmov.bombermanandroid.app.commands.*;
+import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.text.PauseText;
 import com.cmov.bombermanandroid.app.threads.ExplosionThread;
 
 import java.util.*;
+
+import de.greenrobot.event.EventBus;
 
 
 public class Game {
@@ -23,6 +26,7 @@ public class Game {
     private static Grid grid;
     private static boolean gameOver;
     private static Wallpaper gameOverWallpaper;
+    private static EventBus eventBus;
 
     static {
         init();
@@ -37,6 +41,7 @@ public class Game {
         commands = new LinkedList<Command>();
         bombs = new LinkedList<Bomb>();
         gameOver = false;
+        eventBus = EventBus.getDefault();
     }
 
     public static void setGrid(Grid grid1) {
@@ -52,8 +57,20 @@ public class Game {
 
             if(!paused) {
                 update(canvas);
+                eventBus.post(new UpdatedGameStateEvent());
             }
         }
+    }
+
+    public static int getPlayerScore(int playerIndex) {
+        Bomberman player = getPlayer(playerIndex);
+        if(player == null) {
+            return 0;
+        }
+        else {
+            return player.getScore();
+        }
+
     }
 
     private static void update(Canvas canvas) {
@@ -149,6 +166,10 @@ public class Game {
             return players.get(player);
         }
 
+    }
+
+    public static EventBus getEventBus() {
+        return eventBus;
     }
 
     public static void dropBomb(int player) {
@@ -261,5 +282,7 @@ public class Game {
         Bomberman player = getPlayer(playerIndex);
         trySendCommand(player, new RightCommand(player));
     }
+
+
 
 }

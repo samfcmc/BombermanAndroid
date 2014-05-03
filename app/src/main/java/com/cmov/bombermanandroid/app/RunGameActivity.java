@@ -3,21 +3,23 @@ package com.cmov.bombermanandroid.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.cmov.bombermanandroid.app.commands.Command;
-import com.cmov.bombermanandroid.app.commands.DownCommand;
-import com.cmov.bombermanandroid.app.commands.LeftCommand;
-import com.cmov.bombermanandroid.app.commands.RightCommand;
 import com.cmov.bombermanandroid.app.commands.TurnPauseOnOffCommand;
-import com.cmov.bombermanandroid.app.commands.UpCommand;
-import com.cmov.bombermanandroid.app.model.Bomberman;
+import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 
 
 public class RunGameActivity extends ActionBarActivity {
 
     private static final int FIRST_PLAYER = 0;
+    private TextView scoreTextView;
+    private UpdateGameStateThread updatedGameStateThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,28 @@ public class RunGameActivity extends ActionBarActivity {
 
         //create the text view
         TextView textView = (TextView) findViewById(R.id.player_name);
-        textView.setText(textView.getText()+ "\n" + nick);
+        textView.setText(textView.getText() + "\n" + nick);
+
+        initViews();
+        initThreads();
+        subscribeToEvents();
     }
 
+    private void initViews() {
+        this.scoreTextView = (TextView) findViewById(R.id.player_score);
+    }
+
+    private void initThreads() {
+        this.updatedGameStateThread = new UpdateGameStateThread();
+    }
+
+    private void subscribeToEvents() {
+        Game.getEventBus().register(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.run_game, menu);
         return true;
@@ -87,7 +104,6 @@ public class RunGameActivity extends ActionBarActivity {
     }
 
     public void quitGame(View view) {
-        //will be changed
         finish();
     }
 
@@ -95,5 +111,20 @@ public class RunGameActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
         Game.reset();
+    }
+
+    public void onEvent(UpdatedGameStateEvent event) {
+        runOnUiThread(updatedGameStateThread);
+    }
+
+    private void updateScoreTextView() {
+        int score = Game.getPlayerScore(FIRST_PLAYER);
+        this.scoreTextView.setText(Integer.toString(score));
+    }
+
+    private class UpdateGameStateThread extends Thread {
+        public void run() {
+            updateScoreTextView();
+        }
     }
 }
