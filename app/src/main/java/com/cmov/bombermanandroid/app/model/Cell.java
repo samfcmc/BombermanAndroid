@@ -34,8 +34,9 @@ public class Cell {
     }
 
     public void draw(Canvas canvas){
-        for(Model model : this.models){
-            model.draw(canvas);
+        //draw the new objects at background
+        for(int i = this.models.size() - 1; i > -1; i--){
+            this.models.get(i).draw(canvas);
         }
     }
 
