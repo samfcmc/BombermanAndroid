@@ -142,7 +142,7 @@ public class GameLoader {
     }
 
     private void addRobot(int x, int y, Context context) {
-        Robot robot = new Robot(BitmapLib.getRobotBitmap(context), x, y, getSetting(GameLoader.GAME_SETTINGS.RS), false);
+        Robot robot = new Robot(BitmapLib.getRobotBitmap(context), x, y, getSetting(GameLoader.GAME_SETTINGS.RS), false, true);
         this.grid.addRobot(robot);
         Game.addEnemy(robot);
     }
@@ -165,7 +165,7 @@ public class GameLoader {
 
         else {
             Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context, playerNumber), x,
-                    y, playerNumber, Constants.BOMBERMAN_LIVES, Constants.BOMBERMAN_SPEED, false);
+                    y, playerNumber, Constants.BOMBERMAN_LIVES, Constants.BOMBERMAN_SPEED, false, false);
             this.grid.addBomberman(bomberman);
             Game.addPlayer(bomberman);
         }

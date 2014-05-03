@@ -18,6 +18,7 @@ public abstract class Movable extends Model {
     private CharacterCommand receivedCommand;
     private float speed;
     private boolean isDead;
+    private boolean isEnemy;
     private boolean isMoving;
     /*
      * This coordinates will just be used to perform the
@@ -37,14 +38,24 @@ public abstract class Movable extends Model {
      * @param speed  the speed
      * @param isDead the is dead
      */
-    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead) {
+    public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead, boolean isEnemy) {
         super(bitmap, x, y, true);
         this.speed = speed;
         this.isDead = isDead;
+        this.isEnemy = isEnemy;
         this.movingX = 0;
         this.movingY = 0;
         this.stopX = 0;
         this.stopY = 0;
+    }
+
+    /**
+     * Is enemy
+     *
+     * @return
+     */
+    public boolean isEnemy() {
+        return isEnemy;
     }
 
     /**
@@ -247,6 +258,13 @@ public abstract class Movable extends Model {
     public void die() {
         this.isDead = true;
     }
+
+    /**
+     * Detects a collision between two movable objects
+     *
+     * @param movable
+     */
+    public abstract void touchedByMovable(Movable movable);
 
     @Override
     public void setAlpha(int alpha) {

@@ -12,8 +12,8 @@ public class Bomberman extends Movable {
     public int lives;
     private long lastBomb;
 
-    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead){
-        super(bitmap, x, y, speed, isDead);
+    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead, boolean isEnemy){
+        super(bitmap, x, y, speed, isDead, isEnemy);
         this.playerID = playerID;
         this.lives = lives;
         this.lastBomb = 0;
@@ -52,5 +52,18 @@ public class Bomberman extends Movable {
             this.lastBomb = dt;
        }
         return bomb;
+    }
+
+
+    /**
+     * Detects a collision between two movable objects
+     *
+     * @param movable
+     */
+    @Override
+    public void touchedByMovable(Movable movable) {
+        if(movable.isEnemy()){
+            this.die();
+        }
     }
 }

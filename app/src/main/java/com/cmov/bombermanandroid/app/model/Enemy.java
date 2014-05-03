@@ -8,8 +8,8 @@ import java.lang.*;
 
 public abstract class Enemy extends Movable {
 
-    public Enemy(Bitmap bitmap, int x, int y, float speed, boolean isDead){
-        super(bitmap, x, y, speed, isDead);
+    public Enemy(Bitmap bitmap, int x, int y, float speed, boolean isDead, boolean isEnemy){
+        super(bitmap, x, y, speed, isDead, isEnemy);
     }
 
 }
