@@ -2,8 +2,8 @@ package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import com.cmov.bombermanandroid.app.logic.CrossedExplosion;
 import com.cmov.bombermanandroid.app.logic.ExplosionCalculator;
+import com.cmov.bombermanandroid.app.logic.NormalExplosion;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,7 +50,7 @@ public class Bomb extends StaticModel {
     }
 
     public void createExplosions() {
-        createCrossedExplosion(new CrossedExplosion(this));
+        createCrossedExplosion(new NormalExplosion(this));
     }
 
     public void testExplosionEffect(Explosion explosion) {

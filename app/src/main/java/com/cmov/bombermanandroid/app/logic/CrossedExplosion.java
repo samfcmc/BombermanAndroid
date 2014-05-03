@@ -1,8 +1,5 @@
 package com.cmov.bombermanandroid.app.logic;
 
-import android.graphics.Bitmap;
-import com.cmov.bombermanandroid.app.BitmapLib;
-import com.cmov.bombermanandroid.app.GameLoader;
 import com.cmov.bombermanandroid.app.model.Bomb;
 import com.cmov.bombermanandroid.app.model.Explosion;
 import com.cmov.bombermanandroid.app.model.Grid;
@@ -15,8 +12,6 @@ import java.util.List;
 //This class calculates cross explosion
 public class CrossedExplosion extends ExplosionCalculator {
 
-    public static final int EXPLOSION_FRAMES = 8;
-
     public static final int N = 0; //North
     public static final int S = 1; //South
     public static final int W = 2; //West
@@ -26,9 +21,6 @@ public class CrossedExplosion extends ExplosionCalculator {
     private int sourceX;
     private int sourceY;
 
-    private Bitmap bitmap;
-    private int duration;
-
     public CrossedExplosion(Bomb bomb) {
         super(bomb);
 
@@ -37,9 +29,6 @@ public class CrossedExplosion extends ExplosionCalculator {
         this.axisPoints.add(new ArrayList<Point2D>());
         this.axisPoints.add(new ArrayList<Point2D>());
         this.axisPoints.add(new ArrayList<Point2D>());
-
-        this.bitmap = BitmapLib.getBombExplosionBitmap();
-        this.duration = GameLoader.getInstance().getSetting(GameLoader.GAME_SETTINGS.ED);
     }
 
     private void addAllPoints(List<Point2D> lst) {
@@ -143,9 +132,9 @@ public class CrossedExplosion extends ExplosionCalculator {
                 getBomb().getY(), getBomb().getRange())) {
 
             if(!getBomb().getGrid().isWall(point.getX(),point.getY())) {
-                Explosion explosion = new Explosion(bitmap,
+                Explosion explosion = new Explosion(getBitmap(),
                         point.getX(), point.getY(), false,
-                        duration, EXPLOSION_FRAMES, getBomb());
+                        getDuration(), EXPLOSION_FRAMES, getBomb());
 
                 explosions.add(explosion);
                 //showing explosions to the grid
