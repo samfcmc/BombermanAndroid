@@ -16,7 +16,7 @@ public class Robot extends Enemy {
      */
     @Override
     public void touchedByMovable(Movable movable) {
-        if( !movable.isEnemy() ){
+       if(!movable.isEnemy()){
             movable.die();
         }
     }

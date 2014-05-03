@@ -79,6 +79,7 @@ public class Game {
             gameOver = true;
         }
         else {
+            detectMovableCollisions(enemies, players);
             updateMovables(players, deadPlayers, canvas);
             updateMovables(enemies, canvas);
             updateBombs();
@@ -116,6 +117,20 @@ public class Game {
 
     public static void addCommand(Command command) {
         commands.add(command);
+    }
+
+    private static void detectMovableCollisions(List<? extends Movable> players, List<? extends Movable> enemies){
+        for(Movable m : enemies){
+
+            Iterator<? extends Movable> iterator =  players.iterator();
+            while(iterator.hasNext()){
+                Movable e = iterator.next();
+                if((m.getX() == e.getX()) && (m.getY() == e.getY())){
+                    m.touchedByMovable(e);
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     private static void updateMovables(List<? extends Movable> characters, Canvas canvas) {
