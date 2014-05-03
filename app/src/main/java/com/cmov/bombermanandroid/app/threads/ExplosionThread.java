@@ -16,6 +16,6 @@ public class ExplosionThread extends TimerTask {
     public void run() {
         bomb.createExplosions();
         //now explosion take place
-        bomb.setExplosionOccured(true);
+        bomb.setExplosionOccurred(true);
     }
 }
