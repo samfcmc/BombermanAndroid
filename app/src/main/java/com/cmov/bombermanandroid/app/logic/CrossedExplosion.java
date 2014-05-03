@@ -29,7 +29,9 @@ public class CrossedExplosion extends ExplosionCalculator {
     private Bitmap bitmap;
     private int duration;
 
-    public CrossedExplosion() {
+    public CrossedExplosion(Bomb bomb) {
+        super(bomb);
+
         this.axisPoints = new ArrayList<List<Point2D>>(4);
         this.axisPoints.add(new ArrayList<Point2D>());
         this.axisPoints.add(new ArrayList<Point2D>());
@@ -48,8 +50,10 @@ public class CrossedExplosion extends ExplosionCalculator {
         }
     }
 
+    //A position is valid if 0 < p < GridBound.MAX
     public boolean isValidPosition(int posX, int posY) {
-        return posX >= 0 && posY >= 0;
+        return posX >= 0 && posX < Grid.WIDTH &&
+                posY >= 0 && posY < Grid.HEIGHT;
     }
 
     private void addPoint(int i, int inc, boolean xx) {
@@ -132,23 +136,23 @@ public class CrossedExplosion extends ExplosionCalculator {
 
 
     @Override
-    public List<Explosion> calculateExplosion(int sourceX, int sourceY, int range, Grid grid,
-                                              Bomb bomb) {
+    public void calculateExplosion() {
         List<Explosion> explosions = new ArrayList<Explosion>();
 
-        for(Point2D point : this.calculatePoints(sourceX, sourceY, range)) {
+        for(Point2D point : this.calculatePoints(getBomb().getX(),
+                getBomb().getY(), getBomb().getRange())) {
 
-            if(!grid.isWall(point.getX(),point.getY())) {
+            if(!getBomb().getGrid().isWall(point.getX(),point.getY())) {
                 Explosion explosion = new Explosion(bitmap,
                         point.getX(), point.getY(), false,
-                        duration, EXPLOSION_FRAMES, bomb);
+                        duration, EXPLOSION_FRAMES, getBomb());
 
                 explosions.add(explosion);
                 //showing explosions to the grid
-                grid.addExplosion(explosion);
+                getBomb().getGrid().addExplosion(explosion);
             }
         }
 
-        return explosions;
+        getBomb().setExplosions(explosions);
     }
 }
