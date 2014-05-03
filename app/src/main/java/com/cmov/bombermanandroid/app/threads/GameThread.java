@@ -31,7 +31,7 @@ public class GameThread extends TimerTask {
     /*
      * Interval to execute this timer task (in milliseconds)
      */
-    public static final int INTERVAL = 20;
+    public static final int INTERVAL = 50;
 
 	public GameThread(SurfaceHolder surfaceHolder, MainGameSurfaceView gameSurfaceView) {
 		super();
