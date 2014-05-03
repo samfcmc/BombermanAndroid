@@ -19,11 +19,11 @@ public class Grid {
     /**
      * The grid's HEIGHT (in number of cells).
      */
-    public static final int HEIGHT = 19;
+    public static final int HEIGHT = 15;
     /**
      * The grid's WIDTH (in number of cells).
      */
-    public static final int WIDTH = 19;
+    public static final int WIDTH = 15;
 
     public static float TILE_WIDHT;
 
