@@ -24,4 +24,9 @@ public class Obstacle extends StaticModel {
     public void setHitPoints(int hitPoints) {
         this.hitPoints = hitPoints;
     }
+
+    @Override
+    public void touchedByExplosion() {
+        //TODO: We should destroy it
+    }
 }

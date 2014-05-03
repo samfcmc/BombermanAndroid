@@ -2,7 +2,10 @@ package com.cmov.bombermanandroid.app;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.cmov.bombermanandroid.app.constants.Constants;
 import com.cmov.bombermanandroid.app.model.*;
+import com.cmov.bombermanandroid.app.modes.GameMode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +20,7 @@ public class GameLoader {
 
     private static final int PARAMETER_INDEX = 0;
     private static final int VALUE_INDEX = 1;
-    private static final int OBSTACLE_HIT_POINTS = 1;
-    private static final int BOMBERMAN_LIVES = 3;
-    private static final float BOMBERMAN_SPEED = 2.0f;
-    private static final int MAX_PLAYERS = 3;
+
 
     public static enum GAME_SETTINGS {
         LN, //Level Name
@@ -65,9 +65,6 @@ public class GameLoader {
     }
 
     public void loadGameSettings(Context context) {
-
-        Log.d(TAG, "Loading Settings ....");
-
         InputStream is = context.getResources().openRawResource(R.raw.level_1);
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -81,16 +78,15 @@ public class GameLoader {
         } catch (IOException e) {
             Log.d(TAG, "Catches Exception " + e.getMessage());
         }
-
     }
 
     private void loadOtherFeatures(Context context) {
         BitmapLib.loadBomb(context);
         BitmapLib.loadBombExplosion(context);
+        Game.setGameOverWallpaper(new Wallpaper(BitmapLib.getGameOverBitmap(context)));
     }
 
-    public void loadGameMap(Context context) {
-        Log.d(TAG, "Loading Map ....");
+    public void loadGameMap(Context context, GameMode gameMode) {
         loadOtherFeatures(context);
         int i = 0;
 
@@ -108,7 +104,6 @@ public class GameLoader {
                 char[] tiles = line.toCharArray();
                 // Reads the entire line
                 // Fill the grid with the elements
-                Log.d(TAG, "Adding the tiles ....");
                 for (int j = 0; j < this.grid.WIDTH; j++)
                     switch (tiles[j]) {
                         case '-':
@@ -124,7 +119,7 @@ public class GameLoader {
                             addWall(j, i, context);
                             break;
                         default:
-                            addBomberman(j, i, context, tiles);
+                            addBomberman(j, i, context, tiles, gameMode);
                             break;
                     }
                 i++;
@@ -142,7 +137,7 @@ public class GameLoader {
     }
 
     private void addObstacle(int x, int y, Context context) {
-        Obstacle obstacle = new Obstacle(BitmapLib.getObstacleBitmap(context), x, y, OBSTACLE_HIT_POINTS, true);
+        Obstacle obstacle = new Obstacle(BitmapLib.getObstacleBitmap(context), x, y, Constants.OBSTACLE_HIT_POINTS, true);
         this.grid.addObstacle(obstacle);
     }
 
@@ -157,16 +152,22 @@ public class GameLoader {
         this.grid.addWall(wall);
     }
 
-    private void addBomberman(int x, int y, Context context, char[] tiles) {
+    private void addBomberman(int x, int y, Context context, char[] tiles, GameMode gameMode) {
         int playerNumber = Character.getNumericValue(tiles[x]);
 
-        if (playerNumber > MAX_PLAYERS || playerNumber == -1) {
+        if (playerNumber > Constants.MAX_PLAYERS || playerNumber == -1) {
             throw new RuntimeException("Wrong input value");
         }
 
-        Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context, playerNumber), x,
-                y, playerNumber, BOMBERMAN_LIVES, BOMBERMAN_SPEED, false);
-        this.grid.addBomberman(bomberman);
-        Game.addPlayer(bomberman);
+        if(playerNumber > gameMode.getMaxPlayers()) {
+            addFloor(x, y);
+        }
+
+        else {
+            Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context, playerNumber), x,
+                    y, playerNumber, Constants.BOMBERMAN_LIVES, Constants.BOMBERMAN_SPEED, false);
+            this.grid.addBomberman(bomberman);
+            Game.addPlayer(bomberman);
+        }
     }
 }
