@@ -165,7 +165,7 @@ public class GameLoader {
 
         else {
             Bomberman bomberman = new Bomberman(BitmapLib.getBombermanBitmap(context, playerNumber), x,
-                    y, playerNumber, Constants.BOMBERMAN_LIVES, Constants.BOMBERMAN_SPEED, false, false);
+                    y, playerNumber, Constants.BOMBERMAN_LIVES, Constants.BOMBERMAN_SPEED, false, false, getSetting(GAME_SETTINGS.PR));
             this.grid.addBomberman(bomberman);
             Game.addPlayer(bomberman);
         }

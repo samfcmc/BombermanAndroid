@@ -1,12 +1,21 @@
 package com.cmov.bombermanandroid.app.logic;
 
+import android.graphics.Bitmap;
+import com.cmov.bombermanandroid.app.BitmapLib;
+import com.cmov.bombermanandroid.app.GameLoader;
+import com.cmov.bombermanandroid.app.model.Bomb;
+import com.cmov.bombermanandroid.app.model.Explosion;
+import com.cmov.bombermanandroid.app.model.Grid;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 //This class calculates cross explosion
-public class CrossPoint extends ExplosionLogic {
+public class CrossedExplosion extends ExplosionCalculator {
+
+    public static final int EXPLOSION_FRAMES = 8;
 
     public static final int N = 0; //North
     public static final int S = 1; //South
@@ -17,17 +26,23 @@ public class CrossPoint extends ExplosionLogic {
     private int sourceX;
     private int sourceY;
 
-    public CrossPoint() {
+    private Bitmap bitmap;
+    private int duration;
+
+    public CrossedExplosion() {
         this.axisPoints = new ArrayList<List<Point2D>>(4);
         this.axisPoints.add(new ArrayList<Point2D>());
         this.axisPoints.add(new ArrayList<Point2D>());
         this.axisPoints.add(new ArrayList<Point2D>());
         this.axisPoints.add(new ArrayList<Point2D>());
+
+        this.bitmap = BitmapLib.getBombExplosionBitmap();
+        this.duration = GameLoader.getInstance().getSetting(GameLoader.GAME_SETTINGS.ED);
     }
 
     private void addAllPoints(List<Point2D> lst) {
-        for (int i = 0; i < axisPoints.size(); i++) {
-            for (Point2D point2D : this.axisPoints.get(i)){
+        for (List<Point2D> axisPoint : axisPoints) {
+            for (Point2D point2D : axisPoint) {
                 lst.add(point2D);
             }
         }
@@ -96,13 +111,7 @@ public class CrossPoint extends ExplosionLogic {
         }
     }
 
-
-    @Override
-    public List<Point2D> calculatePoints(int sourceX, int sourceY, int range) {
-        assert range > 0;
-        assert sourceX >= 0;
-        assert sourceY >= 0;
-
+    private List<Point2D> calculatePoints(int sourceX, int sourceY, int range) {
         this.sourceX = sourceX;
         this.sourceY = sourceY;
 
@@ -119,5 +128,27 @@ public class CrossPoint extends ExplosionLogic {
         }
         addAllPoints(result);
         return result;
+    }
+
+
+    @Override
+    public List<Explosion> calculateExplosion(int sourceX, int sourceY, int range, Grid grid,
+                                              Bomb bomb) {
+        List<Explosion> explosions = new ArrayList<Explosion>();
+
+        for(Point2D point : this.calculatePoints(sourceX, sourceY, range)) {
+
+            if(!grid.isWall(point.getX(),point.getY())) {
+                Explosion explosion = new Explosion(bitmap,
+                        point.getX(), point.getY(), false,
+                        duration, EXPLOSION_FRAMES, bomb);
+
+                explosions.add(explosion);
+                //showing explosions to the grid
+                grid.addExplosion(explosion);
+            }
+        }
+
+        return explosions;
     }
 }

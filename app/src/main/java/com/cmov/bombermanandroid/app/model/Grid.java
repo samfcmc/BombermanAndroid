@@ -5,11 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import com.cmov.bombermanandroid.app.R;
-import com.cmov.bombermanandroid.app.logic.ExplosionLogic;
-import com.cmov.bombermanandroid.app.logic.Point2D;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The type Grid.
@@ -165,18 +160,6 @@ public class Grid {
     }
 
     public boolean isWall(int x, int y) { return  this.getModel(x,y) instanceof Wall; }
-
-    //given a point (x,y) a range and a calculator
-    // this method returns all crossed except those which represent a wall
-    public List<Point2D> getCrossedPoints(int x, int y, int range, ExplosionLogic calculator) {
-        List<Point2D> points = new ArrayList<Point2D>();
-        for(Point2D point : calculator.calculatePoints(x,y,range)){
-            if(!this.isWall(point.getX(),point.getY())) {
-                points.add(point);
-            }
-        }
-        return points;
-    }
 
     public void removeModel(Model model) {
         this.gameMap[model.getY()][model.getX()].removeModel(model);

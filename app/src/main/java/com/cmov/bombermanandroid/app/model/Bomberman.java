@@ -1,6 +1,7 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
+
 import com.cmov.bombermanandroid.app.BitmapLib;
 import com.cmov.bombermanandroid.app.GameLoader;
 
@@ -8,15 +9,23 @@ import java.util.Queue;
 
 public class Bomberman extends Movable {
 
-    public int playerID;
-    public int lives;
+    private int playerID;
+    private int lives;
     private long lastBomb;
+    private int pointsPerRobotKilled;
+    private int score;
 
-    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead, boolean isEnemy){
+    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead, boolean isEnemy, int pointsPerRobotKilled){
         super(bitmap, x, y, speed, isDead, isEnemy);
         this.playerID = playerID;
         this.lives = lives;
         this.lastBomb = 0;
+        this.pointsPerRobotKilled = pointsPerRobotKilled;
+        this.score = 0;
+    }
+
+    public int getPointsPerRobotKilled() {
+        return pointsPerRobotKilled;
     }
 
     public int getLives() {
@@ -27,16 +36,18 @@ public class Bomberman extends Movable {
         this.lives = lives;
     }
 
-    public long getLastBomb() { return this.lastBomb; }
+    public long getLastBomb() {
+        return this.lastBomb;
+    }
 
-    public Bomb dropBomb(Grid grid, Queue<Bomb> bombs, long dt){
+    public Bomb dropBomb(Grid grid, Queue<Bomb> bombs, long dt) {
         Bomb bomb = null;
         long timePassed = dt - lastBomb;
         //get timeout
         GameLoader gameLoader = GameLoader.getInstance();
         long explosionTimeout = (long) 1000 * gameLoader.getSetting(GameLoader.GAME_SETTINGS.ET); //timeout
 
-       if(timePassed > explosionTimeout) {
+        if (timePassed > explosionTimeout) {
             bomb = new
                     Bomb(BitmapLib.getBombBitmap(),
                     this.getX(), //implant the bomb
@@ -45,15 +56,20 @@ public class Bomberman extends Movable {
                     gameLoader.getSetting(GameLoader.GAME_SETTINGS.ED), //duration
                     explosionTimeout, //timeout
                     grid,   //the current grid
-                    dt);
+                    dt,
+                    this);
             //add bomb in the grid
             grid.addBomb(bomb);
             bombs.add(bomb);
             this.lastBomb = dt;
-       }
+        }
         return bomb;
     }
 
+    @Override
+    public void afterExplosion(Explosion explosion) {
+
+    }
 
     /**
      * Detects a collision between two movable objects
@@ -62,8 +78,17 @@ public class Bomberman extends Movable {
      */
     @Override
     public void touchedByMovable(Movable movable) {
-        if(movable.isEnemy()){
+        if (movable.isEnemy()) {
             this.die();
         }
+    }
+
+
+    protected void killedEnemy() {
+        this.score += this.pointsPerRobotKilled;
+    }
+
+    public int getScore() {
+        return score;
     }
 }
