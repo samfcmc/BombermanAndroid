@@ -2,8 +2,6 @@ package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-
-import com.cmov.bombermanandroid.app.BitmapLib;
 import com.cmov.bombermanandroid.app.logic.CrossedExplosion;
 import com.cmov.bombermanandroid.app.logic.ExplosionCalculator;
 
@@ -23,7 +21,6 @@ public class Bomb extends StaticModel {
     private boolean triggered;
     private boolean explosionOccurred;
     private long realDuration;
-    private Bitmap bitmap;
     private Bomberman bomberman;
 
     public Bomb(Bitmap bitmap, int x, int y, int range, int duration, long timeout, Grid grid, long timeDropped, Bomberman bomberman) {
@@ -37,13 +34,11 @@ public class Bomb extends StaticModel {
         this.realDuration = timeout + (long) duration * 1000;
 
         this.explosions = new ArrayList<Explosion>();
-        this.bitmap = BitmapLib.getBombExplosionBitmap();
         this.bomberman = bomberman;
     }
 
     void createCrossedExplosion(ExplosionCalculator calculator) {
-        explosions = calculator.calculateExplosion(this.getX(),
-                this.getY(), this.range, this.grid, this);
+        calculator.calculateExplosion();
     }
 
     public boolean isExplosionOccurred() {
@@ -55,7 +50,7 @@ public class Bomb extends StaticModel {
     }
 
     public void createExplosions() {
-        createCrossedExplosion(new CrossedExplosion());
+        createCrossedExplosion(new CrossedExplosion(this));
     }
 
     public void testExplosionEffect(Explosion explosion) {
@@ -124,5 +119,17 @@ public class Bomb extends StaticModel {
     @Override
     public void touchedByExplosion(Explosion explosion) {
         //Nothing happens
+    }
+
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setExplosions(List<Explosion> explosions) {
+        this.explosions = explosions;
     }
 }
