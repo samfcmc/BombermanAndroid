@@ -41,7 +41,7 @@ public class Game {
         while (iterator.hasNext()) {
             Bomb bomb = iterator.next();
             if(bomb.isTriggered()) {
-                bomb.updade(System.currentTimeMillis());
+                bomb.update(System.currentTimeMillis());
             } else {
                 Log.d("Game", "remove bomb: " + bomb.getX() + " " + bomb.getY());
                 grid.removeCell(bomb);

@@ -1,6 +1,7 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.util.Log;
 import com.cmov.bombermanandroid.app.BitmapLib;
 import com.cmov.bombermanandroid.app.logic.CrossPoint;
@@ -22,6 +23,7 @@ public class Bomb extends StaticModel  {
     private int range;
     private int duration;
     private boolean triggered;
+    private boolean explosionOccured;
     private long realDuration;
 
     Queue<Explosion> explosions;
@@ -36,6 +38,7 @@ public class Bomb extends StaticModel  {
         this.grid = grid;
         this.timeDropped = timeDropped;
         this.triggered = true;
+        this.explosionOccured = false; //the bomb has not exploded yet
         this.realDuration = timeout + (long) duration * 1000;
 
         this.explosions = new LinkedList<Explosion>();
@@ -55,6 +58,14 @@ public class Bomb extends StaticModel  {
         }
     }
 
+    public boolean isExplosionOccured() {
+        return explosionOccured;
+    }
+
+    public void setExplosionOccured(boolean explosionOccured) {
+        this.explosionOccured = explosionOccured;
+    }
+
     public void createExplosions() {
         //this.explosions = this.crossExplosion.getCrossedExplosion();
         Log.d(TAG, "createExplosion range: " + this.range + " duration: " + this.duration);
@@ -72,6 +83,13 @@ public class Bomb extends StaticModel  {
 
     private void explode() {
         this.timeout = 0;
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        if(!isExplosionOccured()) {
+            super.draw(canvas);
+        }
     }
 
     public void updateExplosion(long dt) {
@@ -94,7 +112,7 @@ public class Bomb extends StaticModel  {
         }
 
     }
-    public void updade(long dt) {
+    public void update(long dt) {
         long passed = dt - this.timeDropped;
 
         if(passed < realDuration) {
