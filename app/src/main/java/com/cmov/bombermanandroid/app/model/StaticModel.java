@@ -6,7 +6,7 @@ import android.graphics.ColorFilter;
 /**
  * Created by samuel on 4/23/14.
  */
-public class StaticModel extends Model {
+public abstract class StaticModel extends Model {
 
 
     public StaticModel(Bitmap bitmap, int x, int y, boolean isCollidable) {

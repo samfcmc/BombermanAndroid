@@ -127,6 +127,19 @@ public class Explosion extends Model {
     }
 
     @Override
+    public void touchedByExplosion() {
+        //Explosion should not touch in itself... It would be weird
+    }
+
+    protected void touchInModels(Grid grid) {
+        Cell cell = grid.getCell(getY(), getX());
+
+        for(Model model : cell.getModels()) {
+            model.touchedByExplosion();
+        }
+    }
+
+    @Override
     public void setAlpha(int alpha) {
 
     }

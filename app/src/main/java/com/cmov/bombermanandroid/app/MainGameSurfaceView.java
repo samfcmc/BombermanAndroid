@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.threads.EnemiesThread;
 import com.cmov.bombermanandroid.app.threads.GameThread;
 
@@ -39,7 +40,6 @@ public class MainGameSurfaceView extends SurfaceView implements
     public void init(Context context) {
         // adding the callback (this) to the surface holder to intercept events
         getHolder().addCallback(this);
-        //gameControls = new GameControls(context);
         // create the game loop thread
         this.thread = new GameThread(getHolder(), this);
         this.timer = new Timer();
@@ -47,7 +47,7 @@ public class MainGameSurfaceView extends SurfaceView implements
         // load the game settings
         GameLoader instance = GameLoader.getInstance();
         instance.loadGameSettings(context);
-        instance.loadGameMap(context);
+        instance.loadGameMap(context, GameMode.SINGLEPLAYER);
         // make the GamePanel focusable so it can handle events
         setFocusable(true);
     }

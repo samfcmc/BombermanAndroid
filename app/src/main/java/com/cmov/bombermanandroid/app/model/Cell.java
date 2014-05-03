@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Cell {
 
-    List<Model> models;
+    private List<Model> models;
 
     public Cell(){
         this(new ArrayList<Model>());

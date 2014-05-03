@@ -50,4 +50,8 @@ public class BitmapLib {
     public static Bitmap getBackgroundBitmap(Context context){
         return BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
     }
+
+    public static Bitmap getGameOverBitmap(Context context) {
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.gameover);
+    }
 }

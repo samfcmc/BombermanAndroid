@@ -2,7 +2,7 @@ package com.cmov.bombermanandroid.app;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.util.Log;
+
 import com.cmov.bombermanandroid.app.commands.*;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.text.PauseText;
@@ -13,27 +13,64 @@ import java.util.*;
 
 public class Game {
 
-    private static List<Bomberman> players = new ArrayList<Bomberman>();
-    private static List<Enemy> enemies = new ArrayList<Enemy>();
-    private static boolean paused = false;
-    private static PauseText pauseText = new PauseText(Color.WHITE);
-    private static Queue<Command> commands = new LinkedList<Command>();
-    private static Queue<Bomb> bombs = new LinkedList<Bomb>();
+    private static List<Bomberman> players;
+    private static List<Enemy> enemies;
+    private static List<Movable> deadPlayers;
+    private static boolean paused;
+    private static PauseText pauseText;
+    private static Queue<Command> commands;
+    private static Queue<Bomb> bombs;
     private static Grid grid;
+    private static boolean gameOver;
+    private static Wallpaper gameOverWallpaper;
+
+    static {
+        init();
+    }
+
+    private static void init() {
+        players = new ArrayList<Bomberman>();
+        enemies = new ArrayList<Enemy>();
+        deadPlayers = new ArrayList<Movable>();
+        paused = false;
+        pauseText = new PauseText(Color.WHITE);
+        commands = new LinkedList<Command>();
+        bombs = new LinkedList<Bomb>();
+        gameOver = false;
+    }
 
     public static void setGrid(Grid grid1) {
         grid = grid1;
     }
 
     public static void updateGameState(Canvas canvas) {
-        processCommands();
+        if(gameOver) {
+            commands.clear();
+        }
+        else {
+            processCommands();
 
-        if(!paused) {
-            updateMovables(players, canvas);
+            if(!paused) {
+                update(canvas);
+            }
+        }
+    }
+
+    private static void update(Canvas canvas) {
+        //Check for game over
+        if(noMorePlayersAlive()) {
+            gameOver = true;
+        }
+        else {
+            updateMovables(players, deadPlayers, canvas);
             updateMovables(enemies, canvas);
             updateBombs();
             generateCommandForEnemies();
         }
+    }
+
+    private static boolean noMorePlayersAlive() {
+        return players.isEmpty();
     }
 
     private static void updateBombs() {
@@ -43,8 +80,7 @@ public class Game {
             if(bomb.isTriggered()) {
                 bomb.update(System.currentTimeMillis());
             } else {
-                Log.d("Game", "remove bomb: " + bomb.getX() + " " + bomb.getY());
-                grid.removeCell(bomb);
+                grid.removeModel(bomb);
                 iterator.remove();
             }
         }
@@ -57,19 +93,41 @@ public class Game {
         }
     }
 
+    public static void setGameOverWallpaper(Wallpaper wallpaper) {
+        gameOverWallpaper = wallpaper;
+    }
+
     public static void addCommand(Command command) {
         commands.add(command);
     }
 
     private static void updateMovables(List<? extends Movable> characters, Canvas canvas) {
-        for (Movable character : characters) {
-            if (!(character.getCommand() == null)) {
-                CharacterCommand command = character.getCommand();
-                command.execute();
+        updateMovables(characters, null, canvas);
+    }
+
+    private static void updateMovables(List<? extends Movable> characters,
+                                       List<Movable> deadCharacters, Canvas canvas) {
+        Iterator<? extends Movable> iterator = characters.iterator();
+        while(iterator.hasNext()) {
+            Movable character = iterator.next();
+            // Update life state
+            if(character.isDead()) {
+                if(deadCharacters != null) {
+                    deadCharacters.add(character);
+                }
+                iterator.remove();
+                grid.removeModel(character);
             }
-            if (character.isMoving()) {
-                if (character.shouldStop(character.getScaledBitmap(canvas))) {
-                    character.stopAndUpdatePosition(grid);
+
+            else {
+                if (!(character.getCommand() == null)) {
+                    CharacterCommand command = character.getCommand();
+                    command.execute();
+                }
+                if (character.isMoving()) {
+                    if (character.shouldStop(character.getScaledBitmap(canvas))) {
+                        character.stopAndUpdatePosition(grid);
+                    }
                 }
             }
         }
@@ -84,13 +142,21 @@ public class Game {
     }
 
     public static Bomberman getPlayer(int player) {
-        return players.get(player);
+        if(players.isEmpty()) {
+            return null;
+        }
+        else {
+            return players.get(player);
+        }
+
     }
 
     public static void dropBomb(int player) {
-        Bomb bomb = getPlayer(player).dropBomb(grid, bombs, System.currentTimeMillis());
-        if (bomb != null) {
-            new Timer().schedule(new ExplosionThread(bomb), bomb.getTimeout());
+        if(!gameOver) {
+            Bomb bomb = getPlayer(player).dropBomb(grid, bombs, System.currentTimeMillis());
+            if (bomb != null) {
+                new Timer().schedule(new ExplosionThread(bomb), bomb.getTimeout());
+            }
         }
     }
 
@@ -105,10 +171,18 @@ public class Game {
     public static void reset() {
         players.clear();
         enemies.clear();
+        deadPlayers.clear();
+        paused = false;
+        commands.clear();
+        bombs.clear();
+        gameOver = false;
     }
 
     public static void draw(Canvas canvas) {
-        if(paused) {
+        if(gameOver) {
+            gameOverWallpaper.draw(canvas);
+        }
+        else if(paused) {
             pauseText.draw(canvas);
         }
         else {
@@ -160,6 +234,32 @@ public class Game {
         }
 
         return command;
+    }
+
+    private static void trySendCommand(Bomberman player, CharacterCommand command) {
+        if(player != null) {
+            player.setCommand(command);
+        }
+    }
+
+    public static void sendUpCommand(int playerIndex) {
+        Bomberman player = getPlayer(playerIndex);
+        trySendCommand(player, new UpCommand(player));
+    }
+
+    public static void sendDownCommand(int playerIndex) {
+        Bomberman player = getPlayer(playerIndex);
+        trySendCommand(player, new DownCommand(player));
+    }
+
+    public static void sendLeftCommand(int playerIndex) {
+        Bomberman player = getPlayer(playerIndex);
+        trySendCommand(player, new LeftCommand(player));
+    }
+
+    public static void sendRightCommand(int playerIndex) {
+        Bomberman player = getPlayer(playerIndex);
+        trySendCommand(player, new RightCommand(player));
     }
 
 }

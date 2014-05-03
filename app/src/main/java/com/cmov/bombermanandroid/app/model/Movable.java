@@ -9,7 +9,7 @@ import com.cmov.bombermanandroid.app.threads.GameThread;
 /**
  * The type Movable.
  */
-public class Movable extends Model {
+public abstract class Movable extends Model {
 
     private static final int MOVE_RIGHT = 1;
     private static final int MOVE_LEFT = -1;
@@ -189,6 +189,11 @@ public class Movable extends Model {
         }
     }
 
+    @Override
+    public void touchedByExplosion() {
+        die();
+    }
+
     /**
      * Should stop.
      *
@@ -239,6 +244,10 @@ public class Movable extends Model {
         this.receivedCommand = null;
     }
 
+    public void die() {
+        this.isDead = true;
+    }
+
     @Override
     public void setAlpha(int alpha) {
 
@@ -252,5 +261,9 @@ public class Movable extends Model {
     @Override
     public int getOpacity() {
         return 0;
+    }
+
+    public boolean isDead() {
+        return isDead;
     }
 }

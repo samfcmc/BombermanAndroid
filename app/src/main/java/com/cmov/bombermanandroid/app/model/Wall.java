@@ -12,4 +12,8 @@ public class Wall extends StaticModel {
         super(bitmap, x, y, true);
     }
 
+    @Override
+    public void touchedByExplosion() {
+        //The walls are badass and nothing can destroy them :)
+    }
 }
