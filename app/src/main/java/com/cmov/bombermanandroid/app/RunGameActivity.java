@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.commands.TurnPauseOnOffCommand;
+import com.cmov.bombermanandroid.app.events.TimePassedEvent;
 import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 
 
@@ -19,6 +20,7 @@ public class RunGameActivity extends ActionBarActivity {
 
     private static final int FIRST_PLAYER = 0;
     private TextView scoreTextView;
+    private TextView timeLeftTextView;
     private UpdateGameStateThread updatedGameStateThread;
 
     @Override
@@ -48,6 +50,7 @@ public class RunGameActivity extends ActionBarActivity {
 
     private void initViews() {
         this.scoreTextView = (TextView) findViewById(R.id.player_score);
+        this.timeLeftTextView = (TextView) findViewById(R.id.time_left);
     }
 
     private void initThreads() {
@@ -116,9 +119,21 @@ public class RunGameActivity extends ActionBarActivity {
         runOnUiThread(updatedGameStateThread);
     }
 
+    public void onEvent(final TimePassedEvent event) {
+        runOnUiThread(new Thread() {
+            public void run() {
+                updateTimerTextView(event.getTimeLeft());
+            }
+        });
+    }
+
     private void updateScoreTextView() {
         int score = Game.getPlayerScore(FIRST_PLAYER);
         this.scoreTextView.setText(Integer.toString(score));
+    }
+
+    private void updateTimerTextView(int timeLeft) {
+        this.timeLeftTextView.setText(timeLeft + "");
     }
 
     private class UpdateGameStateThread extends Thread {

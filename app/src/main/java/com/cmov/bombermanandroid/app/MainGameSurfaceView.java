@@ -44,8 +44,6 @@ public class MainGameSurfaceView extends SurfaceView implements
         this.thread = new GameThread(getHolder(), this);
         this.timer = new Timer();
 
-        Game.start(context, GameMode.SINGLEPLAYER);
-
         // make the GamePanel focusable so it can handle events
         setFocusable(true);
     }
@@ -60,6 +58,7 @@ public class MainGameSurfaceView extends SurfaceView implements
         // at this point the surface is created and
         // we can safely start the game loop
         //setWillNotDraw(false);
+        Game.start(getContext(), GameMode.SINGLEPLAYER);
         launchThreads();
     }
 

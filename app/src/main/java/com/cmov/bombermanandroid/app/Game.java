@@ -12,6 +12,7 @@ import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.text.PauseText;
 import com.cmov.bombermanandroid.app.threads.ExplosionThread;
+import com.cmov.bombermanandroid.app.threads.TimeOutThread;
 
 import java.util.*;
 
@@ -22,6 +23,7 @@ public class Game {
 
     private static int currentLevel;
     private static GameMode currentGameMode;
+    private static int gameDuration;
 
     /*
      * Movables lists
@@ -36,6 +38,7 @@ public class Game {
     private static boolean gameOver;
     private static boolean paused;
     private static boolean allEnemiesAreDead;
+    private static boolean timeOut;
 
     /*
      * Special drawables
@@ -43,13 +46,14 @@ public class Game {
     private static PauseText pauseText;
     private static Wallpaper gameOverWallpaper;
 
-
     private static Queue<Command> commands;
     private static Queue<Bomb> bombs;
     private static Grid grid;
 
     private static EventBus eventBus;
     private static Context currentContext;
+    private static Timer timer;
+    private static TimeOutThread timeOutThread;
 
     static {
         init();
@@ -66,6 +70,8 @@ public class Game {
         gameOver = false;
         eventBus = EventBus.getDefault();
         allEnemiesAreDead = false;
+        timeOut = false;
+        timer = new Timer();
     }
 
     private static void reset() {
@@ -76,6 +82,22 @@ public class Game {
         bombs.clear();
         gameOver = false;
         allEnemiesAreDead = false;
+        timeOut = false;
+        timeOutThread.cancel();
+        timer.cancel();
+    }
+
+    private static void launchTimeOutThread() {
+        timeOutThread = new TimeOutThread(gameDuration * 60);
+        timer.schedule(timeOutThread, 0, 1000);
+    }
+
+    public static void timeOut() {
+        timeOut = true;
+    }
+
+    public static void setGameDuration(int gameDuration) {
+        Game.gameDuration = gameDuration;
     }
 
     public static void start(Context context, GameMode gameMode) {
@@ -84,12 +106,14 @@ public class Game {
         currentLevel = 0;
         currentContext = context;
         GameLoader.getInstance().loadGameLevel(context, gameMode, currentLevel);
+        launchTimeOutThread();
     }
 
     public static void startNextLevel() {
         reset();
         currentLevel = (currentLevel + 1) % Levels.getLevelsCount();
         GameLoader.getInstance().loadGameLevel(currentContext, currentGameMode, currentLevel);
+        launchTimeOutThread();
     }
 
     public static void setGrid(Grid grid1) {
@@ -97,10 +121,10 @@ public class Game {
     }
 
     public static void updateGameState(Canvas canvas) {
-        if(gameOver) {
+        if(gameOver || timeOut) {
             commands.clear();
         }
-        if(allEnemiesAreDead) {
+        else if(allEnemiesAreDead) {
             startNextLevel();
         }
         else {
@@ -246,7 +270,7 @@ public class Game {
     }
 
     public static void dropBomb(int player) {
-        if(!gameOver) {
+        if(!gameOver && !timeOut) {
             Bomb bomb = getPlayer(player).dropBomb(grid, bombs, System.currentTimeMillis());
             if (bomb != null) {
                 new Timer().schedule(new ExplosionThread(bomb), bomb.getTimeout());
@@ -274,6 +298,9 @@ public class Game {
 
     public static void draw(Canvas canvas) {
         if(gameOver) {
+            gameOverWallpaper.draw(canvas);
+        }
+        else if(timeOut) {
             gameOverWallpaper.draw(canvas);
         }
         else if(paused) {
