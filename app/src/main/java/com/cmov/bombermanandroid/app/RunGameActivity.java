@@ -21,6 +21,7 @@ public class RunGameActivity extends ActionBarActivity {
     private static final int FIRST_PLAYER = 0;
     private TextView scoreTextView;
     private TextView timeLeftTextView;
+    private TextView numberPlayersTextView;
     private UpdateGameStateThread updatedGameStateThread;
 
     @Override
@@ -51,6 +52,7 @@ public class RunGameActivity extends ActionBarActivity {
     private void initViews() {
         this.scoreTextView = (TextView) findViewById(R.id.player_score);
         this.timeLeftTextView = (TextView) findViewById(R.id.time_left);
+        this.numberPlayersTextView = (TextView) findViewById(R.id.numb_players);
     }
 
     private void initThreads() {
@@ -127,17 +129,26 @@ public class RunGameActivity extends ActionBarActivity {
         });
     }
 
+    private void updateNumberOfPlayersTextView(){
+        int number_players = Game.getNumberOfPlayers();
+        String displayText = "Number Players\n" + Integer.toString(number_players);
+        this.numberPlayersTextView.setText(displayText);
+    }
+
     private void updateScoreTextView() {
         int score = Game.getPlayerScore(FIRST_PLAYER);
-        this.scoreTextView.setText(Integer.toString(score));
+        String displayText = "Player Score\n" + Integer.toString(score);
+        this.scoreTextView.setText(displayText);
     }
 
     private void updateTimerTextView(int timeLeft) {
-        this.timeLeftTextView.setText(timeLeft + "");
+        String displayText = "Time Left\n" + timeLeft + "";
+        this.timeLeftTextView.setText(displayText);
     }
 
     private class UpdateGameStateThread extends Thread {
         public void run() {
+            updateNumberOfPlayersTextView();
             updateScoreTextView();
         }
     }

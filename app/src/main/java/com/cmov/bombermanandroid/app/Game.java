@@ -137,6 +137,10 @@ public class Game {
         }
     }
 
+    public static int getNumberOfPlayers(){
+        return players.size();
+    }
+
     public static int getPlayerScore(int playerIndex) {
         Bomberman player = getPlayer(playerIndex);
         if(player == null) {
