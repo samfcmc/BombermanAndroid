@@ -1,11 +1,14 @@
 package com.cmov.bombermanandroid.app;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.cmov.bombermanandroid.app.commands.*;
+import com.cmov.bombermanandroid.app.constants.Levels;
 import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 import com.cmov.bombermanandroid.app.model.*;
+import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.text.PauseText;
 import com.cmov.bombermanandroid.app.threads.ExplosionThread;
 
@@ -16,17 +19,36 @@ import de.greenrobot.event.EventBus;
 
 public class Game {
 
+    private static int currentLevel;
+    private static GameMode currentGameMode;
+
+    /*
+     * Movables lists
+     */
     private static List<Bomberman> players;
     private static List<Enemy> enemies;
     private static List<Movable> deadPlayers;
+
+    /*
+     * Game state control flags
+     */
+    private static boolean gameOver;
     private static boolean paused;
+    private static boolean allEnemiesAreDead;
+
+    /*
+     * Special drawables
+     */
     private static PauseText pauseText;
+    private static Wallpaper gameOverWallpaper;
+
+
     private static Queue<Command> commands;
     private static Queue<Bomb> bombs;
     private static Grid grid;
-    private static boolean gameOver;
-    private static Wallpaper gameOverWallpaper;
+
     private static EventBus eventBus;
+    private static Context currentContext;
 
     static {
         init();
@@ -42,6 +64,20 @@ public class Game {
         bombs = new LinkedList<Bomb>();
         gameOver = false;
         eventBus = EventBus.getDefault();
+        allEnemiesAreDead = false;
+    }
+
+    public static void start(Context context, GameMode gameMode) {
+        currentGameMode = gameMode;
+        currentLevel = 0;
+        currentContext = context;
+        GameLoader.getInstance().loadGameLevel(context, gameMode, currentLevel);
+    }
+
+    public static void startNextLevel() {
+        init();
+        currentLevel = (currentLevel + 1) % Levels.getLevelsCount();
+        GameLoader.getInstance().loadGameLevel(currentContext, currentGameMode, currentLevel);
     }
 
     public static void setGrid(Grid grid1) {
@@ -51,6 +87,9 @@ public class Game {
     public static void updateGameState(Canvas canvas) {
         if(gameOver) {
             commands.clear();
+        }
+        if(allEnemiesAreDead) {
+            startNextLevel();
         }
         else {
             processCommands();
@@ -78,6 +117,9 @@ public class Game {
         if(noMorePlayersAlive()) {
             gameOver = true;
         }
+        else if(noMoreEnemiesAlive()) {
+            allEnemiesAreDead = true;
+        }
         else {
             detectMovableCollisions(enemies, players);
             updateMovables(players, deadPlayers, canvas);
@@ -89,6 +131,10 @@ public class Game {
 
     private static boolean noMorePlayersAlive() {
         return players.isEmpty();
+    }
+
+    private static boolean noMoreEnemiesAlive() {
+        return enemies.isEmpty();
     }
 
     private static void updateBombs() {
@@ -205,13 +251,7 @@ public class Game {
     }
 
     public static void reset() {
-        players.clear();
-        enemies.clear();
-        deadPlayers.clear();
-        paused = false;
-        commands.clear();
-        bombs.clear();
-        gameOver = false;
+        init();
     }
 
     public static void draw(Canvas canvas) {

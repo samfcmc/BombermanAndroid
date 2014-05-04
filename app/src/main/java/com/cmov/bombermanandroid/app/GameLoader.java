@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.cmov.bombermanandroid.app.constants.Constants;
+import com.cmov.bombermanandroid.app.constants.Levels;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.modes.GameMode;
 
@@ -64,9 +65,8 @@ public class GameLoader {
         addSetting(GAME_SETTINGS.valueOf(parameter), value);
     }
 
-    public void loadGameSettings(Context context) {
-        InputStream is = context.getResources().openRawResource(R.raw.level_1);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+    private void loadGameSettings(Context context, int level) {
+        BufferedReader br = Levels.getLevelSettingsBufferedReader(context, level);
 
         try {
             String line = br.readLine();
@@ -80,18 +80,22 @@ public class GameLoader {
         }
     }
 
+    public void loadGameLevel(Context context, GameMode gameMode, int level) {
+        loadGameSettings(context, level);
+        loadGameMap(context, gameMode, level);
+    }
+
     private void loadOtherFeatures(Context context) {
         BitmapLib.loadBomb(context);
         BitmapLib.loadBombExplosion(context);
         Game.setGameOverWallpaper(new Wallpaper(BitmapLib.getGameOverBitmap(context)));
     }
 
-    public void loadGameMap(Context context, GameMode gameMode) {
+    private void loadGameMap(Context context, GameMode gameMode, int level) {
         loadOtherFeatures(context);
         int i = 0;
 
-        InputStream is = context.getResources().openRawResource(R.raw.level_1_layout);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        BufferedReader br = Levels.getLevelLayoutBufferedReader(context, level);
 
         grid = new Grid(context);
         Game.setGrid(grid);
