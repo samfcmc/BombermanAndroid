@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 
+import java.util.Iterator;
+
 public class Explosion extends Model {
 
     private static final String TAG = Explosion.class.getSimpleName();
@@ -135,9 +137,15 @@ public class Explosion extends Model {
 
     protected void touchInModels(Grid grid) {
         Cell cell = grid.getCell(getY(), getX());
+        Iterator<Model> iterator = cell.getModels().iterator();
 
-        for(Model model : cell.getModels()) {
+        while (iterator.hasNext()) {
+            Model model = iterator.next();
             model.touchedByExplosion(this);
+
+            if(!model.isVisible()) {
+                iterator.remove();
+            }
         }
     }
 
