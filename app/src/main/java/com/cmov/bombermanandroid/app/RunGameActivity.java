@@ -110,7 +110,6 @@ public class RunGameActivity extends ActionBarActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Game.reset();
     }
 
     public void onEvent(UpdatedGameStateEvent event) {

@@ -15,9 +15,9 @@ public class Bomberman extends Movable {
     private int pointsPerRobotKilled;
     private int score;
 
-    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed, boolean isDead,
+    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed,
                      boolean isEnemy, int pointsPerRobotKilled){
-        super(bitmap, x, y, speed, isDead, isEnemy);
+        super(bitmap, x, y, speed, false, isEnemy);
         this.playerID = playerID;
         this.lives = lives;
         this.lastBomb = 0;
