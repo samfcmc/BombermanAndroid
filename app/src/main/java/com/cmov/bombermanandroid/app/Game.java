@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.cmov.bombermanandroid.app.commands.*;
+import com.cmov.bombermanandroid.app.constants.Constants;
 import com.cmov.bombermanandroid.app.constants.Levels;
 import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 import com.cmov.bombermanandroid.app.model.*;
@@ -67,7 +68,18 @@ public class Game {
         allEnemiesAreDead = false;
     }
 
+    private static void reset() {
+        enemies.clear();
+        deadPlayers.clear();
+        paused = false;
+        commands.clear();
+        bombs.clear();
+        gameOver = false;
+        allEnemiesAreDead = false;
+    }
+
     public static void start(Context context, GameMode gameMode) {
+        init();
         currentGameMode = gameMode;
         currentLevel = 0;
         currentContext = context;
@@ -75,7 +87,7 @@ public class Game {
     }
 
     public static void startNextLevel() {
-        init();
+        reset();
         currentLevel = (currentLevel + 1) % Levels.getLevelsCount();
         GameLoader.getInstance().loadGameLevel(currentContext, currentGameMode, currentLevel);
     }
@@ -220,7 +232,7 @@ public class Game {
     }
 
     public static Bomberman getPlayer(int player) {
-        if(players.isEmpty()) {
+        if(players.isEmpty() || player > players.size() - 1) {
             return null;
         }
         else {
@@ -242,16 +254,22 @@ public class Game {
         }
     }
 
-    public static void addPlayer(Bomberman bomberman) {
-        players.add(bomberman);
+    public static Bomberman addPlayer(Context context, int x, int y, int playerNumber,
+                                 int pointsPerRobotKilled) {
+        Bomberman player = getPlayer(playerNumber - 1);
+
+        if(player == null) {
+            player = new Bomberman(BitmapLib.getBombermanBitmap(context), x, y, playerNumber,
+                    Constants.BOMBERMAN_LIVES, Constants.BOMBERMAN_SPEED, false,
+                    pointsPerRobotKilled);
+            players.add(player);
+        }
+
+        return player;
     }
 
     public static void addEnemy(Enemy enemy) {
         enemies.add(enemy);
-    }
-
-    public static void reset() {
-        init();
     }
 
     public static void draw(Canvas canvas) {
