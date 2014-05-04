@@ -44,10 +44,8 @@ public class MainGameSurfaceView extends SurfaceView implements
         this.thread = new GameThread(getHolder(), this);
         this.timer = new Timer();
 
-        // load the game settings
-        GameLoader instance = GameLoader.getInstance();
-        instance.loadGameSettings(context);
-        instance.loadGameMap(context, GameMode.SINGLEPLAYER);
+        Game.start(context, GameMode.SINGLEPLAYER);
+
         // make the GamePanel focusable so it can handle events
         setFocusable(true);
     }
