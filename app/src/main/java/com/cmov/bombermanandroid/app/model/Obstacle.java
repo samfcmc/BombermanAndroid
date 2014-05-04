@@ -1,9 +1,6 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 
 
 public class Obstacle extends StaticModel {
@@ -27,6 +24,6 @@ public class Obstacle extends StaticModel {
 
     @Override
     public void touchedByExplosion(Explosion explosion) {
-        //TODO: We should destroy it
+        setVisible(false,false);
     }
 }
