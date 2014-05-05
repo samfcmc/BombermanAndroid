@@ -131,18 +131,18 @@ public class RunGameActivity extends ActionBarActivity {
 
     private void updateNumberOfPlayersTextView(){
         int number_players = Game.getNumberOfPlayers();
-        String displayText = "Number Players\n" + Integer.toString(number_players);
+        String displayText = getResources().getString(R.string.numb_players) + "\n" + Integer.toString(number_players);
         this.numberPlayersTextView.setText(displayText);
     }
 
     private void updateScoreTextView() {
         int score = Game.getPlayerScore(FIRST_PLAYER);
-        String displayText = "Player Score\n" + Integer.toString(score);
+        String displayText = getResources().getString(R.string.player_score) + "\n" + Integer.toString(score);
         this.scoreTextView.setText(displayText);
     }
 
     private void updateTimerTextView(int timeLeft) {
-        String displayText = "Time Left\n" + timeLeft + "";
+        String displayText = getResources().getString(R.string.time_left) + "\n" + timeLeft + "";
         this.timeLeftTextView.setText(displayText);
     }
 
