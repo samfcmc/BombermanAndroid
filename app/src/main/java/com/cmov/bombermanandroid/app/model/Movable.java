@@ -39,7 +39,7 @@ public abstract class Movable extends Model {
      * @param isDead the is dead
      */
     public Movable(Bitmap bitmap, int x, int y, float speed, boolean isDead, boolean isEnemy) {
-        super(bitmap, x, y, true);
+        super(bitmap, x, y, false);
         this.speed = speed;
         this.isDead = isDead;
         this.isEnemy = isEnemy;

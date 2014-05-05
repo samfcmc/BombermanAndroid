@@ -74,7 +74,7 @@ public class Game {
         timer = new Timer();
     }
 
-    private static void reset() {
+    public static void reset() {
         enemies.clear();
         deadPlayers.clear();
         paused = false;
@@ -88,8 +88,15 @@ public class Game {
     }
 
     private static void launchTimeOutThread() {
+        timer = new Timer();
         timeOutThread = new TimeOutThread(gameDuration * 60);
         timer.schedule(timeOutThread, 0, 1000);
+    }
+
+    private static void stop() {
+        commands.clear();
+        timeOutThread.cancel();
+        timer.cancel();
     }
 
     public static void timeOut() {
@@ -122,7 +129,7 @@ public class Game {
 
     public static void updateGameState(Canvas canvas) {
         if(gameOver || timeOut) {
-            commands.clear();
+            stop();
         }
         else if(allEnemiesAreDead) {
             startNextLevel();

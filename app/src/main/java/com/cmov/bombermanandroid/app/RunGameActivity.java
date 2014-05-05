@@ -117,6 +117,12 @@ public class RunGameActivity extends ActionBarActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Game.reset();
+    }
+
     public void onEvent(UpdatedGameStateEvent event) {
         runOnUiThread(updatedGameStateThread);
     }
