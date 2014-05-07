@@ -2,7 +2,6 @@ package com.cmov.bombermanandroid.app.modes;
 
 public class MultiplayerModeManager extends ModeManager {
 
-
     @Override
     public void upPressed() {
 
