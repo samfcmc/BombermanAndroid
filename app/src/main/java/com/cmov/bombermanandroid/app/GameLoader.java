@@ -89,7 +89,7 @@ public class GameLoader {
         BitmapLib.loadBomb(context);
         BitmapLib.loadBombExplosion(context);
         Game.setGameOverWallpaper(new Wallpaper(BitmapLib.getGameOverBitmap(context)));
-        Game.setGameDuration(getSetting(GAME_SETTINGS.GD));
+        Game.setGameDuration(getSetting(GAME_SETTINGS.GD) * 60);
     }
 
     private void loadGameMap(Context context, GameMode gameMode, int level) {

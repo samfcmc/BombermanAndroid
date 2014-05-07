@@ -87,10 +87,20 @@ public class Game {
         timer.cancel();
     }
 
-    private static void launchTimeOutThread() {
+    private static void startTimeOutThread() {
         timer = new Timer();
-        timeOutThread = new TimeOutThread(gameDuration * 60);
+        timeOutThread = new TimeOutThread(gameDuration);
         timer.schedule(timeOutThread, 0, 1000);
+    }
+
+    public static void stopTimeOutThread() {
+        gameDuration = timeOutThread.getEvent().getTimeLeft();
+        timeOutThread.cancel();
+        timer.cancel();
+    }
+
+    public static void resumeTimeOutThread() {
+        startTimeOutThread();
     }
 
     private static void stop() {
@@ -113,14 +123,14 @@ public class Game {
         currentLevel = 0;
         currentContext = context;
         GameLoader.getInstance().loadGameLevel(context, gameMode, currentLevel);
-        launchTimeOutThread();
+        startTimeOutThread();
     }
 
     public static void startNextLevel() {
         reset();
         currentLevel = (currentLevel + 1) % Levels.getLevelsCount();
         GameLoader.getInstance().loadGameLevel(currentContext, currentGameMode, currentLevel);
-        launchTimeOutThread();
+        startTimeOutThread();
     }
 
     public static void setGrid(Grid grid1) {

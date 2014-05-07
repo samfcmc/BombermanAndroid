@@ -30,6 +30,9 @@ public class TimeOutThread extends TimerTask {
 
         this.event.setTimeLeft(this.duration);
         Game.getEventBus().post(this.event);
+    }
 
+    public TimePassedEvent getEvent() {
+        return event;
     }
 }
