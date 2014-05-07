@@ -14,11 +14,11 @@ public class Grid {
     /**
      * The grid's HEIGHT (in number of cells).
      */
-    public static final int HEIGHT = 15;
+    public static final int HEIGHT = 13;
     /**
      * The grid's WIDTH (in number of cells).
      */
-    public static final int WIDTH = 15;
+    public static final int WIDTH = 19;
 
     public static float TILE_WIDHT;
 
@@ -156,7 +156,7 @@ public class Grid {
 
     public static void calculateTileSize(float canvasWidth, float canvasHeight) {
         TILE_WIDHT = canvasWidth / Grid.WIDTH;
-        TILE_HEIGHT = canvasHeight / Grid.WIDTH;
+        TILE_HEIGHT = canvasHeight / Grid.HEIGHT;
     }
 
     public boolean isWall(int x, int y) { return  this.getModel(x,y) instanceof Wall; }
