@@ -14,6 +14,7 @@ import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.commands.TurnPauseOnOffCommand;
 import com.cmov.bombermanandroid.app.events.TimePassedEvent;
 import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
+import com.cmov.bombermanandroid.app.modes.ModeManager;
 
 
 public class RunGameActivity extends ActionBarActivity {
@@ -84,23 +85,22 @@ public class RunGameActivity extends ActionBarActivity {
     }
 
     public void upPressed(View view) {
-        Game.sendUpCommand(FIRST_PLAYER);
+        Game.sendUpCommand();
     }
 
     public void downPressed(View view) {
-        Game.sendDownCommand(FIRST_PLAYER);
+        Game.sendDownCommand();
     }
 
-    public void leftPressed(View view) {
-        Game.sendLeftCommand(FIRST_PLAYER);
+    public void leftPressed(View view) { Game.sendLeftCommand();
     }
 
     public void rightPressed(View view) {
-        Game.sendRightCommand(FIRST_PLAYER);
+        Game.sendRightCommand();
     }
 
     public void bombPressed(View view) {
-        Game.dropBomb(FIRST_PLAYER);
+        Game.dropBomb();
     }
 
     public void pauseGame(View view) {

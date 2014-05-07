@@ -107,6 +107,22 @@ public class Game {
         Game.gameDuration = gameDuration;
     }
 
+    public static Queue<Bomb> getBombs() {
+        return bombs;
+    }
+
+    public static Grid getGrid() {
+        return grid;
+    }
+
+    public static boolean isGameOver() {
+        return gameOver;
+    }
+
+    public static boolean isTimeOut() {
+        return timeOut;
+    }
+
     public static void start(Context context, GameMode gameMode) {
         init();
         currentGameMode = gameMode;
@@ -266,6 +282,15 @@ public class Game {
         Game.paused = paused;
     }
 
+    public static Bomberman getLocalPlayer(){
+        if(players.isEmpty()) {
+            return null;
+        }
+        else {
+            return players.get(0);
+        }
+    }
+
     public static Bomberman getPlayer(int player) {
         if(players.isEmpty() || player > players.size() - 1) {
             return null;
@@ -280,13 +305,8 @@ public class Game {
         return eventBus;
     }
 
-    public static void dropBomb(int player) {
-        if(!gameOver && !timeOut) {
-            Bomb bomb = getPlayer(player).dropBomb(grid, bombs, System.currentTimeMillis());
-            if (bomb != null) {
-                new Timer().schedule(new ExplosionThread(bomb), bomb.getTimeout());
-            }
-        }
+    public static void dropBomb() {
+       currentGameMode.getManager().bombPressed();
     }
 
     public static Bomberman addPlayer(Context context, int x, int y, int playerNumber,
@@ -368,30 +388,26 @@ public class Game {
         return command;
     }
 
-    private static void trySendCommand(Bomberman player, CharacterCommand command) {
+    public static void trySendCommand(Bomberman player, CharacterCommand command) {
         if(player != null) {
             player.setCommand(command);
         }
     }
 
-    public static void sendUpCommand(int playerIndex) {
-        Bomberman player = getPlayer(playerIndex);
-        trySendCommand(player, new UpCommand(player));
+    public static void sendUpCommand() {
+        currentGameMode.getManager().upPressed();
     }
 
-    public static void sendDownCommand(int playerIndex) {
-        Bomberman player = getPlayer(playerIndex);
-        trySendCommand(player, new DownCommand(player));
+    public static void sendDownCommand() {
+        currentGameMode.getManager().downPressed();
     }
 
-    public static void sendLeftCommand(int playerIndex) {
-        Bomberman player = getPlayer(playerIndex);
-        trySendCommand(player, new LeftCommand(player));
+    public static void sendLeftCommand() {
+        currentGameMode.getManager().leftPressed();
     }
 
-    public static void sendRightCommand(int playerIndex) {
-        Bomberman player = getPlayer(playerIndex);
-        trySendCommand(player, new RightCommand(player));
+    public static void sendRightCommand() {
+        currentGameMode.getManager().rightPressed();
     }
 
 
