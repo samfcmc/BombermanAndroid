@@ -2,8 +2,10 @@ package com.cmov.bombermanandroid.app;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +20,12 @@ import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.utl.ist.cmov.wifidirect.SimWifiP2pBroadcast;
+
 public class MultiplayerActivity extends ActionBarActivity {
+
+    private String gameName;
+    private int MULTIPLAYER_MAX_PLAYERS;
 
     private List<MultiplayerGameInfo> multiplayerGamesList;
 
@@ -61,6 +68,26 @@ public class MultiplayerActivity extends ActionBarActivity {
         //TODO: Replace this with code that refreshes the list
         // This is just testing code
         MultiplayerManager.requestPeers();
+    }
+
+    public void initBroadcastReceiver(){
+        // Create a new IntentFilter
+        IntentFilter filter = new IntentFilter();
+        // Add the generic actions to be filtered
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
+        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
+        // Create a new instance of P2PBcastReceiver
+        SimWifiP2pBroadcastReceiver receiver = new SimWifiP2pBroadcastReceiver(this);
+        // Register the Bcast Receiver
+        registerReceiver(receiver, filter);
+    }
+
+    public void doCreateMultiplayerClick(String gameName, String maxPlayers){
+        this.gameName = gameName;
+        this.MULTIPLAYER_MAX_PLAYERS = Integer.parseInt(maxPlayers);
+        initBroadcastReceiver();
     }
 
     private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {

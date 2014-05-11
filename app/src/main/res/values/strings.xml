@@ -8,7 +8,6 @@
     <!-- Main menu -->
     <string name="button_singleplayer">Singleplayer</string>
     <string name="button_multiplayer">Multiplayer</string>
-
     <string name="title_activity_run_game">Bomberman Running</string>
     <string name="pause_button">Pause</string>
     <string name="quit_button">Quit</string>
@@ -18,7 +17,7 @@
     <string name="time_left">Time Left</string>
     <string name="numb_players">Number Players</string>
 
-    <!--Multiplayer-->
+    <!-- Multiplayer -->
     <string name="title_activity_multiplayer">Multiplayer Mode</string>
     <string name="button_multiplayer_new_game">Host a new game</string>
     <string name="button_multiplayer_refresh_list">Refresh list</string>
@@ -29,5 +28,7 @@
     <string name="editText_dialog_new_multiplayer_game_max">Max number of players</string>
     <string name="button_dialog_new_multiplayer_game_create">Create</string>
     <string name="button_dialog_new_multiplayer_game_cancel">Cancel</string>
+    <string name="title_activity_multiplayer_game">MultiplayerGameActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
