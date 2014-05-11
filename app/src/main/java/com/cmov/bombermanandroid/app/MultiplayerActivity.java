@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
+import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ public class MultiplayerActivity extends ActionBarActivity {
         setContentView(R.layout.activity_multiplayer);
 
         this.multiplayerGamesList = new ArrayList<MultiplayerGameInfo>();
+        MultiplayerManager.init(this);
+
     }
 
 
@@ -55,7 +58,7 @@ public class MultiplayerActivity extends ActionBarActivity {
     }
 
     public void refreshMultiplayerGamesList(View view) {
-
+        MultiplayerManager.requestPeers();
     }
 
     private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {
