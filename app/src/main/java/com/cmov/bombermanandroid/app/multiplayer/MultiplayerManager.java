@@ -56,7 +56,6 @@ public class MultiplayerManager {
         Intent intent = new Intent(activity, SimWifiP2pService.class);
         boolean bind = activity.bindService(intent, connection, Context.BIND_AUTO_CREATE);
         bound = true;
-        //manager.requestPeers(channel, listener);
     }
 
     public static void wifiOff() {
@@ -81,24 +80,9 @@ public class MultiplayerManager {
 
         @Override
         public void onPeersAvailable(SimWifiP2pDeviceList peers) {
-            StringBuilder peersStr = new StringBuilder();
+            //TODO: This is just testing code!! Must be replaced
+            Toast.makeText(activity, "Group " + peers.getDeviceList().size(), Toast.LENGTH_LONG).show();
 
-            // compile list of devices in range
-            for (SimWifiP2pDevice device : peers.getDeviceList()) {
-                String devstr = "" + device.deviceName + " (" + device.getVirtIp() + ")\n";
-                peersStr.append(devstr);
-            }
-
-            // display list of devices in range
-            new AlertDialog.Builder(activity)
-                    .setTitle("Devices in WiFi Range")
-                    .setMessage(peersStr.toString())
-                    .setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .show();
-            // Find groups
             manager.requestGroupInfo(channel, this);
         }
     }
@@ -114,8 +98,8 @@ public class MultiplayerManager {
                     MultiplayerManager.activity.getMainLooper(),
                     null);
             MultiplayerManager.bound = true;
-            //MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
-              //      MultiplayerManager.listener);
+            MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
+                    MultiplayerManager.listener);
         }
 
         @Override

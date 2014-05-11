@@ -58,6 +58,8 @@ public class MultiplayerActivity extends ActionBarActivity {
     }
 
     public void refreshMultiplayerGamesList(View view) {
+        //TODO: Replace this with code that refreshes the list
+        // This is just testing code
         MultiplayerManager.requestPeers();
     }
 
