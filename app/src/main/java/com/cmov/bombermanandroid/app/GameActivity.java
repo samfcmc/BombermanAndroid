@@ -8,10 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.cmov.bombermanandroid.app.modes.GameMode;
+
 //It is a main activity
 public class GameActivity extends ActionBarActivity {
 
-    public final static String EXTRA_MESSAGE = "com.cmov.bombermanandroid.MESSAGE";
+    public final static String NICK = "com.cmov.bombermanandroid.NICK";
+    public final static String MODE = "com.cmov.bombermanandroid.MODE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +48,26 @@ public class GameActivity extends ActionBarActivity {
         }
     }
 
-    public void playGame(View view) {
+    public void playGame(GameMode gameMode) {
 
         Intent intent = new Intent(this, RunGameActivity.class);
         //get user nick name
         EditText editText = (EditText) findViewById(R.id.nick_name);
         if(editText.getText() != null) {
             String nick = editText.getText().toString();
-            intent.putExtra(EXTRA_MESSAGE, nick);
+            intent.putExtra(NICK, nick);
+            intent.putExtra(MODE, gameMode);
             startActivity(intent);
         }
+    }
+
+    public void launchSingleplayer(View view) {
+        playGame(GameMode.SINGLEPLAYER);
+    }
+
+    public void launchMultiplayer(View view) {
+        Intent intent = new Intent(this, MultiplayerActivity.class);
+        startActivity(intent);
     }
 
     //this method show the game settings

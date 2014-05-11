@@ -57,8 +57,11 @@ public class MainGameSurfaceView extends SurfaceView implements
     public void surfaceCreated(SurfaceHolder holder) {
         // at this point the surface is created and
         // we can safely start the game loop
-        //setWillNotDraw(false);
-        Game.start(getContext(), GameMode.SINGLEPLAYER);
+
+        // Context must be an activity!!
+        Activity activity = (Activity) getContext();
+        GameMode gameMode = (GameMode) activity.getIntent().getSerializableExtra(GameActivity.MODE);
+        Game.start(getContext(), gameMode);
         launchThreads();
     }
 

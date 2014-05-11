@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cmov.bombermanandroid.app" >
-    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="19" />
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -22,8 +25,16 @@
             android:label="@string/title_activity_run_game"
             android:parentActivityName="com.cmov.bombermanandroid.app.GameActivity" >
             <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.cmov.bombermanandroid.app.GameActivity" ></meta-data>
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cmov.bombermanandroid.app.GameActivity" />
+        </activity>
+        <activity
+            android:name="com.cmov.bombermanandroid.app.MultiplayerActivity"
+            android:label="@string/title_activity_multiplayer"
+            android:parentActivityName="com.cmov.bombermanandroid.app.GameActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="GameActivity" />
         </activity>
     </application>
 

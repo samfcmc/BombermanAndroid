@@ -14,7 +14,6 @@ import com.cmov.bombermanandroid.app.commands.Command;
 import com.cmov.bombermanandroid.app.commands.TurnPauseOnOffCommand;
 import com.cmov.bombermanandroid.app.events.TimePassedEvent;
 import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
-import com.cmov.bombermanandroid.app.modes.ModeManager;
 
 
 public class RunGameActivity extends ActionBarActivity {
@@ -39,7 +38,7 @@ public class RunGameActivity extends ActionBarActivity {
 
         //get the nick from the intent
         Intent intent = getIntent();
-        String nick = intent.getStringExtra(GameActivity.EXTRA_MESSAGE);
+        String nick = intent.getStringExtra(GameActivity.NICK);
 
         //create the text view
         TextView textView = (TextView) findViewById(R.id.player_name);
