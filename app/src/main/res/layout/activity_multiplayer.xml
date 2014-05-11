@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/button_multiplayer_new_game"
         android:id="@+id/button_multiplayer_new_game"
+        android:onClick="createNewMultiplayerGame"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:text="@string/button_multiplayer_refresh_list"
         android:id="@+id/button_multiplayer_refresh_list"
+        android:onClick="refreshMultiplayerGamesList"
         android:layout_alignBottom="@+id/button_multiplayer_new_game"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

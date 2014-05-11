@@ -1,8 +1,9 @@
 package com.cmov.bombermanandroid.app;
 
+import android.app.FragmentManager;
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,12 +14,8 @@ import android.widget.TextView;
 
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-
 
 public class MultiplayerActivity extends ActionBarActivity {
 
@@ -52,6 +49,15 @@ public class MultiplayerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void createNewMultiplayerGame(View view) {
+        NewMultiplayerGameDialog dialog = new NewMultiplayerGameDialog();
+        dialog.show(getFragmentManager(), "");
+    }
+
+    public void refreshMultiplayerGamesList(View view) {
+
+    }
+
     private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {
 
         public MultiplayerGamesListAdapter(Context context, int resource) {
@@ -78,4 +84,5 @@ public class MultiplayerActivity extends ActionBarActivity {
             return convertView;
         }
     }
-}
+
+ }

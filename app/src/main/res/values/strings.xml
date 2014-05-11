@@ -25,5 +25,9 @@
     <string name="textView_multiplayer_list_item_name">Name</string>
     <string name="textView_multiplayer_list_item_players_label">Players:</string>
     <string name="textView_multiplayer_list_item_players_number">n</string>
+    <string name="editText_dialog_new_multiplayer_game_name">Enter your game name here</string>
+    <string name="editText_dialog_new_multiplayer_game_max">Max number of players</string>
+    <string name="button_dialog_new_multiplayer_game_create">Create</string>
+    <string name="button_dialog_new_multiplayer_game_cancel">Cancel</string>
 
 </resources>
