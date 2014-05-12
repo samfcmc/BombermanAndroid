@@ -149,16 +149,8 @@ public class MultiplayerManager {
             try {
                 SimWifiP2pSocket clientSocket = new SimWifiP2pSocket(params[0], PORT);
                 OutputStream outputStream = clientSocket.getOutputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                        clientSocket.getInputStream()));
                 outputStream.write(MessageFactory.createAskForGameMessage().getBytes());
                 outputStream.flush();
-                String response = bufferedReader.readLine();
-                if(response != null && MessageInterpreter.peerHasGame(response)) {
-                    MultiplayerGameInfo gameInfo = MessageInterpreter.getGameInfo(response);
-                    return gameInfo;
-                                   }
-
             } catch (UnknownHostException e) {
             } catch (IOException e) {
             }
