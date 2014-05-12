@@ -30,4 +30,15 @@ public class MessageFactory {
         }
         return null;
     }
+
+    public static String createNoMultiplayerGameCreatedMessage() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", "noGame");
+            return json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

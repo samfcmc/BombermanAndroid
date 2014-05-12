@@ -49,6 +49,8 @@ public class MultiplayerManager {
     private static Listener listener = new Listener();
     private static SimWifiP2pSocketServer serverSocket;
     private static List<MultiplayerGameInfo> foundGames;
+    private static MultiplayerGameInfo currentHostedGame;
+    private static MultiplayerRole currentRole;
 
     public static void init(Activity activity) {
         SimWifiP2pSocketManager.Init(activity.getApplicationContext());
@@ -61,6 +63,7 @@ public class MultiplayerManager {
         activity.registerReceiver(receiver, filter);
         MultiplayerManager.activity = activity;
         MultiplayerManager.foundGames = new ArrayList<MultiplayerGameInfo>();
+        MultiplayerManager.currentRole = new NoMultiplayerRole();
         wifiOn();
     }
 
@@ -71,6 +74,14 @@ public class MultiplayerManager {
 
     public static List<MultiplayerGameInfo> getFoundGames() {
         return foundGames;
+    }
+
+    public static MultiplayerGameInfo getCurrentHostedGame() {
+        return currentHostedGame;
+    }
+
+    public static MultiplayerRole getCurrentRole() {
+        return currentRole;
     }
 
     public static void wifiOn() {
@@ -104,6 +115,7 @@ public class MultiplayerManager {
     }
 
     public static void discoverGames() {
+        MultiplayerManager.foundGames.clear();
         MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
                 MultiplayerManager.listener);
     }
@@ -132,7 +144,6 @@ public class MultiplayerManager {
                     MultiplayerManager.activity.getApplication(),
                     MultiplayerManager.activity.getMainLooper(),
                     null);
-            MultiplayerManager.bound = true;
             new MessageReceiverThread().start();
         }
 

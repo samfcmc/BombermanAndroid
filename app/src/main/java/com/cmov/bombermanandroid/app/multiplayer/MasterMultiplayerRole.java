@@ -7,4 +7,9 @@ public class MasterMultiplayerRole extends MultiplayerRole {
 
     }
 
+    @Override
+    public String createAskGameResponseMessage() {
+        return MessageFactory.createMultiplayerGameCreatedMessage(
+                MultiplayerManager.getCurrentHostedGame());
+    }
 }
