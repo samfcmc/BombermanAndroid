@@ -12,8 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 
@@ -29,14 +31,22 @@ public class MultiplayerActivity extends ActionBarActivity {
 
     private List<MultiplayerGameInfo> multiplayerGamesList;
 
+    private ListView listView;
+    private MultiplayerGamesListAdapter listAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer);
 
         this.multiplayerGamesList = new ArrayList<MultiplayerGameInfo>();
+        this.listView = (ListView) findViewById(R.id.listView_multiplayer_games_list);
+        this.listAdapter = new MultiplayerGamesListAdapter();
+        this.listView.setAdapter(this.listAdapter);
+
         MultiplayerManager.init(this);
 
+        Game.getEventBus().register(this);
     }
 
 
@@ -65,35 +75,27 @@ public class MultiplayerActivity extends ActionBarActivity {
     }
 
     public void refreshMultiplayerGamesList(View view) {
-        //TODO: Replace this with code that refreshes the list
-        // This is just testing code
         MultiplayerManager.requestPeers();
     }
 
-    public void initBroadcastReceiver(){
-        // Create a new IntentFilter
-        IntentFilter filter = new IntentFilter();
-        // Add the generic actions to be filtered
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_STATE_CHANGED_ACTION);
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_PEERS_CHANGED_ACTION);
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
-        filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_NETWORK_MEMBERSHIP_CHANGED_ACTION);
-        // Create a new instance of P2PBcastReceiver
-        SimWifiP2pBroadcastReceiver receiver = new SimWifiP2pBroadcastReceiver(this);
-        // Register the Bcast Receiver
-        registerReceiver(receiver, filter);
+    private void refreshMultiplayerGamesList() {
+        this.multiplayerGamesList = MultiplayerManager.getFoundGames();
+        this.listAdapter.notifyDataSetChanged();
+    }
+
+    public void onEvent(MultiplayerGameFoundEvent event) {
+        refreshMultiplayerGamesList();
     }
 
     public void doCreateMultiplayerClick(String gameName, String maxPlayers){
         this.gameName = gameName;
         this.MULTIPLAYER_MAX_PLAYERS = Integer.parseInt(maxPlayers);
-        initBroadcastReceiver();
     }
 
     private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {
 
-        public MultiplayerGamesListAdapter(Context context, int resource) {
-            super(context, resource, MultiplayerActivity.this.multiplayerGamesList);
+        public MultiplayerGamesListAdapter() {
+            super(MultiplayerActivity.this, R.layout.list_item_multiplayer_list, MultiplayerActivity.this.multiplayerGamesList);
         }
 
         @Override

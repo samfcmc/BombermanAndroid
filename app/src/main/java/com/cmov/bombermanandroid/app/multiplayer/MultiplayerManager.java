@@ -9,13 +9,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.SimWifiP2pBroadcastReceiver;
 import com.cmov.bombermanandroid.app.constants.Constants;
+import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pBroadcast;
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pDevice;
@@ -23,7 +38,9 @@ import pt.utl.ist.cmov.wifidirect.SimWifiP2pDeviceList;
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pInfo;
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pManager;
 import pt.utl.ist.cmov.wifidirect.service.SimWifiP2pService;
+import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
 import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocketManager;
+import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocketServer;
 
 /**
  * MultiplayerManager: This class handles all the multiplayer behavior and
@@ -38,6 +55,9 @@ public class MultiplayerManager {
     private static boolean bound = false;
     private static WifiP2pServiceConnection connection = new WifiP2pServiceConnection();
     private static Listener listener = new Listener();
+    private static SimWifiP2pSocketServer serverSocket;
+    private static List<MultiplayerGameInfo> foundGames;
+    private static final int PORT = 10001;
 
     public static void init(Activity activity) {
         SimWifiP2pSocketManager.Init(activity.getApplicationContext());
@@ -49,7 +69,12 @@ public class MultiplayerManager {
         SimWifiP2pBroadcastReceiver receiver = new SimWifiP2pBroadcastReceiver(activity);
         activity.registerReceiver(receiver, filter);
         MultiplayerManager.activity = activity;
+        MultiplayerManager.foundGames = new ArrayList<MultiplayerGameInfo>();
         wifiOn();
+    }
+
+    public static List<MultiplayerGameInfo> getFoundGames() {
+        return foundGames;
     }
 
     public static void wifiOn() {
@@ -59,31 +84,37 @@ public class MultiplayerManager {
     }
 
     public static void wifiOff() {
-        if(bound) {
+        if (bound) {
             activity.unbindService(connection);
             bound = false;
         }
     }
 
+
     public static void requestPeers() {
         MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
                 MultiplayerManager.listener);
+        try {
+            serverSocket = new SimWifiP2pSocketServer(PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static class Listener implements SimWifiP2pManager.PeerListListener,
             SimWifiP2pManager.GroupInfoListener {
 
         @Override
-        public void onGroupInfoAvailable(SimWifiP2pDeviceList simWifiP2pDeviceList, SimWifiP2pInfo simWifiP2pInfo) {
-            Toast.makeText(activity, "Group " + simWifiP2pDeviceList.getDeviceList().size(), Toast.LENGTH_LONG).show();
+        public void onGroupInfoAvailable(SimWifiP2pDeviceList peers, SimWifiP2pInfo simWifiP2pInfo) {
+
         }
 
         @Override
         public void onPeersAvailable(SimWifiP2pDeviceList peers) {
-            //TODO: This is just testing code!! Must be replaced
-            Toast.makeText(activity, "Group " + peers.getDeviceList().size(), Toast.LENGTH_LONG).show();
-
-            manager.requestGroupInfo(channel, this);
+            Toast.makeText(activity, "Peers " + peers.getDeviceList().size(), Toast.LENGTH_LONG).show();
+            for(SimWifiP2pDevice device : peers.getDeviceList()) {
+                new AskForGameAsyncTask().execute(device.getVirtIp());
+            }
         }
     }
 
@@ -111,4 +142,35 @@ public class MultiplayerManager {
         }
     }
 
+    private static class AskForGameAsyncTask extends AsyncTask<String, Void, MultiplayerGameInfo> {
+
+        @Override
+        protected MultiplayerGameInfo doInBackground(String... params) {
+            try {
+                SimWifiP2pSocket clientSocket = new SimWifiP2pSocket(params[0], PORT);
+                OutputStream outputStream = clientSocket.getOutputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                        clientSocket.getInputStream()));
+                outputStream.write(MessageFactory.createAskForGameMessage().getBytes());
+                outputStream.flush();
+                String response = bufferedReader.readLine();
+                if(response != null && MessageInterpreter.peerHasGame(response)) {
+                    MultiplayerGameInfo gameInfo = MessageInterpreter.getGameInfo(response);
+                    return gameInfo;
+                                   }
+
+            } catch (UnknownHostException e) {
+            } catch (IOException e) {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(MultiplayerGameInfo multiplayerGameInfo) {
+            if(multiplayerGameInfo != null) {
+                foundGames.add(multiplayerGameInfo);
+                Game.getEventBus().post(new MultiplayerGameFoundEvent());
+            }
+        }
+    }
 }
