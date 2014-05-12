@@ -1,11 +1,8 @@
 package com.cmov.bombermanandroid.app.multiplayer;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -17,15 +14,10 @@ import android.widget.Toast;
 
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.SimWifiP2pBroadcastReceiver;
-import com.cmov.bombermanandroid.app.constants.Constants;
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
@@ -163,6 +155,40 @@ public class MultiplayerManager {
                 foundGames.add(multiplayerGameInfo);
                 Game.getEventBus().post(new MultiplayerGameFoundEvent());
             }
+        }
+    }
+
+    private class IncommingMessage extends AsyncTask<Void, SimWifiP2pSocketServer, Void> {
+
+        private final String TAG = "MultiplayerActivity";
+        private SimWifiP2pSocketServer mServerSocket = null;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            Log.d(TAG, "Incomming Message Task started ...");
+
+            try {
+                this.mServerSocket = new SimWifiP2pSocketServer(PORT);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    SimWifiP2pSocket sock = this.mServerSocket.accept();
+                    Log.d(TAG, "Closing accepted socket because mCliSocket still active.");
+                    // reads the message
+                    BufferedReader br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                    String message = br.readLine();
+                    // Treat the message
+                    sock.close();
+                } catch (IOException e) {
+                    Log.d("Error Accepting Socket", e.getMessage());
+                    break;
+                }
+            }
+            return null;
         }
     }
 }
