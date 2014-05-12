@@ -121,6 +121,7 @@ public class MultiplayerManager {
                     MultiplayerManager.activity.getMainLooper(),
                     null);
             MultiplayerManager.bound = true;
+            new MessageReceiverAsyncTask().execute();
             MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
                     MultiplayerManager.listener);
         }
@@ -158,7 +159,7 @@ public class MultiplayerManager {
         }
     }
 
-    private class IncommingMessage extends AsyncTask<Void, SimWifiP2pSocketServer, Void> {
+    private static class MessageReceiverAsyncTask extends AsyncTask<Void, SimWifiP2pSocketServer, Void> {
 
         private final String TAG = "MultiplayerActivity";
         private SimWifiP2pSocketServer mServerSocket = null;
@@ -181,7 +182,7 @@ public class MultiplayerManager {
                     // reads the message
                     BufferedReader br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                     String message = br.readLine();
-                    // Treat the message
+                    // Pass to a message interpreter to interpret the message
                     sock.close();
                 } catch (IOException e) {
                     Log.d("Error Accepting Socket", e.getMessage());
