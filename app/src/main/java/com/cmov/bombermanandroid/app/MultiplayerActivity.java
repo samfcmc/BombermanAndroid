@@ -79,8 +79,16 @@ public class MultiplayerActivity extends ActionBarActivity {
     }
 
     private void refreshMultiplayerGamesList() {
-        this.multiplayerGamesList = MultiplayerManager.getFoundGames();
-        this.listAdapter.notifyDataSetChanged();
+        runOnUiThread(new Thread() {
+            @Override
+            public void run() {
+                MultiplayerActivity.this.multiplayerGamesList = MultiplayerManager.getFoundGames();
+                MultiplayerActivity.this.listAdapter.clear();
+                MultiplayerActivity.this.listAdapter.addAll(
+                        MultiplayerActivity.this.multiplayerGamesList);
+                MultiplayerActivity.this.listAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void onEvent(MultiplayerGameFoundEvent event) {
@@ -95,7 +103,8 @@ public class MultiplayerActivity extends ActionBarActivity {
     private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {
 
         public MultiplayerGamesListAdapter() {
-            super(MultiplayerActivity.this, R.layout.list_item_multiplayer_list, MultiplayerActivity.this.multiplayerGamesList);
+            super(MultiplayerActivity.this, R.layout.list_item_multiplayer_list,
+                    MultiplayerActivity.this.multiplayerGamesList);
         }
 
         @Override
@@ -113,7 +122,7 @@ public class MultiplayerActivity extends ActionBarActivity {
                     findViewById(R.id.textView_multiplayer_list_item_players_number);
 
             nameTextView.setText(item.getName());
-            numberOfPlayersTextView.setText(item.getNumberOfPlayers());
+            numberOfPlayersTextView.setText(item.getNumberOfPlayers() + "");
 
             return convertView;
         }

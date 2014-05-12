@@ -18,9 +18,10 @@ public class MessageFactory {
         }
     }
 
-    public static String gameCreated(MultiplayerGameInfo gameInfo) {
+    public static String createMultiplayerGameCreatedMessage(MultiplayerGameInfo gameInfo) {
         JSONObject json = new JSONObject();
         try {
+            json.put("type", "game");
             json.put("name", gameInfo.getName());
             json.put("maxPlayers", gameInfo.getNumberOfPlayers());
             return  json.toString();
