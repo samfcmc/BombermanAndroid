@@ -14,7 +14,7 @@ import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
  * AskGameMessageReceiver: When other peers ask "me"
  * if "I am" hosting a game
  */
-public class AskGameMessageReceiver extends MessageReceiver  {
+public class AskGameMessageReceiver implements MessageReceiver  {
     @Override
     public void afterReceive(JSONObject json, ObjectOutputStream outputStream) {
         //TODO: Send the right response!!

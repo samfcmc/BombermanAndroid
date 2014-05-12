@@ -86,13 +86,26 @@ public class MultiplayerManager {
         }
     }
 
-    public static void requestPeers() {
-        MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
-                MultiplayerManager.listener);
+    protected static void sendMessage(SimWifiP2pDevice device, String message) {
+        SimWifiP2pSocket clientSocket = null;
+        try {
+            clientSocket = new SimWifiP2pSocket(device.getVirtIp(), PORT);
+            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+            outputStream.writeObject(message);
+            outputStream.flush();
+            ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
+            String response = (String) inputStream.readObject();
+            MessageInterpreter.interpretMessage(response, outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void sendGameInfoToPeers() {
-
+    public static void discoverGames() {
+        MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
+                MultiplayerManager.listener);
     }
 
     private static class Listener implements SimWifiP2pManager.PeerListListener,
@@ -121,8 +134,6 @@ public class MultiplayerManager {
                     null);
             MultiplayerManager.bound = true;
             new MessageReceiverThread().start();
-            //MultiplayerManager.manager.requestPeers(MultiplayerManager.channel,
-            //      MultiplayerManager.listener);
         }
 
         @Override
@@ -145,46 +156,17 @@ public class MultiplayerManager {
         @Override
         public void run() {
             for (SimWifiP2pDevice device : this.peers.getDeviceList()) {
-                new SendMessageThread(device).start();
-            }
-        }
-    }
-
-    private static class SendMessageThread extends Thread {
-        private SimWifiP2pDevice device;
-
-        public SendMessageThread(SimWifiP2pDevice device) {
-            this.device = device;
-        }
-
-        @Override
-        public void run() {
-            SimWifiP2pSocket clientSocket = null;
-            try {
-                clientSocket = new SimWifiP2pSocket(this.device.getVirtIp(), PORT);
-                ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-                outputStream.writeObject(MessageFactory.createAskForGameMessage());
-                outputStream.flush();
-                ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-                String response = (String) inputStream.readObject();
-                MessageInterpreter.interpretMessage(response, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                sendMessage(device, MessageFactory.createAskForGameMessage());
             }
         }
     }
 
     private static class MessageReceiverThread extends Thread {
 
-        private final String TAG = "MultiplayerActivity";
         private SimWifiP2pSocketServer mServerSocket = null;
 
         @Override
         public void run() {
-            Log.d(TAG, "Incomming MessageReceiver Task started ...");
-
             try {
                 this.mServerSocket = new SimWifiP2pSocketServer(PORT);
 
@@ -195,22 +177,14 @@ public class MultiplayerManager {
                 try {
                     SimWifiP2pSocket sock = this.mServerSocket.accept();
                     //Toast.makeText(activity, "Socket accepted", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "Closing accepted socket because mCliSocket still active.");
 
                     ObjectOutputStream outputStream = new ObjectOutputStream(sock.getOutputStream());
                     outputStream.flush();
                     // reads the message
                     ObjectInputStream inputStream = new ObjectInputStream(sock.getInputStream());
-                    final String message = (String) inputStream.readObject();
-
-                    activity.runOnUiThread(new Thread() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity, "Received message " + message, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    MessageInterpreter.interpretMessage(message, outputStream);
+                    String message = (String) inputStream.readObject();
                     // Pass to a message interpreter to interpret the message
+                    MessageInterpreter.interpretMessage(message, outputStream);
                     sock.close();
                 } catch (IOException e) {
                     Log.d("Error Accepting Socket", e.getMessage());

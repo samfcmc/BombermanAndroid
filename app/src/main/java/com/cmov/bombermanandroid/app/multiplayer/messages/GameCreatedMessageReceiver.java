@@ -12,7 +12,7 @@ import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
 /**
  * When a peer sends information about a game that it is hosting
  */
-public class GameCreatedMessageReceiver extends MessageReceiver {
+public class GameCreatedMessageReceiver implements MessageReceiver {
     @Override
     public void afterReceive(JSONObject json, ObjectOutputStream objectOutputStream) {
         MultiplayerManager.addMultiplayerGame(MessageInterpreter.getGameInfo(json.toString()));

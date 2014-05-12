@@ -1,11 +1,8 @@
 package com.cmov.bombermanandroid.app;
 
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +18,6 @@ import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import pt.utl.ist.cmov.wifidirect.SimWifiP2pBroadcast;
 
 public class MultiplayerActivity extends ActionBarActivity {
 
@@ -75,7 +70,7 @@ public class MultiplayerActivity extends ActionBarActivity {
     }
 
     public void refreshMultiplayerGamesList(View view) {
-        MultiplayerManager.requestPeers();
+        MultiplayerManager.discoverGames();
     }
 
     private void refreshMultiplayerGamesList() {
