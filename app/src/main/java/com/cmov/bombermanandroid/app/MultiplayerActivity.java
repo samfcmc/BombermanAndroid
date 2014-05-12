@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
+import com.cmov.bombermanandroid.app.multiplayer.communication.WDSimCommunicationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class MultiplayerActivity extends ActionBarActivity {
         this.listAdapter = new MultiplayerGamesListAdapter();
         this.listView.setAdapter(this.listAdapter);
 
-        MultiplayerManager.init(this);
+        MultiplayerManager.init(new WDSimCommunicationManager(this));
 
         Game.getEventBus().register(this);
     }
