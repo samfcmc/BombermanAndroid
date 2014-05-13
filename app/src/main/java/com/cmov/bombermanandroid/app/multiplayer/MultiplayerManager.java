@@ -3,13 +3,8 @@ package com.cmov.bombermanandroid.app.multiplayer;
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationManager;
-<<<<<<< HEAD
 import com.cmov.bombermanandroid.app.multiplayer.roles.MultiplayerRole;
 import com.cmov.bombermanandroid.app.multiplayer.roles.NoMultiplayerRole;
-=======
-import com.cmov.bombermanandroid.app.multiplayer.messages.MessageReceiver;
->>>>>>> c94cd000f07fe11b74c951f475ef4a5063779eb8
-
 import java.util.ArrayList;
 import java.util.List;
 

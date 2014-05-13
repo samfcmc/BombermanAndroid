@@ -11,24 +11,12 @@ import android.os.Messenger;
 import android.util.Log;
 
 import com.cmov.bombermanandroid.app.SimWifiP2pBroadcastReceiver;
-<<<<<<< HEAD
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageInterpreter;
-=======
-import com.cmov.bombermanandroid.app.multiplayer.MessageFactory;
-import com.cmov.bombermanandroid.app.multiplayer.MessageInterpreter;
-import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
-import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
-import com.cmov.bombermanandroid.app.multiplayer.NoMultiplayerRole;
->>>>>>> c94cd000f07fe11b74c951f475ef4a5063779eb8
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-<<<<<<< HEAD
-=======
-import java.util.ArrayList;
->>>>>>> c94cd000f07fe11b74c951f475ef4a5063779eb8
 
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pBroadcast;
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pDevice;
@@ -69,8 +57,6 @@ public class WDSimCommunicationManager implements CommunicationManager{
         filter.addAction(SimWifiP2pBroadcast.WIFI_P2P_GROUP_OWNERSHIP_CHANGED_ACTION);
         SimWifiP2pBroadcastReceiver receiver = new SimWifiP2pBroadcastReceiver(activity);
         this.activity.registerReceiver(receiver, filter);
-        //MultiplayerManager.foundGames = new ArrayList<MultiplayerGameInfo>();
-        //MultiplayerManager.currentRole = new NoMultiplayerRole();
         wifiOn();
     }
 
