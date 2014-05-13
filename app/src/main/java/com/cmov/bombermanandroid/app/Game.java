@@ -27,9 +27,10 @@ public class Game {
     /*
      * Movables lists
      */
-    private static List<Bomberman> players;
+    private static Map<Integer, Bomberman> players;
     private static List<Enemy> enemies;
     private static List<Movable> deadPlayers;
+    private static Map<Integer, Bomberman> freePlayerSlots;
 
     /*
      * Game state control flags
@@ -53,13 +54,15 @@ public class Game {
     private static Context currentContext;
     private static Timer timer;
     private static TimeOutThread timeOutThread;
+    private static int localPlayerNumber;
 
     static {
         init();
     }
 
     private static void init() {
-        players = new ArrayList<Bomberman>();
+        players = new HashMap<Integer, Bomberman>();
+        freePlayerSlots = new HashMap<Integer, Bomberman>();
         enemies = new ArrayList<Enemy>();
         deadPlayers = new ArrayList<Movable>();
         paused = false;
@@ -74,6 +77,7 @@ public class Game {
     }
 
     public static void reset() {
+        freePlayerSlots.clear();
         enemies.clear();
         deadPlayers.clear();
         paused = false;
@@ -138,6 +142,7 @@ public class Game {
         currentLevel = 0;
         currentContext = context;
         GameLoader.getInstance().loadGameLevel(context, gameMode, currentLevel);
+        currentGameMode.getManager().start();
         startTimeOutThread();
     }
 
@@ -145,7 +150,24 @@ public class Game {
         reset();
         currentLevel = (currentLevel + 1) % Levels.getLevelsCount();
         GameLoader.getInstance().loadGameLevel(currentContext, currentGameMode, currentLevel);
+        players.clear();
+        currentGameMode.getManager().start();
         startTimeOutThread();
+    }
+
+    private static Bomberman getFreeSlot(int playerNumber) {
+        return freePlayerSlots.get(playerNumber);
+    }
+
+    public static void joinPlayer(int playerNumber) {
+        Bomberman player = getFreeSlot(playerNumber);
+        freePlayerSlots.remove(playerNumber);
+        players.put(playerNumber, player);
+        grid.addBomberman(player);
+    }
+
+    public static void setLocalPlayerNumber(int playerNumber) {
+        localPlayerNumber = playerNumber;
     }
 
     public static void setGrid(Grid grid1) {
@@ -173,8 +195,8 @@ public class Game {
         return players.size();
     }
 
-    public static int getPlayerScore(int playerIndex) {
-        Bomberman player = getPlayer(playerIndex);
+    public static int getPlayerScore(int playerNumber) {
+        Bomberman player = getPlayer(playerNumber);
         if(player == null) {
             return 0;
         }
@@ -193,8 +215,8 @@ public class Game {
             allEnemiesAreDead = true;
         }
         else {
-            detectMovableCollisions(enemies, players);
-            updateMovables(players, deadPlayers, canvas);
+            detectMovableCollisions(enemies, players.values());
+            updateMovables(players.values(), deadPlayers, canvas);
             updateMovables(enemies, canvas);
             updateBombs();
             generateCommandForEnemies();
@@ -237,7 +259,7 @@ public class Game {
         commands.add(command);
     }
 
-    private static void detectMovableCollisions(List<? extends Movable> players, List<? extends Movable> enemies){
+    private static void detectMovableCollisions(Collection<? extends Movable> players, Collection<? extends Movable> enemies){
         for(Movable m : enemies){
 
             Iterator<? extends Movable> iterator =  players.iterator();
@@ -255,8 +277,8 @@ public class Game {
         updateMovables(characters, null, canvas);
     }
 
-    private static void updateMovables(List<? extends Movable> characters,
-                                       List<Movable> deadCharacters, Canvas canvas) {
+    private static void updateMovables(Collection<? extends Movable> characters,
+                                       Collection<Movable> deadCharacters, Canvas canvas) {
         Iterator<? extends Movable> iterator = characters.iterator();
         while(iterator.hasNext()) {
             Movable character = iterator.next();
@@ -296,7 +318,7 @@ public class Game {
             return null;
         }
         else {
-            return players.get(0);
+            return players.get(localPlayerNumber);
         }
     }
 
@@ -318,16 +340,22 @@ public class Game {
        currentGameMode.getManager().bombPressed();
     }
 
-    public static Bomberman addPlayer(Context context, int x, int y, int playerNumber,
-                                 int pointsPerRobotKilled) {
+    public static Bomberman addPlayerSlot(Context context, int x, int y, int playerNumber,
+                                          int pointsPerRobotKilled) {
         Bomberman player = getPlayer(playerNumber - 1);
 
         if(player == null) {
             player = new Bomberman(BitmapLib.getBombermanBitmap(context), x, y, playerNumber,
                     Constants.BOMBERMAN_LIVES, Constants.BOMBERMAN_SPEED, false,
                     pointsPerRobotKilled);
-            players.add(player);
         }
+        else {
+            player.setX(x);
+            player.setY(y);
+            player.setPointsPerRobotKilled(pointsPerRobotKilled);
+            players.remove(playerNumber);
+        }
+        freePlayerSlots.put(playerNumber, player);
 
         return player;
     }

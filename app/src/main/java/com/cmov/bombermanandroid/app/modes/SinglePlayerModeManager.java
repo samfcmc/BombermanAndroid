@@ -13,6 +13,13 @@ import java.util.Timer;
 
 public class SinglePlayerModeManager extends ModeManager {
 
+    private static final int LOCAL_PLAYER = 1;
+    @Override
+    public void start() {
+        Game.joinPlayer(LOCAL_PLAYER);
+        Game.setLocalPlayerNumber(LOCAL_PLAYER);
+    }
+
     @Override
     public void upPressed() {
         Bomberman player = Game.getLocalPlayer();

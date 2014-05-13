@@ -92,4 +92,8 @@ public class Bomberman extends Movable {
     public int getScore() {
         return score;
     }
+
+    public void setPointsPerRobotKilled(int pointsPerRobotKilled) {
+        this.pointsPerRobotKilled = pointsPerRobotKilled;
+    }
 }

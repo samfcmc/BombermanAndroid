@@ -158,17 +158,12 @@ public class GameLoader {
     private void addBomberman(int x, int y, Context context, char[] tiles, GameMode gameMode) {
         int playerNumber = Character.getNumericValue(tiles[x]);
 
-        if (playerNumber > Constants.MAX_PLAYERS || playerNumber == -1) {
+        if (playerNumber == -1) {
             throw new RuntimeException("Wrong input value");
         }
 
-        if(playerNumber > gameMode.getMaxPlayers()) {
-            addFloor(x, y);
-        }
-
         else {
-            Bomberman player = Game.addPlayer(context, x, y, playerNumber, getSetting(GAME_SETTINGS.PR));
-            this.grid.addBomberman(player);
+            Bomberman player = Game.addPlayerSlot(context, x, y, playerNumber, getSetting(GAME_SETTINGS.PR));
         }
     }
 }

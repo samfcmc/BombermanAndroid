@@ -2,6 +2,7 @@ package com.cmov.bombermanandroid.app.modes;
 
 public abstract class ModeManager {
 
+    public abstract void start();
     public abstract void upPressed();
     public abstract void downPressed();
     public abstract void leftPressed();
