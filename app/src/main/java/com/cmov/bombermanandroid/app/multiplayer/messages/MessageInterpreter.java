@@ -1,5 +1,6 @@
-package com.cmov.bombermanandroid.app.multiplayer;
+package com.cmov.bombermanandroid.app.multiplayer.messages;
 
+import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.messages.AskGameMessageReceiver;
 import com.cmov.bombermanandroid.app.multiplayer.messages.GameCreatedMessageReceiver;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageReceiver;

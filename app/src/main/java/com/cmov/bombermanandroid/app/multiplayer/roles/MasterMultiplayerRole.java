@@ -1,4 +1,7 @@
-package com.cmov.bombermanandroid.app.multiplayer;
+package com.cmov.bombermanandroid.app.multiplayer.roles;
+
+import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
+import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 
 public class MasterMultiplayerRole extends MultiplayerRole {
 

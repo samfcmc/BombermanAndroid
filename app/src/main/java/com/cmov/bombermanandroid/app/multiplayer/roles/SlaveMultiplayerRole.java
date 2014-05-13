@@ -1,10 +1,9 @@
-package com.cmov.bombermanandroid.app.multiplayer;
+package com.cmov.bombermanandroid.app.multiplayer.roles;
 
-/**
- * When the peer didn't host a game neither
- * joined one
- */
-public class NoMultiplayerRole extends MultiplayerRole {
+import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
+
+public class SlaveMultiplayerRole extends MultiplayerRole {
+
     @Override
     public void notifyAboutUpdate() {
 
@@ -14,4 +13,5 @@ public class NoMultiplayerRole extends MultiplayerRole {
     public String createAskGameResponseMessage() {
         return MessageFactory.createNoMultiplayerGameCreatedMessage();
     }
+
 }

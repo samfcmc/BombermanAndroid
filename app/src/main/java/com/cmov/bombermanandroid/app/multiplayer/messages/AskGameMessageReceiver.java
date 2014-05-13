@@ -1,15 +1,11 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
-import com.cmov.bombermanandroid.app.multiplayer.MessageFactory;
-import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-
-import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
 
 /**
  * AskGameMessageReceiver: When other peers ask "me"

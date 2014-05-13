@@ -11,7 +11,6 @@ import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.text.PauseText;
-import com.cmov.bombermanandroid.app.threads.ExplosionThread;
 import com.cmov.bombermanandroid.app.threads.TimeOutThread;
 
 import java.util.*;

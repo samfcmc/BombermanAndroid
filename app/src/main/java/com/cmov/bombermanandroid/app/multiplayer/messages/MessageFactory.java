@@ -1,4 +1,6 @@
-package com.cmov.bombermanandroid.app.multiplayer;
+package com.cmov.bombermanandroid.app.multiplayer.messages;
+
+import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;

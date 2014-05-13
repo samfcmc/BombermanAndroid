@@ -1,4 +1,4 @@
-package com.cmov.bombermanandroid.app.multiplayer;
+package com.cmov.bombermanandroid.app.multiplayer.roles;
 
 public abstract class MultiplayerRole {
 
