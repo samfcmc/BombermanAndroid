@@ -14,4 +14,10 @@ public class SlaveMultiplayerRole extends MultiplayerRole {
         return MessageFactory.createNoMultiplayerGameCreatedMessage();
     }
 
+    @Override
+    public int getLocalPlayer() {
+        //TODO: The master must give an id to the player
+        return 0;
+    }
+
 }

@@ -126,10 +126,10 @@ public class Game {
         return currentState;
     }
 
-    public static void start(Context context, GameMode gameMode) {
+    public static void start(Context context, GameMode gameMode, int level) {
         init();
         currentGameMode = gameMode;
-        currentLevel = 0;
+        currentLevel = level;
         currentContext = context;
         GameLoader.getInstance().loadGameLevel(context, gameMode, currentLevel);
         currentGameMode.getManager().start();

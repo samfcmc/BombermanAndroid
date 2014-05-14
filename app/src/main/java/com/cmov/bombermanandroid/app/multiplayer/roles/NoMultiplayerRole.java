@@ -16,4 +16,9 @@ public class NoMultiplayerRole extends MultiplayerRole {
     public String createAskGameResponseMessage() {
         return MessageFactory.createNoMultiplayerGameCreatedMessage();
     }
+
+    @Override
+    public int getLocalPlayer() {
+        return -1;
+    }
 }

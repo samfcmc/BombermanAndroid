@@ -15,6 +15,8 @@ public class GameActivity extends ActionBarActivity {
 
     public final static String NICK = "com.cmov.bombermanandroid.NICK";
     public final static String MODE = "com.cmov.bombermanandroid.MODE";
+    public final static String LEVEL = "com.cmov.bombermanandroid.LEVEL";
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,8 @@ public class GameActivity extends ActionBarActivity {
         setContentView(R.layout.activity_game);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        editText = (EditText) findViewById(R.id.nick_name);
     }
 
 
@@ -52,7 +56,7 @@ public class GameActivity extends ActionBarActivity {
 
         Intent intent = new Intent(this, RunGameActivity.class);
         //get user nick name
-        EditText editText = (EditText) findViewById(R.id.nick_name);
+
         if(editText.getText() != null) {
             String nick = editText.getText().toString();
             intent.putExtra(NICK, nick);
@@ -67,6 +71,7 @@ public class GameActivity extends ActionBarActivity {
 
     public void launchMultiplayer(View view) {
         Intent intent = new Intent(this, MultiplayerActivity.class);
+        intent.putExtra(NICK, editText.getText().toString());
         startActivity(intent);
     }
 

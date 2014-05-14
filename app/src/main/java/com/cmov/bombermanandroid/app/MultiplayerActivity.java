@@ -1,6 +1,7 @@
 package com.cmov.bombermanandroid.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
-import com.cmov.bombermanandroid.app.modes.MultiplayerModeManager;
+import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.communication.WDSimCommunicationManager;
@@ -24,12 +25,13 @@ import java.util.List;
 public class MultiplayerActivity extends ActionBarActivity {
 
     private String gameName;
-    private int MULTIPLAYER_MAX_PLAYERS;
+    private int maxPlayers;
 
     private List<MultiplayerGameInfo> multiplayerGamesList;
 
     private ListView listView;
     private MultiplayerGamesListAdapter listAdapter;
+    private String nickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class MultiplayerActivity extends ActionBarActivity {
         this.listView = (ListView) findViewById(R.id.listView_multiplayer_games_list);
         this.listAdapter = new MultiplayerGamesListAdapter();
         this.listView.setAdapter(this.listAdapter);
+
+        this.nickname = getIntent().getStringExtra(GameActivity.NICK);
 
         MultiplayerManager.init(new WDSimCommunicationManager(this));
 
@@ -94,9 +98,16 @@ public class MultiplayerActivity extends ActionBarActivity {
 
     public void doCreateMultiplayerClick(String gameName, String maxPlayers){
         this.gameName = gameName;
-        this.MULTIPLAYER_MAX_PLAYERS = Integer.parseInt(maxPlayers);
-        MultiplayerGameInfo multiplayerGame = new MultiplayerGameInfo(gameName, MULTIPLAYER_MAX_PLAYERS);
+        this.maxPlayers = Integer.parseInt(maxPlayers);
+        MultiplayerGameInfo multiplayerGame = new MultiplayerGameInfo(gameName, this.maxPlayers);
         MultiplayerManager.addMultiplayerGame(multiplayerGame);
+
+        Intent intent = new Intent(this, RunGameActivity.class);
+        intent.putExtra(GameActivity.NICK, this.nickname);
+        intent.putExtra(GameActivity.MODE, GameMode.MULTIPLAYER);
+        MultiplayerManager.createGame(gameName, this.maxPlayers);
+        startActivity(intent);
+
     }
 
     private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {

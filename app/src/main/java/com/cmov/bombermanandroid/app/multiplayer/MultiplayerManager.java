@@ -1,8 +1,12 @@
 package com.cmov.bombermanandroid.app.multiplayer;
 
+import android.content.Context;
+
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
+import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationManager;
+import com.cmov.bombermanandroid.app.multiplayer.roles.MasterMultiplayerRole;
 import com.cmov.bombermanandroid.app.multiplayer.roles.MultiplayerRole;
 import com.cmov.bombermanandroid.app.multiplayer.roles.NoMultiplayerRole;
 import java.util.ArrayList;
@@ -18,12 +22,22 @@ public class MultiplayerManager {
     private static MultiplayerGameInfo currentHostedGame;
     private static MultiplayerRole currentRole;
     private static CommunicationManager communicationManager;
+    private static int localPlayer;
 
     public static void init(CommunicationManager communicationManager) {
         MultiplayerManager.foundGames = new ArrayList<MultiplayerGameInfo>();
         MultiplayerManager.currentRole = new NoMultiplayerRole();
         MultiplayerManager.communicationManager = communicationManager;
         MultiplayerManager.communicationManager.init();
+    }
+
+    public static void createGame(String gameName, int maxPlayers) {
+        currentHostedGame = new MultiplayerGameInfo(gameName, maxPlayers);
+        currentRole = new MasterMultiplayerRole();
+    }
+
+    public static void joinGame(MultiplayerGameInfo gameInfo) {
+        //TODO:...
     }
 
     public static void addMultiplayerGame(MultiplayerGameInfo gameInfo) {

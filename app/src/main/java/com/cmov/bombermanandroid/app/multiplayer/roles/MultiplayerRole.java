@@ -4,5 +4,6 @@ public abstract class MultiplayerRole {
 
     public abstract void notifyAboutUpdate();
     public abstract String createAskGameResponseMessage();
+    public abstract int getLocalPlayer();
 
 }

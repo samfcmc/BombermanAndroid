@@ -61,7 +61,8 @@ public class MainGameSurfaceView extends SurfaceView implements
         // Context must be an activity!!
         Activity activity = (Activity) getContext();
         GameMode gameMode = (GameMode) activity.getIntent().getSerializableExtra(GameActivity.MODE);
-        Game.start(getContext(), gameMode);
+        int level = activity.getIntent().getIntExtra(GameActivity.LEVEL, 0);
+        Game.start(getContext(), gameMode, level);
         launchThreads();
     }
 
