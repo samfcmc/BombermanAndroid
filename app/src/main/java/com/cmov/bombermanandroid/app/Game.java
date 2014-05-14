@@ -10,6 +10,11 @@ import com.cmov.bombermanandroid.app.constants.Levels;
 import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.modes.GameMode;
+import com.cmov.bombermanandroid.app.states.AllEnemiesAreDeadState;
+import com.cmov.bombermanandroid.app.states.GameOverState;
+import com.cmov.bombermanandroid.app.states.RunningState;
+import com.cmov.bombermanandroid.app.states.State;
+import com.cmov.bombermanandroid.app.states.TimeOutState;
 import com.cmov.bombermanandroid.app.text.PauseText;
 import com.cmov.bombermanandroid.app.threads.TimeOutThread;
 
@@ -35,10 +40,7 @@ public class Game {
     /*
      * Game state control flags
      */
-    private static boolean gameOver;
-    private static boolean paused;
-    private static boolean allEnemiesAreDead;
-    private static boolean timeOut;
+    private static State currentState;
 
     /*
      * Special drawables
@@ -65,14 +67,10 @@ public class Game {
         freePlayerSlots = new HashMap<Integer, Bomberman>();
         enemies = new ArrayList<Enemy>();
         deadPlayers = new ArrayList<Movable>();
-        paused = false;
         pauseText = new PauseText(Color.WHITE);
         commands = new LinkedList<Command>();
         bombs = new LinkedList<Bomb>();
-        gameOver = false;
         eventBus = EventBus.getDefault();
-        allEnemiesAreDead = false;
-        timeOut = false;
         timer = new Timer();
     }
 
@@ -80,12 +78,8 @@ public class Game {
         freePlayerSlots.clear();
         enemies.clear();
         deadPlayers.clear();
-        paused = false;
         commands.clear();
         bombs.clear();
-        gameOver = false;
-        allEnemiesAreDead = false;
-        timeOut = false;
         timeOutThread.cancel();
         timer.cancel();
     }
@@ -106,14 +100,14 @@ public class Game {
         startTimeOutThread();
     }
 
-    private static void stop() {
+    public static void stop() {
         commands.clear();
         timeOutThread.cancel();
         timer.cancel();
     }
 
     public static void timeOut() {
-        timeOut = true;
+        currentState = new TimeOutState();
     }
 
     public static void setGameDuration(int gameDuration) {
@@ -128,12 +122,8 @@ public class Game {
         return grid;
     }
 
-    public static boolean isGameOver() {
-        return gameOver;
-    }
-
-    public static boolean isTimeOut() {
-        return timeOut;
+    public static State getCurrentState() {
+        return currentState;
     }
 
     public static void start(Context context, GameMode gameMode) {
@@ -143,6 +133,7 @@ public class Game {
         currentContext = context;
         GameLoader.getInstance().loadGameLevel(context, gameMode, currentLevel);
         currentGameMode.getManager().start();
+        currentState = new RunningState();
         startTimeOutThread();
     }
 
@@ -152,6 +143,7 @@ public class Game {
         GameLoader.getInstance().loadGameLevel(currentContext, currentGameMode, currentLevel);
         players.clear();
         currentGameMode.getManager().start();
+        currentState = new RunningState();
         startTimeOutThread();
     }
 
@@ -175,24 +167,15 @@ public class Game {
     }
 
     public static void updateGameState(Canvas canvas) {
-        if(gameOver || timeOut) {
-            stop();
-        }
-        else if(allEnemiesAreDead) {
-            startNextLevel();
-        }
-        else {
-            processCommands();
-
-            if(!paused) {
-                update(canvas);
-                eventBus.post(new UpdatedGameStateEvent());
-            }
-        }
+        currentState.update(canvas);
     }
 
     public static int getNumberOfPlayers(){
         return players.size();
+    }
+
+    public static void setCurrentState(State currentState) {
+        Game.currentState = currentState;
     }
 
     public static int getPlayerScore(int playerNumber) {
@@ -203,16 +186,15 @@ public class Game {
         else {
             return player.getScore();
         }
-
     }
 
-    private static void update(Canvas canvas) {
+    public static void update(Canvas canvas) {
         //Check for game over
         if(noMorePlayersAlive()) {
-            gameOver = true;
+            currentState = new GameOverState();
         }
         else if(noMoreEnemiesAlive()) {
-            allEnemiesAreDead = true;
+            currentState = new AllEnemiesAreDeadState();
         }
         else {
             detectMovableCollisions(enemies, players.values());
@@ -244,7 +226,7 @@ public class Game {
         }
     }
 
-    private static void processCommands() {
+    public static void processCommands() {
         if(!commands.isEmpty()) {
             Command command = commands.remove();
             command.execute();
@@ -305,14 +287,6 @@ public class Game {
         }
     }
 
-    public static boolean isPaused() {
-        return paused;
-    }
-
-    public static void setPaused(boolean paused) {
-        Game.paused = paused;
-    }
-
     public static Bomberman getLocalPlayer(){
         if(players.isEmpty()) {
             return null;
@@ -365,18 +339,19 @@ public class Game {
     }
 
     public static void draw(Canvas canvas) {
-        if(gameOver) {
-            gameOverWallpaper.draw(canvas);
-        }
-        else if(timeOut) {
-            gameOverWallpaper.draw(canvas);
-        }
-        else if(paused) {
-            pauseText.draw(canvas);
-        }
-        else {
-            grid.draw(canvas);
-        }
+        currentState.draw(canvas);
+    }
+
+    public static void drawGameOver(Canvas canvas) {
+        gameOverWallpaper.draw(canvas);
+    }
+
+    public static void drawPauseText(Canvas canvas) {
+        pauseText.draw(canvas);
+    }
+
+    public static void drawGrid(Canvas canvas) {
+        grid.draw(canvas);
     }
 
     public static boolean checkCollision(Movable character, int x, int y) {

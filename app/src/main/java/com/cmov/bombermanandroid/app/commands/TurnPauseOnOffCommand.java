@@ -1,6 +1,8 @@
 package com.cmov.bombermanandroid.app.commands;
 
 import com.cmov.bombermanandroid.app.Game;
+import com.cmov.bombermanandroid.app.states.PausedState;
+import com.cmov.bombermanandroid.app.states.RunningState;
 
 /**
  *
@@ -8,12 +10,13 @@ import com.cmov.bombermanandroid.app.Game;
 public class TurnPauseOnOffCommand extends Command{
     @Override
     public void execute() {
-        Game.setPaused(!Game.isPaused());
-        if(Game.isPaused()) {
-            Game.stopTimeOutThread();
+        if(Game.getCurrentState() instanceof PausedState) {
+            Game.resumeTimeOutThread();
+            Game.setCurrentState(new RunningState());
         }
         else {
-            Game.resumeTimeOutThread();
+            Game.stopTimeOutThread();
+            Game.setCurrentState(new PausedState());
         }
     }
 }

@@ -48,7 +48,7 @@ public class SinglePlayerModeManager extends ModeManager {
     public void bombPressed() {
         Bomberman player = Game.getLocalPlayer();
 
-        if(!Game.isGameOver() && !Game.isTimeOut()) {
+        if(Game.getCurrentState().isCanDropBomb()) {
             Bomb bomb = player.dropBomb(Game.getGrid(), Game.getBombs(), System.currentTimeMillis());
             if (bomb != null) {
                 new Timer().schedule(new ExplosionThread(bomb), bomb.getTimeout());
