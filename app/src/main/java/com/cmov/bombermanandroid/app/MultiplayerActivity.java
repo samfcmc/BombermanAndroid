@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
+import com.cmov.bombermanandroid.app.modes.MultiplayerModeManager;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.communication.WDSimCommunicationManager;
@@ -94,6 +95,8 @@ public class MultiplayerActivity extends ActionBarActivity {
     public void doCreateMultiplayerClick(String gameName, String maxPlayers){
         this.gameName = gameName;
         this.MULTIPLAYER_MAX_PLAYERS = Integer.parseInt(maxPlayers);
+        MultiplayerGameInfo multiplayerGame = new MultiplayerGameInfo(gameName, MULTIPLAYER_MAX_PLAYERS);
+        MultiplayerManager.addMultiplayerGame(multiplayerGame);
     }
 
     private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {
