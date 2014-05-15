@@ -11,12 +11,15 @@ import android.os.Messenger;
 import android.util.Log;
 
 import com.cmov.bombermanandroid.app.SimWifiP2pBroadcastReceiver;
+import com.cmov.bombermanandroid.app.constants.Constants;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageInterpreter;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import android.os.Handler;
+import java.util.logging.LogRecord;
 
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pBroadcast;
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pDevice;
@@ -31,9 +34,10 @@ import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocketServer;
 /**
  * Handles communication using WDSIM
  */
-public class WDSimCommunicationManager implements CommunicationManager{
-    Activity activity;
+public class WDSimCommunicationManager implements CommunicationManager {
+    private static final int PORT = 10001;
 
+    Activity activity;
     private SimWifiP2pManager manager;
     private SimWifiP2pManager.Channel channel;
     private Messenger service;
@@ -41,7 +45,7 @@ public class WDSimCommunicationManager implements CommunicationManager{
     private WifiP2pServiceConnection connection = new WifiP2pServiceConnection();
     private Listener listener = new Listener();
     private SimWifiP2pSocketServer serverSocket;
-    private static final int PORT = 10001;
+    private MessageReceiverThread receiverThread = new MessageReceiverThread();
 
     public WDSimCommunicationManager(Activity activity) {
         this.activity = activity;
@@ -64,6 +68,14 @@ public class WDSimCommunicationManager implements CommunicationManager{
         Intent intent = new Intent(this.activity, SimWifiP2pService.class);
         boolean bind = this.activity.bindService(intent, this.connection, Context.BIND_AUTO_CREATE);
         this.bound = true;
+
+        this.activity.runOnUiThread(new Thread() {
+            @Override
+            public void run() {
+                receiverThread.start();
+            }
+        });
+
     }
 
     @Override
@@ -84,57 +96,16 @@ public class WDSimCommunicationManager implements CommunicationManager{
         }
     }
 
-    protected static void sendMessage(SimWifiP2pDevice device, String message) {
-        SimWifiP2pSocket clientSocket = null;
-        try {
-            clientSocket = new SimWifiP2pSocket(device.getVirtIp(), PORT);
-            ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
-            outputStream.writeObject(message);
-            outputStream.flush();
-            ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
-            String response = (String) inputStream.readObject();
-            MessageInterpreter.interpretMessage(response, outputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     private static class Listener implements SimWifiP2pManager.PeerListListener,
             SimWifiP2pManager.GroupInfoListener {
 
         @Override
         public void onGroupInfoAvailable(SimWifiP2pDeviceList peers, SimWifiP2pInfo simWifiP2pInfo) {
-
         }
 
         @Override
         public void onPeersAvailable(SimWifiP2pDeviceList peers) {
             new AskForGameThread(peers).start();
-        }
-    }
-
-    private class WifiP2pServiceConnection implements ServiceConnection {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            WDSimCommunicationManager.this.service = new Messenger(service);
-            WDSimCommunicationManager.this.manager = new SimWifiP2pManager(
-                    WDSimCommunicationManager.this.service);
-            WDSimCommunicationManager.this.channel = WDSimCommunicationManager.this.
-                    manager.initialize(WDSimCommunicationManager.this.activity.getApplication(),
-                    WDSimCommunicationManager.this.activity.getMainLooper(),
-                    null);
-            new MessageReceiverThread().start();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            WDSimCommunicationManager.this.service = null;
-            WDSimCommunicationManager.this.manager = null;
-            WDSimCommunicationManager.this.channel = null;
-            WDSimCommunicationManager.this.bound = false;
         }
     }
 
@@ -149,8 +120,36 @@ public class WDSimCommunicationManager implements CommunicationManager{
         @Override
         public void run() {
             for (SimWifiP2pDevice device : this.peers.getDeviceList()) {
-                sendMessage(device, MessageFactory.createAskForGameMessage());
+                try {
+                    Log.d("Peer found", device.getVirtIp());
+                    SimWifiP2pSocket socket = new SimWifiP2pSocket(device.getVirtIp(), PORT);
+                    WDSimCommunicationChannel channel = new WDSimCommunicationChannel(socket);
+                    channel.sendMessage(MessageFactory.createAskForGameMessage());
+                    new  CommunicationThread(channel).start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
+        }
+    }
+
+    private static class CommunicationThread extends Thread {
+        private WDSimCommunicationChannel communicationChannel;
+
+        public CommunicationThread(WDSimCommunicationChannel communicationChannel) {
+            this.communicationChannel = communicationChannel;
+        }
+
+        @Override
+        public void run() {
+            String message = this.communicationChannel.receiveMessage();
+
+            while (message != null || !message.equals(Constants.END_COMMUNICATION)) {
+                MessageInterpreter.interpretMessage(message, this.communicationChannel);
+                message = this.communicationChannel.receiveMessage();
+            }
+            this.communicationChannel.close();
         }
     }
 
@@ -169,23 +168,36 @@ public class WDSimCommunicationManager implements CommunicationManager{
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     SimWifiP2pSocket sock = this.mServerSocket.accept();
-                    //Toast.makeText(activity, "Socket accepted", Toast.LENGTH_LONG).show();
+                    WDSimCommunicationChannel channel = new WDSimCommunicationChannel(sock);
+                    new CommunicationThread(channel).start();
 
-                    ObjectOutputStream outputStream = new ObjectOutputStream(sock.getOutputStream());
-                    outputStream.flush();
-                    // reads the message
-                    ObjectInputStream inputStream = new ObjectInputStream(sock.getInputStream());
-                    String message = (String) inputStream.readObject();
-                    // Pass to a message interpreter to interpret the message
-                    MessageInterpreter.interpretMessage(message, outputStream);
-                    sock.close();
                 } catch (IOException e) {
                     Log.d("Error Accepting Socket", e.getMessage());
                     break;
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private class WifiP2pServiceConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            WDSimCommunicationManager.this.service = new Messenger(service);
+            WDSimCommunicationManager.this.manager = new SimWifiP2pManager(
+                    WDSimCommunicationManager.this.service);
+            WDSimCommunicationManager.this.channel = WDSimCommunicationManager.this.
+                    manager.initialize(WDSimCommunicationManager.this.activity.getApplication(),
+                    WDSimCommunicationManager.this.activity.getMainLooper(),
+                    null);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            WDSimCommunicationManager.this.service = null;
+            WDSimCommunicationManager.this.manager = null;
+            WDSimCommunicationManager.this.channel = null;
+            WDSimCommunicationManager.this.bound = false;
         }
     }
 }

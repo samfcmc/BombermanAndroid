@@ -1,5 +1,7 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
+import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
+
 import org.json.JSONObject;
 
 import java.io.ObjectOutputStream;
@@ -11,5 +13,5 @@ import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
  * received message
  */
 public interface MessageReceiver {
-    public void afterReceive(JSONObject json, ObjectOutputStream outputStream);
+    public void afterReceive(JSONObject json, CommunicationChannel communicationChannel);
 }

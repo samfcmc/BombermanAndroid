@@ -1,6 +1,7 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
+import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
 import com.cmov.bombermanandroid.app.multiplayer.messages.AskGameMessageReceiver;
 import com.cmov.bombermanandroid.app.multiplayer.messages.GameCreatedMessageReceiver;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageReceiver;
@@ -29,15 +30,16 @@ public class MessageInterpreter {
     private static void bootstrap() {
         messagesReceivers.put("game?", new AskGameMessageReceiver());
         messagesReceivers.put("game", new GameCreatedMessageReceiver());
+        messagesReceivers.put("noGame", new NoMultiplayerGameMessageReceiver());
     }
 
-    public static void interpretMessage(String message, ObjectOutputStream outputStream) {
+    public static void interpretMessage(String message, CommunicationChannel communicationChannel) {
         try {
             JSONObject jsonMessage = new JSONObject(message);
             String type = jsonMessage.getString("type");
             MessageReceiver receiver = messagesReceivers.get(type);
             if(receiver != null) {
-                receiver.afterReceive(jsonMessage, outputStream);
+                receiver.afterReceive(jsonMessage, communicationChannel);
             }
         } catch (JSONException e) {
             e.printStackTrace();

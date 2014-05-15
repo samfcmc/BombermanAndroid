@@ -1,20 +1,16 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
 import com.cmov.bombermanandroid.app.constants.Constants;
-import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
 
 import org.json.JSONObject;
 
-import java.io.ObjectOutputStream;
-
 /**
- * When a peer sends information about a game that it is hosting
+ *
  */
-public class GameCreatedMessageReceiver implements MessageReceiver {
+public class NoMultiplayerGameMessageReceiver implements MessageReceiver {
     @Override
     public void afterReceive(JSONObject json, CommunicationChannel communicationChannel) {
-        MultiplayerManager.addMultiplayerGame(MessageInterpreter.getGameInfo(json.toString()));
         communicationChannel.sendMessage(Constants.END_COMMUNICATION);
     }
 }
