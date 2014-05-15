@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
 import com.cmov.bombermanandroid.app.modes.GameMode;
-import com.cmov.bombermanandroid.app.threads.EnemiesThread;
 import com.cmov.bombermanandroid.app.threads.GameThread;
 
 import java.util.Timer;
@@ -61,6 +57,7 @@ public class MainGameSurfaceView extends SurfaceView implements
         // Context must be an activity!!
         Activity activity = (Activity) getContext();
         GameMode gameMode = (GameMode) activity.getIntent().getSerializableExtra(GameActivity.MODE);
+
         int level = activity.getIntent().getIntExtra(GameActivity.LEVEL, 0);
         Game.start(getContext(), gameMode, level);
         launchThreads();

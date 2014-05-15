@@ -10,21 +10,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/nick_name"
+        android:layout_alignParentTop="true"
         android:maxLength="5"
         android:singleLine="true" />
 
+    <Spinner
+            android:id="@+id/level_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nick_name" />
+
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_singleplayer"
         android:id="@+id/button_singleplayer"
         android:onClick="launchSingleplayer"
-        android:layout_below="@+id/nick_name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/level_spinner"
+            />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_multiplayer"
         android:id="@+id/button_multiplayer"
@@ -35,7 +41,7 @@
 
     <Button
         style="@style/QuitButton"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/quit_button"
         android:onClick="quitApp"
