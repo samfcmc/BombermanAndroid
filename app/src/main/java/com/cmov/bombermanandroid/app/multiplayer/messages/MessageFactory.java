@@ -1,6 +1,8 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
+import com.cmov.bombermanandroid.app.model.Bomberman;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
+import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,11 +46,14 @@ public class MessageFactory {
         return null;
     }
 
-    public static String createJoinGameMessage(){
+    public static String createJoinGameMessage(Bomberman bomberman){
        JSONObject json = new JSONObject();
-        try {
+       int playerNumber = bomberman.getPlayerNumber();
+       try {
             json.put("type", "join");
-            // TODO : update the message with the game state
+            json.put("player", playerNumber);
+            // TODO : update with the correct level
+            json.put("level", 0);
             return json.toString();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -72,6 +77,16 @@ public class MessageFactory {
         try {
             json.put("type", "update");
             // TODO : update the message with the game updates
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String createJoinRefuseGameMessage(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", "joinRefused");
         } catch (JSONException e) {
             e.printStackTrace();
         }

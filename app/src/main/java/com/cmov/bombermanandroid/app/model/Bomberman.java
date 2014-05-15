@@ -9,16 +9,16 @@ import java.util.Queue;
 
 public class Bomberman extends Movable {
 
-    private int playerID;
+    private int playerNumber;
     private int lives;
     private long lastBomb;
     private int pointsPerRobotKilled;
     private int score;
 
-    public Bomberman(Bitmap bitmap, int x, int y, int playerID, int lives, float speed,
+    public Bomberman(Bitmap bitmap, int x, int y, int playerNumber, int lives, float speed,
                      boolean isEnemy, int pointsPerRobotKilled){
         super(bitmap, x, y, speed, false, isEnemy);
-        this.playerID = playerID;
+        this.playerNumber = playerNumber;
         this.lives = lives;
         this.lastBomb = 0;
         this.pointsPerRobotKilled = pointsPerRobotKilled;
@@ -39,6 +39,10 @@ public class Bomberman extends Movable {
 
     public long getLastBomb() {
         return this.lastBomb;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 
     public Bomb dropBomb(Grid grid, Queue<Bomb> bombs, long dt) {

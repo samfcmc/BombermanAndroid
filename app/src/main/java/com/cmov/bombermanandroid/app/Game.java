@@ -151,6 +151,14 @@ public class Game {
         return freePlayerSlots.get(playerNumber);
     }
 
+    public static Bomberman getNextFreeSlot() {
+        return freePlayerSlots.values().iterator().next();
+    }
+
+    public static boolean hasFreeSlots(){
+        return !freePlayerSlots.isEmpty();
+    }
+
     public static void joinPlayer(int playerNumber) {
         Bomberman player = getFreeSlot(playerNumber);
         freePlayerSlots.remove(playerNumber);
