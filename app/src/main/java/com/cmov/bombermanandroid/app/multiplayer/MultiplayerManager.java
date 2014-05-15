@@ -3,15 +3,19 @@ package com.cmov.bombermanandroid.app.multiplayer;
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.events.JoinedMultiplayerGameEvent;
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
+import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationManager;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 import com.cmov.bombermanandroid.app.multiplayer.roles.MasterMultiplayerRole;
 import com.cmov.bombermanandroid.app.multiplayer.roles.MultiplayerRole;
 import com.cmov.bombermanandroid.app.multiplayer.roles.NoMultiplayerRole;
 import com.cmov.bombermanandroid.app.multiplayer.roles.SlaveMultiplayerRole;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * MultiplayerManager: This class handles all the multiplayer behavior and
@@ -20,6 +24,7 @@ import java.util.List;
 public class MultiplayerManager {
     private static final int PORT = 10001;
     private static List<FoundMultiplayerGameInfo> foundGames;
+    private static Map<Integer, CommunicationChannel> currentPlayers;
     private static MultiplayerGameInfo currentHostedGame;
     private static MultiplayerRole currentRole;
     private static CommunicationManager communicationManager;
@@ -28,6 +33,7 @@ public class MultiplayerManager {
 
     public static void init(CommunicationManager communicationManager) {
         MultiplayerManager.foundGames = new ArrayList<FoundMultiplayerGameInfo>();
+        MultiplayerManager.currentPlayers = new HashMap<Integer, CommunicationChannel>();
         MultiplayerManager.currentRole = new NoMultiplayerRole();
         MultiplayerManager.communicationManager = communicationManager;
         MultiplayerManager.communicationManager.init();
@@ -48,6 +54,11 @@ public class MultiplayerManager {
         currentRole = new SlaveMultiplayerRole();
         cleanFoundGames();
         Game.getEventBus().post(new JoinedMultiplayerGameEvent(gameInfo));
+    }
+
+    public static void joinPlayer(int playerNumber, CommunicationChannel communicationChannel) {
+        currentPlayers.put(playerNumber, communicationChannel);
+        Game.joinPlayer(playerNumber);
     }
 
     public static void addMultiplayerGame(FoundMultiplayerGameInfo gameInfo) {
@@ -86,5 +97,13 @@ public class MultiplayerManager {
     public static void destroy() {
         cleanFoundGames();
         communicationManager.destroy();
+    }
+
+    public static void sendToSlaves(JsonObject jsonUpdateNotify) {
+        for(CommunicationChannel slaveCommunicationChannel : currentPlayers.values()) {
+            communicationManager.sendMessage(slaveCommunicationChannel,
+                    jsonUpdateNotify.toString());
+
+        }
     }
 }

@@ -22,7 +22,7 @@ public class WDSimWithAddressCommunicationChannel implements CommunicationChanne
         this.address = address;
         init();
     }
-    
+
 
     private  void init(){
         try {

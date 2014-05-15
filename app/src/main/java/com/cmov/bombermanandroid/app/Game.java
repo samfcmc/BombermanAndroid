@@ -106,6 +106,10 @@ public class Game {
         timer.cancel();
     }
 
+    public static Map<Integer, Bomberman> getPlayersMap(){
+        return players;
+    }
+
     public static void timeOut() {
         currentState = new TimeOutState();
     }
@@ -129,6 +133,10 @@ public class Game {
     public static Collection<Bomberman> getPlayers() {
         return players.values();
     }
+
+    public static List<Enemy> getEnemies() { return  enemies; }
+
+    public static Enemy getEnemy(int enemyIndex) { return enemies.get(enemyIndex); }
 
     public static void start(Context context, GameMode gameMode, int level) {
         init();
@@ -211,7 +219,7 @@ public class Game {
         }
     }
 
-    public static void update(Canvas canvas) {
+    public static void updateLocal(Canvas canvas){
         //Check for game over
         if(noMorePlayersAlive()) {
             currentState = new GameOverState();
@@ -224,8 +232,12 @@ public class Game {
             updateMovables(players.values(), deadPlayers, canvas);
             updateMovables(enemies, canvas);
             updateBombs();
-            generateCommandForEnemies();
-        }
+            currentGameMode.getManager().updateEnemies();
+         }
+    }
+
+    public static void update(Canvas canvas) {
+       currentGameMode.getManager().update(canvas);
     }
 
     private static boolean noMorePlayersAlive() {

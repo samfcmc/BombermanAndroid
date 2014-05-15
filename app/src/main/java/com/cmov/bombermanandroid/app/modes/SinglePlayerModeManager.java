@@ -1,5 +1,7 @@
 package com.cmov.bombermanandroid.app.modes;
 
+import android.graphics.Canvas;
+
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.commands.DownCommand;
 import com.cmov.bombermanandroid.app.commands.LeftCommand;
@@ -7,6 +9,8 @@ import com.cmov.bombermanandroid.app.commands.RightCommand;
 import com.cmov.bombermanandroid.app.commands.UpCommand;
 import com.cmov.bombermanandroid.app.model.Bomb;
 import com.cmov.bombermanandroid.app.model.Bomberman;
+import com.cmov.bombermanandroid.app.states.AllEnemiesAreDeadState;
+import com.cmov.bombermanandroid.app.states.GameOverState;
 import com.cmov.bombermanandroid.app.threads.ExplosionThread;
 
 import java.util.Timer;
@@ -18,6 +22,11 @@ public class SinglePlayerModeManager extends ModeManager {
     public void start() {
         Game.joinPlayer(LOCAL_PLAYER);
         Game.setLocalPlayerNumber(LOCAL_PLAYER);
+    }
+
+    @Override
+    public void update(Canvas canvas) {
+        Game.updateLocal(canvas);
     }
 
     @Override
@@ -59,5 +68,10 @@ public class SinglePlayerModeManager extends ModeManager {
     @Override
     public void quitPressed() {
         // TODO
+    }
+
+    @Override
+    public void updateEnemies() {
+        Game.generateCommandForEnemies();
     }
 }

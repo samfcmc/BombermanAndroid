@@ -1,8 +1,15 @@
 package com.cmov.bombermanandroid.app.multiplayer.roles;
 
 import com.cmov.bombermanandroid.app.Game;
+import com.cmov.bombermanandroid.app.commands.CharacterCommand;
+import com.cmov.bombermanandroid.app.commands.Command;
+import com.cmov.bombermanandroid.app.model.Enemy;
+import com.cmov.bombermanandroid.app.model.Movable;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
+import com.google.gson.JsonObject;
+
+import java.util.List;
 
 public class MasterMultiplayerRole extends MultiplayerRole {
 
@@ -30,5 +37,30 @@ public class MasterMultiplayerRole extends MultiplayerRole {
     public void start() {
         Game.joinPlayer(LOCAL_PLAYER);
         Game.setLocalPlayerNumber(LOCAL_PLAYER);
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void updateEnemies() {
+        Game.generateCommandForEnemies();
+        // TODO: Send only the updated positions
+    }
+
+    @Override
+    public void receiveMoveUpdate(JsonObject jsonUpdateMessage, CharacterCommand command) {
+        JsonObject jsonUpdateNotify = new JsonObject();
+        jsonUpdateNotify.addProperty("type", "update");
+        jsonUpdateNotify.add("update", jsonUpdateMessage);
+        MultiplayerManager.sendToSlaves(jsonUpdateNotify);
+        command.getCharacter().setCommand(command);
+    }
+
+    @Override
+    public void receiveBombUpdate(Movable movable) {
+
     }
 }

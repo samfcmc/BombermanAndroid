@@ -1,10 +1,14 @@
 package com.cmov.bombermanandroid.app.multiplayer.roles;
 
 import com.cmov.bombermanandroid.app.Game;
+import com.cmov.bombermanandroid.app.commands.CharacterCommand;
+import com.cmov.bombermanandroid.app.commands.Command;
+import com.cmov.bombermanandroid.app.model.Movable;
 import com.cmov.bombermanandroid.app.multiplayer.JoinedMultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.PlayerInfo;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -37,6 +41,26 @@ public class SlaveMultiplayerRole extends MultiplayerRole {
         }
 
         Game.joinPlayer(joinedGame.getPlayerNumber());
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void updateEnemies() {
+
+    }
+
+    @Override
+    public void receiveMoveUpdate(JsonObject jsonUpdateMessage, CharacterCommand command) {
+        command.getCharacter().setCommand(command);
+    }
+
+    @Override
+    public void receiveBombUpdate(Movable movable) {
+
     }
 
 }
