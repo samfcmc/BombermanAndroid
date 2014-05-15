@@ -16,10 +16,6 @@ import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageInterpreter;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import android.os.Handler;
-import java.util.logging.LogRecord;
 
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pBroadcast;
 import pt.utl.ist.cmov.wifidirect.SimWifiP2pDevice;
@@ -35,7 +31,6 @@ import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocketServer;
  * Handles communication using WDSIM
  */
 public class WDSimCommunicationManager implements CommunicationManager {
-    private static final int PORT = 10001;
 
     Activity activity;
     private SimWifiP2pManager manager;
@@ -96,6 +91,17 @@ public class WDSimCommunicationManager implements CommunicationManager {
         }
     }
 
+    public void sendMessage(CommunicationChannel communicationChannel,
+                            String message) {
+        new SendMessageThread(communicationChannel, message).start();
+    }
+
+    @Override
+    public void receiveMessage(CommunicationChannel communicationChannel) {
+        new CommunicationThread(communicationChannel).start();
+    }
+
+
     private static class Listener implements SimWifiP2pManager.PeerListListener,
             SimWifiP2pManager.GroupInfoListener {
 
@@ -120,24 +126,19 @@ public class WDSimCommunicationManager implements CommunicationManager {
         @Override
         public void run() {
             for (SimWifiP2pDevice device : this.peers.getDeviceList()) {
-                try {
-                    Log.d("Peer found", device.getVirtIp());
-                    SimWifiP2pSocket socket = new SimWifiP2pSocket(device.getVirtIp(), PORT);
-                    WDSimCommunicationChannel channel = new WDSimCommunicationChannel(socket);
-                    channel.sendMessage(MessageFactory.createAskForGameMessage());
-                    new  CommunicationThread(channel).start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                Log.d("Peer found", device.getVirtIp());
+                WDSimWithAddressCommunicationChannel channel = new WDSimWithAddressCommunicationChannel(
+                        device.getVirtIp());
+                channel.sendMessage(MessageFactory.createAskForGameMessage());
+                new CommunicationThread(channel).start();
             }
         }
     }
 
     private static class CommunicationThread extends Thread {
-        private WDSimCommunicationChannel communicationChannel;
+        private CommunicationChannel communicationChannel;
 
-        public CommunicationThread(WDSimCommunicationChannel communicationChannel) {
+        public CommunicationThread(CommunicationChannel communicationChannel) {
             this.communicationChannel = communicationChannel;
         }
 
@@ -145,11 +146,28 @@ public class WDSimCommunicationManager implements CommunicationManager {
         public void run() {
             String message = this.communicationChannel.receiveMessage();
 
-            while (message != null || !message.equals(Constants.END_COMMUNICATION)) {
+            while (message != null && !message.equals(Constants.END_COMMUNICATION)) {
                 MessageInterpreter.interpretMessage(message, this.communicationChannel);
                 message = this.communicationChannel.receiveMessage();
             }
             this.communicationChannel.close();
+        }
+    }
+
+    private static class SendMessageThread extends Thread {
+        private CommunicationChannel communicationChannel;
+        private String message;
+
+        public SendMessageThread(CommunicationChannel communicationChannel,
+                                 String message) {
+            this.communicationChannel = communicationChannel;
+            this.message = message;
+        }
+
+        @Override
+        public void run() {
+            this.communicationChannel.sendMessage(message);
+            new CommunicationThread(this.communicationChannel).start();
         }
     }
 
@@ -160,7 +178,7 @@ public class WDSimCommunicationManager implements CommunicationManager {
         @Override
         public void run() {
             try {
-                this.mServerSocket = new SimWifiP2pSocketServer(PORT);
+                this.mServerSocket = new SimWifiP2pSocketServer(Constants.PORT);
 
             } catch (IOException e) {
                 e.printStackTrace();

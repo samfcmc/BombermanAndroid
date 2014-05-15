@@ -7,9 +7,7 @@ public class MultiplayerModeManager extends ModeManager {
 
     @Override
     public void start() {
-        int localPlayer = MultiplayerManager.getCurrentRole().getLocalPlayer();
-        Game.joinPlayer(localPlayer);
-        Game.setLocalPlayerNumber(localPlayer);
+        MultiplayerManager.getCurrentRole().start();
     }
 
     @Override

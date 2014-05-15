@@ -1,20 +1,15 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
 import com.cmov.bombermanandroid.app.multiplayer.FoundMultiplayerGameInfo;
-import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
-import com.cmov.bombermanandroid.app.multiplayer.messages.AskGameMessageReceiver;
-import com.cmov.bombermanandroid.app.multiplayer.messages.GameCreatedMessageReceiver;
-import com.cmov.bombermanandroid.app.multiplayer.messages.MessageReceiver;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
 
 /**
  *
@@ -23,6 +18,8 @@ public class MessageInterpreter {
 
     private static Map<String, MessageReceiver> messagesReceivers =
             new HashMap<String, MessageReceiver>();
+
+    private static JsonParser parser = new JsonParser();
 
     static {
         bootstrap();
@@ -33,39 +30,22 @@ public class MessageInterpreter {
         messagesReceivers.put("game", new GameCreatedMessageReceiver());
         messagesReceivers.put("noGame", new NoMultiplayerGameMessageReceiver());
         messagesReceivers.put("join?", new AskJoinGameMessageReceiver());
-        messagesReceivers.put("join", new JoinGameMessageReceiver());
+        messagesReceivers.put("join", new JoinGameAcceptedMessageReceiver());
         messagesReceivers.put("update", new UpdateGameMessageReceiver());
+        messagesReceivers.put("joinAck", new JoinAckMessageReceiver());
     }
 
     public static void interpretMessage(String message, CommunicationChannel communicationChannel) {
-        try {
-            JSONObject jsonMessage = new JSONObject(message);
-            String type = jsonMessage.getString("type");
-            MessageReceiver receiver = messagesReceivers.get(type);
-            if(receiver != null) {
-                receiver.afterReceive(jsonMessage, communicationChannel);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public static boolean peerHasGame(String message) {
-        try {
-            JSONObject jsonMessage = new JSONObject(message);
-            if(jsonMessage.get("type").equals("gameInfo")) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        } catch (JSONException e) {
-            return false;
+        JsonObject jsonMessage = parser.parse(message).getAsJsonObject();
+        String type = jsonMessage.get("type").getAsString();
+        MessageReceiver receiver = messagesReceivers.get(type);
+        if (receiver != null) {
+            receiver.afterReceive(jsonMessage, communicationChannel);
         }
     }
 
     public static FoundMultiplayerGameInfo getGameInfo(String message,
-                                                  CommunicationChannel communicationChannel) {
+                                                       CommunicationChannel communicationChannel) {
         try {
             JSONObject jsonMessage = new JSONObject(message);
             jsonMessage.put("type", "game");

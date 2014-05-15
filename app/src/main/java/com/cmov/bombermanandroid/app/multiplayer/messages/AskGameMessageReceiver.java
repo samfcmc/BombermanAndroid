@@ -2,8 +2,7 @@ package com.cmov.bombermanandroid.app.multiplayer.messages;
 
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
-
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 /**
  * AskGameMessageReceiver: When other peers ask "me"
@@ -11,7 +10,7 @@ import org.json.JSONObject;
  */
 public class AskGameMessageReceiver implements MessageReceiver {
     @Override
-    public void afterReceive(JSONObject json, CommunicationChannel communicationChannel) {
+    public void afterReceive(JsonObject json, CommunicationChannel communicationChannel) {
         String response = MultiplayerManager.getCurrentRole().createAskGameResponseMessage();
         communicationChannel.sendMessage(response);
     }

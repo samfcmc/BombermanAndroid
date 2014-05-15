@@ -21,4 +21,9 @@ public class NoMultiplayerRole extends MultiplayerRole {
     public int getLocalPlayer() {
         return -1;
     }
+
+    @Override
+    public void start() {
+
+    }
 }

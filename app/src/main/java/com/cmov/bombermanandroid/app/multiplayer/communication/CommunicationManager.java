@@ -11,4 +11,6 @@ public interface CommunicationManager {
     public void init();
     public void destroy();
     public void requestPeers();
+    public void sendMessage(CommunicationChannel communicationChannel, String message);
+    public void receiveMessage(CommunicationChannel communicationChannel);
 }

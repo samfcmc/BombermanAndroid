@@ -1,11 +1,14 @@
 package com.cmov.bombermanandroid.app.multiplayer.roles;
 
+import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 
 public class MasterMultiplayerRole extends MultiplayerRole {
 
     private static final int LOCAL_PLAYER = 1;
+
+
 
     @Override
     public void notifyAboutUpdate() {
@@ -21,5 +24,11 @@ public class MasterMultiplayerRole extends MultiplayerRole {
     @Override
     public int getLocalPlayer() {
         return LOCAL_PLAYER;
+    }
+
+    @Override
+    public void start() {
+        Game.joinPlayer(LOCAL_PLAYER);
+        Game.setLocalPlayerNumber(LOCAL_PLAYER);
     }
 }

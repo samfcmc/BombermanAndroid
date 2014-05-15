@@ -126,6 +126,10 @@ public class Game {
         return currentState;
     }
 
+    public static Collection<Bomberman> getPlayers() {
+        return players.values();
+    }
+
     public static void start(Context context, GameMode gameMode, int level) {
         init();
         currentGameMode = gameMode;
@@ -161,8 +165,19 @@ public class Game {
 
     public static void joinPlayer(int playerNumber) {
         Bomberman player = getFreeSlot(playerNumber);
-        freePlayerSlots.remove(playerNumber);
-        players.put(playerNumber, player);
+        joinPlayer(player);
+    }
+
+    public static void joinPlayerInPosition(int playerNumber, int x, int y) {
+        Bomberman player = getFreeSlot(playerNumber);
+        player.setX(x);
+        player.setY(y);
+        joinPlayer(player);
+    }
+
+    private static void joinPlayer(Bomberman player) {
+        freePlayerSlots.remove(player.getPlayerNumber());
+        players.put(player.getPlayerNumber(), player);
         grid.addBomberman(player);
     }
 

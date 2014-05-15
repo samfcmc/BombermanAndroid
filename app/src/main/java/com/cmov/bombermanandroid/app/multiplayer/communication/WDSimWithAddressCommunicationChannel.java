@@ -1,6 +1,6 @@
 package com.cmov.bombermanandroid.app.multiplayer.communication;
 
-import android.util.Log;
+import com.cmov.bombermanandroid.app.constants.Constants;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,27 +12,39 @@ import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
 /**
  *
  */
-public class WDSimCommunicationChannel implements CommunicationChannel {
+public class WDSimWithAddressCommunicationChannel implements CommunicationChannel {
+    private String address;
     private SimWifiP2pSocket socket;
-    private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
-    public WDSimCommunicationChannel(SimWifiP2pSocket socket) {
-        this.socket = socket;
+    public WDSimWithAddressCommunicationChannel(String address) {
+        this.address = address;
         try {
-            this.outputStream = new ObjectOutputStream(socket.getOutputStream());
-            this.outputStream.flush();
-            this.inputStream = new ObjectInputStream(socket.getInputStream());
+            openSocket();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void openSocket() throws IOException {
+        this.socket = new SimWifiP2pSocket(address, Constants.PORT);
+        this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+        this.outputStream.flush();
+        this.inputStream = new ObjectInputStream(socket.getInputStream());
+    }
+
     @Override
     public void sendMessage(String message) {
         try {
+            if (this.socket.isClosed()) {
+                openSocket();
+            }
             this.outputStream.writeObject(message);
             this.outputStream.flush();
+            if(message.equals(Constants.END_COMMUNICATION)) {
+                this.socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,10 +68,6 @@ public class WDSimCommunicationChannel implements CommunicationChannel {
 
     @Override
     public void close() {
-        try {
-            this.socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 }

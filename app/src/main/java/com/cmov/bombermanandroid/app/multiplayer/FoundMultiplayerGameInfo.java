@@ -13,4 +13,8 @@ public class FoundMultiplayerGameInfo extends MultiplayerGameInfo {
         super(name, numberOfPlayers);
         this.communicationChannel = communicationChannel;
     }
+
+    public CommunicationChannel getCommunicationChannel() {
+        return communicationChannel;
+    }
 }

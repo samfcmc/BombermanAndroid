@@ -9,10 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cmov.bombermanandroid.app.events.JoinedMultiplayerGameEvent;
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
 import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.multiplayer.FoundMultiplayerGameInfo;
@@ -40,17 +42,34 @@ public class MultiplayerActivity extends ActionBarActivity {
         setContentView(R.layout.activity_multiplayer);
 
         this.multiplayerGamesList = new ArrayList<FoundMultiplayerGameInfo>();
-        this.listView = (ListView) findViewById(R.id.listView_multiplayer_games_list);
-        this.listAdapter = new MultiplayerGamesListAdapter();
-        this.listView.setAdapter(this.listAdapter);
 
         this.nickname = getIntent().getStringExtra(GameActivity.NICK);
+        initViews();
 
         MultiplayerManager.init(new WDSimCommunicationManager(this));
 
         Game.getEventBus().register(this);
     }
 
+    private void initViews() {
+        this.listView = (ListView) findViewById(R.id.listView_multiplayer_games_list);
+        this.listAdapter = new MultiplayerGamesListAdapter();
+        this.listView.setAdapter(this.listAdapter);
+
+        this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FoundMultiplayerGameInfo gameInfo = MultiplayerActivity.
+                        this.listAdapter.getItem(position);
+                MultiplayerManager.askToJoinGame(gameInfo);
+            }
+        });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,6 +114,19 @@ public class MultiplayerActivity extends ActionBarActivity {
 
     public void onEvent(MultiplayerGameFoundEvent event) {
         refreshMultiplayerGamesList();
+    }
+
+    public void onEvent(JoinedMultiplayerGameEvent event) {
+        runOnUiThread(new Thread() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MultiplayerActivity.this, RunGameActivity.class);
+                intent.putExtra(GameActivity.NICK, MultiplayerActivity.this.nickname);
+                intent.putExtra(GameActivity.MODE, GameMode.MULTIPLAYER);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void doCreateMultiplayerClick(String gameName, String maxPlayers){

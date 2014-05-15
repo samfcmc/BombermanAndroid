@@ -1,17 +1,12 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
-
-import org.json.JSONObject;
-
-import java.io.ObjectOutputStream;
-
-import pt.utl.ist.cmov.wifidirect.sockets.SimWifiP2pSocket;
+import com.google.gson.JsonObject;
 
 /**
  * This class represents the behavior associated with each
  * received message
  */
 public interface MessageReceiver {
-    public void afterReceive(JSONObject json, CommunicationChannel communicationChannel);
+    public void afterReceive(JsonObject json, CommunicationChannel communicationChannel);
 }
