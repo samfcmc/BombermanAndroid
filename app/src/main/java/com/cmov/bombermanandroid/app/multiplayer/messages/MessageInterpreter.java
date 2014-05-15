@@ -32,6 +32,9 @@ public class MessageInterpreter {
         messagesReceivers.put("game?", new AskGameMessageReceiver());
         messagesReceivers.put("game", new GameCreatedMessageReceiver());
         messagesReceivers.put("noGame", new NoMultiplayerGameMessageReceiver());
+        messagesReceivers.put("join?", new AskJoinGameMessageReceiver());
+        messagesReceivers.put("join", new JoinGameMessageReceiver());
+        messagesReceivers.put("update", new UpdateGameMessageReceiver());
     }
 
     public static void interpretMessage(String message, CommunicationChannel communicationChannel) {

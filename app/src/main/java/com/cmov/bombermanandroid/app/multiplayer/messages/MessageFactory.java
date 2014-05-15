@@ -43,4 +43,39 @@ public class MessageFactory {
         }
         return null;
     }
+
+    public static String createJoinGameMessage(){
+       JSONObject json = new JSONObject();
+        try {
+            json.put("type", "join");
+            // TODO : update the message with the game state
+            return json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String createAskForJoinGameMessage(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", "join?");
+            return json.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String createUpdateGameMessage(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", "update");
+            // TODO : update the message with the game updates
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
