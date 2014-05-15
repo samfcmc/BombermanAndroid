@@ -18,14 +18,14 @@ import java.util.List;
  */
 public class MultiplayerManager {
     private static final int PORT = 10001;
-    private static List<MultiplayerGameInfo> foundGames;
+    private static List<FoundMultiplayerGameInfo> foundGames;
     private static MultiplayerGameInfo currentHostedGame;
     private static MultiplayerRole currentRole;
     private static CommunicationManager communicationManager;
     private static int localPlayer;
 
     public static void init(CommunicationManager communicationManager) {
-        MultiplayerManager.foundGames = new ArrayList<MultiplayerGameInfo>();
+        MultiplayerManager.foundGames = new ArrayList<FoundMultiplayerGameInfo>();
         MultiplayerManager.currentRole = new NoMultiplayerRole();
         MultiplayerManager.communicationManager = communicationManager;
         MultiplayerManager.communicationManager.init();
@@ -40,12 +40,12 @@ public class MultiplayerManager {
         //TODO:...
     }
 
-    public static void addMultiplayerGame(MultiplayerGameInfo gameInfo) {
+    public static void addMultiplayerGame(FoundMultiplayerGameInfo gameInfo) {
         foundGames.add(gameInfo);
         Game.getEventBus().post(new MultiplayerGameFoundEvent());
     }
 
-    public static List<MultiplayerGameInfo> getFoundGames() {
+    public static List<FoundMultiplayerGameInfo> getFoundGames() {
         return foundGames;
     }
 

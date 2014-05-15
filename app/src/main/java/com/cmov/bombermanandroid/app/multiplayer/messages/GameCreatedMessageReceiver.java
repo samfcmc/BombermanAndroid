@@ -14,7 +14,8 @@ import java.io.ObjectOutputStream;
 public class GameCreatedMessageReceiver implements MessageReceiver {
     @Override
     public void afterReceive(JSONObject json, CommunicationChannel communicationChannel) {
-        MultiplayerManager.addMultiplayerGame(MessageInterpreter.getGameInfo(json.toString()));
+        MultiplayerManager.addMultiplayerGame(MessageInterpreter.getGameInfo(json.toString(),
+                communicationChannel));
         communicationChannel.sendMessage(Constants.END_COMMUNICATION);
     }
 }

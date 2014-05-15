@@ -1,5 +1,7 @@
 package com.cmov.bombermanandroid.app.multiplayer;
 
+import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
+
 /**
  * MultiplayerGameInfo: A class to contain the necessary information
  * about a multiplayer game

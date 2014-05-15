@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.cmov.bombermanandroid.app.events.MultiplayerGameFoundEvent;
 import com.cmov.bombermanandroid.app.modes.GameMode;
+import com.cmov.bombermanandroid.app.multiplayer.FoundMultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.communication.WDSimCommunicationManager;
@@ -27,7 +28,7 @@ public class MultiplayerActivity extends ActionBarActivity {
     private String gameName;
     private int maxPlayers;
 
-    private List<MultiplayerGameInfo> multiplayerGamesList;
+    private List<FoundMultiplayerGameInfo> multiplayerGamesList;
 
     private ListView listView;
     private MultiplayerGamesListAdapter listAdapter;
@@ -38,7 +39,7 @@ public class MultiplayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer);
 
-        this.multiplayerGamesList = new ArrayList<MultiplayerGameInfo>();
+        this.multiplayerGamesList = new ArrayList<FoundMultiplayerGameInfo>();
         this.listView = (ListView) findViewById(R.id.listView_multiplayer_games_list);
         this.listAdapter = new MultiplayerGamesListAdapter();
         this.listView.setAdapter(this.listAdapter);
@@ -99,8 +100,6 @@ public class MultiplayerActivity extends ActionBarActivity {
     public void doCreateMultiplayerClick(String gameName, String maxPlayers){
         this.gameName = gameName;
         this.maxPlayers = Integer.parseInt(maxPlayers);
-        MultiplayerGameInfo multiplayerGame = new MultiplayerGameInfo(gameName, this.maxPlayers);
-        MultiplayerManager.addMultiplayerGame(multiplayerGame);
 
         Intent intent = new Intent(this, RunGameActivity.class);
         intent.putExtra(GameActivity.NICK, this.nickname);
@@ -110,7 +109,7 @@ public class MultiplayerActivity extends ActionBarActivity {
 
     }
 
-    private class MultiplayerGamesListAdapter extends ArrayAdapter<MultiplayerGameInfo> {
+    private class MultiplayerGamesListAdapter extends ArrayAdapter<FoundMultiplayerGameInfo> {
 
         public MultiplayerGamesListAdapter() {
             super(MultiplayerActivity.this, R.layout.list_item_multiplayer_list,

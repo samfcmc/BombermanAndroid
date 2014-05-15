@@ -35,7 +35,7 @@ public class WDSimCommunicationChannel implements CommunicationChannel {
             this.outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+    }
 
     }
 

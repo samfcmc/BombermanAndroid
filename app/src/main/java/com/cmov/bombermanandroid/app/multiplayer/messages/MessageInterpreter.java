@@ -1,5 +1,6 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
+import com.cmov.bombermanandroid.app.multiplayer.FoundMultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.cmov.bombermanandroid.app.multiplayer.communication.CommunicationChannel;
 import com.cmov.bombermanandroid.app.multiplayer.messages.AskGameMessageReceiver;
@@ -60,13 +61,14 @@ public class MessageInterpreter {
         }
     }
 
-    public static MultiplayerGameInfo getGameInfo(String message) {
+    public static FoundMultiplayerGameInfo getGameInfo(String message,
+                                                  CommunicationChannel communicationChannel) {
         try {
             JSONObject jsonMessage = new JSONObject(message);
             jsonMessage.put("type", "game");
             String gameName = jsonMessage.getString("name");
             int maxPlayers = jsonMessage.getInt("maxPlayers");
-            return new MultiplayerGameInfo(gameName, maxPlayers);
+            return new FoundMultiplayerGameInfo(gameName, maxPlayers, communicationChannel);
         } catch (JSONException e) {
             return null;
         }
