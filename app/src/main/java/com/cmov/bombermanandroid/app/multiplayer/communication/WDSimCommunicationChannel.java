@@ -1,7 +1,5 @@
 package com.cmov.bombermanandroid.app.multiplayer.communication;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,14 +17,20 @@ public class WDSimCommunicationChannel implements CommunicationChannel {
 
     public WDSimCommunicationChannel(SimWifiP2pSocket socket) {
         this.socket = socket;
-        try {
-            this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+        init();
+    }
+
+    private void init()
+    {
+        try
+        {
+            this.outputStream = new ObjectOutputStream(this.socket.getOutputStream());
             this.outputStream.flush();
-            this.inputStream = new ObjectInputStream(socket.getInputStream());
+            this.inputStream = new ObjectInputStream(this.socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+     }
 
     @Override
     public void sendMessage(String message) {

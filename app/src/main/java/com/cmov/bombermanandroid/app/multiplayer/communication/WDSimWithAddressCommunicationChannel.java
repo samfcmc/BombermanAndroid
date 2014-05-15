@@ -20,12 +20,18 @@ public class WDSimWithAddressCommunicationChannel implements CommunicationChanne
 
     public WDSimWithAddressCommunicationChannel(String address) {
         this.address = address;
+        init();
+    }
+    
+
+    private  void init(){
         try {
             openSocket();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     private void openSocket() throws IOException {
         this.socket = new SimWifiP2pSocket(address, Constants.PORT);
