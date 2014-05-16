@@ -37,7 +37,7 @@ public class Explosion extends Model {
         this.spriteWidth = bitmap.getWidth() / frameCount;
         spriteHeight = bitmap.getHeight();
         sourceRect = new Rect(0, 0, spriteWidth, spriteHeight);
-        framePeriod = 1000 / fps;
+        framePeriod = 100 / fps;
         frameTicker = 0l;
         this.bomb = bomb;
     }

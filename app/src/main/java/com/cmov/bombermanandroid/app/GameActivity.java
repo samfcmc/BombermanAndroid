@@ -6,8 +6,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-
+import android.widget.Spinner;
 import com.cmov.bombermanandroid.app.modes.GameMode;
 
 //It is a main activity
@@ -18,6 +19,8 @@ public class GameActivity extends ActionBarActivity {
     public final static String LEVEL = "com.cmov.bombermanandroid.LEVEL";
     private EditText editText;
 
+    private LevelAdaptor lvlAdaptor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,20 @@ public class GameActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         editText = (EditText) findViewById(R.id.nick_name);
+
+        //load spinner
+        Spinner spinner = (Spinner) findViewById(R.id.level_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.levels_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        lvlAdaptor = new LevelAdaptor();
+
+        spinner.setOnItemSelectedListener(lvlAdaptor);
     }
 
 
@@ -52,27 +69,25 @@ public class GameActivity extends ActionBarActivity {
         }
     }
 
-    public void playGame(GameMode gameMode) {
+    public void playGame(GameMode gameMode, Class clazz) {
 
-        Intent intent = new Intent(this, RunGameActivity.class);
-        //get user nick name
+        Intent intent = new Intent(this, clazz);
 
         if(editText.getText() != null) {
             String nick = editText.getText().toString();
             intent.putExtra(NICK, nick);
             intent.putExtra(MODE, gameMode);
+            intent.putExtra(LEVEL, lvlAdaptor.getLevel());
             startActivity(intent);
         }
     }
 
     public void launchSingleplayer(View view) {
-        playGame(GameMode.SINGLEPLAYER);
+        playGame(GameMode.SINGLEPLAYER, RunGameActivity.class);
     }
 
     public void launchMultiplayer(View view) {
-        Intent intent = new Intent(this, MultiplayerActivity.class);
-        intent.putExtra(NICK, editText.getText().toString());
-        startActivity(intent);
+        playGame(GameMode.SINGLEPLAYER, MultiplayerActivity.class);
     }
 
     //this method show the game settings

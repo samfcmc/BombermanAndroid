@@ -3,24 +3,17 @@ package com.cmov.bombermanandroid.app;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-
 import com.cmov.bombermanandroid.app.commands.*;
 import com.cmov.bombermanandroid.app.constants.Constants;
 import com.cmov.bombermanandroid.app.constants.Levels;
-import com.cmov.bombermanandroid.app.events.UpdatedGameStateEvent;
 import com.cmov.bombermanandroid.app.model.*;
 import com.cmov.bombermanandroid.app.modes.GameMode;
-import com.cmov.bombermanandroid.app.states.AllEnemiesAreDeadState;
-import com.cmov.bombermanandroid.app.states.GameOverState;
-import com.cmov.bombermanandroid.app.states.RunningState;
-import com.cmov.bombermanandroid.app.states.State;
-import com.cmov.bombermanandroid.app.states.TimeOutState;
+import com.cmov.bombermanandroid.app.states.*;
 import com.cmov.bombermanandroid.app.text.PauseText;
 import com.cmov.bombermanandroid.app.threads.TimeOutThread;
+import de.greenrobot.event.EventBus;
 
 import java.util.*;
-
-import de.greenrobot.event.EventBus;
 
 
 public class Game {
@@ -460,7 +453,5 @@ public class Game {
     public static void sendRightCommand() {
         currentGameMode.getManager().rightPressed();
     }
-
-
 
 }

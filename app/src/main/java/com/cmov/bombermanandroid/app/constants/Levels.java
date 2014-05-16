@@ -16,7 +16,8 @@ public class Levels {
 
     private static LevelInfo[] levels = {
             new LevelInfo(R.raw.level_1, R.raw.level_1_layout),
-            new LevelInfo(R.raw.level_2, R.raw.level_2_layout)
+            new LevelInfo(R.raw.level_2, R.raw.level_2_layout),
+            new LevelInfo(R.raw.level_3, R.raw.level_3_layout)
             // For more levels just fill this array with the right values
     };
 

@@ -1,7 +1,6 @@
 package com.cmov.bombermanandroid.app.model;
 
 import android.graphics.Bitmap;
-
 import com.cmov.bombermanandroid.app.BitmapLib;
 import com.cmov.bombermanandroid.app.GameLoader;
 

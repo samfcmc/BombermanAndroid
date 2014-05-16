@@ -16,6 +16,11 @@
     <string name="player_score">Player Score</string>
     <string name="time_left">Time Left</string>
     <string name="numb_players">Number Players</string>
+    <string-array name="levels_array">
+        <item>Level 1</item>
+        <item>Level 2</item>
+        <item>Level 3</item>
+    </string-array>
 
     <!-- Multiplayer -->
     <string name="title_activity_multiplayer">Multiplayer Mode</string>
@@ -29,6 +34,6 @@
     <string name="button_dialog_new_multiplayer_game_create">Create</string>
     <string name="button_dialog_new_multiplayer_game_cancel">Cancel</string>
     <string name="title_activity_multiplayer_game">MultiplayerGameActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="level">Level</string>
 
 </resources>
