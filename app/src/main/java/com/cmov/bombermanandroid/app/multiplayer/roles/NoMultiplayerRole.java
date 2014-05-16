@@ -1,8 +1,7 @@
 package com.cmov.bombermanandroid.app.multiplayer.roles;
 
 import com.cmov.bombermanandroid.app.commands.CharacterCommand;
-import com.cmov.bombermanandroid.app.commands.Command;
-import com.cmov.bombermanandroid.app.model.Movable;
+import com.cmov.bombermanandroid.app.model.Bomberman;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 import com.google.gson.JsonObject;
 
@@ -47,7 +46,7 @@ public class NoMultiplayerRole extends MultiplayerRole {
     }
 
     @Override
-    public void receiveBombUpdate(Movable movable) {
+    public void receiveBombUpdate(Bomberman bomberman) {
 
     }
 }
