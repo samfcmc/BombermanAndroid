@@ -49,4 +49,29 @@ public class NoMultiplayerRole extends MultiplayerRole {
     public void receiveBombUpdate(Bomberman bomberman) {
 
     }
+
+    @Override
+    public void upPressed() {
+
+    }
+
+    @Override
+    public void downPressed() {
+
+    }
+
+    @Override
+    public void leftPressed() {
+
+    }
+
+    @Override
+    public void rightPressed() {
+
+    }
+
+    @Override
+    public void bombPressed() {
+
+    }
 }

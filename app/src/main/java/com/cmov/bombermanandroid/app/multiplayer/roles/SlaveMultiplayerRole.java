@@ -64,4 +64,29 @@ public class SlaveMultiplayerRole extends MultiplayerRole {
         
     }
 
+    @Override
+    public void upPressed() {
+
+    }
+
+    @Override
+    public void downPressed() {
+
+    }
+
+    @Override
+    public void leftPressed() {
+
+    }
+
+    @Override
+    public void rightPressed() {
+
+    }
+
+    @Override
+    public void bombPressed() {
+
+    }
+
 }

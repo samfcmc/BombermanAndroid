@@ -14,7 +14,7 @@ public class MultiplayerModeManager extends ModeManager {
 
     @Override
     public void update(Canvas canvas) {
-
+        Game.updateLocal(canvas);
     }
 
     @Override

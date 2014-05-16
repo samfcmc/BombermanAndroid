@@ -14,4 +14,14 @@ public abstract class MultiplayerRole {
     public abstract void updateEnemies();
     public abstract void receiveMoveUpdate(JsonObject jsonUpdateMessage, CharacterCommand command);
     public abstract void receiveBombUpdate(Bomberman bomberman);
+
+    public abstract void upPressed();
+
+    public abstract void downPressed();
+
+    public abstract void leftPressed();
+
+    public abstract void rightPressed();
+
+    public abstract void bombPressed();
 }

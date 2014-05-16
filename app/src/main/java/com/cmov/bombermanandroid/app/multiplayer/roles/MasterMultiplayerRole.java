@@ -69,4 +69,29 @@ public class MasterMultiplayerRole extends MultiplayerRole {
         jsonUpdateNotify.addProperty("player", bomberman.getPlayerNumber());
         MultiplayerManager.sendToSlaves(jsonUpdateNotify);
     }
+
+    @Override
+    public void upPressed() {
+        
+    }
+
+    @Override
+    public void downPressed() {
+
+    }
+
+    @Override
+    public void leftPressed() {
+
+    }
+
+    @Override
+    public void rightPressed() {
+
+    }
+
+    @Override
+    public void bombPressed() {
+
+    }
 }
