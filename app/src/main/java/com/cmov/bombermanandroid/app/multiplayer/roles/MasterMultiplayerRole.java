@@ -72,7 +72,7 @@ public class MasterMultiplayerRole extends MultiplayerRole {
 
     @Override
     public void upPressed() {
-        
+
     }
 
     @Override

@@ -19,27 +19,27 @@ public class MultiplayerModeManager extends ModeManager {
 
     @Override
     public void upPressed() {
-
+        MultiplayerManager.getCurrentRole().upPressed();
     }
 
     @Override
     public void downPressed() {
-
+        MultiplayerManager.getCurrentRole().downPressed();
     }
 
     @Override
     public void leftPressed() {
-
+        MultiplayerManager.getCurrentRole().leftPressed();
     }
 
     @Override
     public void rightPressed() {
-
+        MultiplayerManager.getCurrentRole().rightPressed();
     }
 
     @Override
     public void bombPressed() {
-
+        MultiplayerManager.getCurrentRole().bombPressed();
     }
 
     @Override
