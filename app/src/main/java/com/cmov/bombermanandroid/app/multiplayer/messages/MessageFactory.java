@@ -1,6 +1,7 @@
 package com.cmov.bombermanandroid.app.multiplayer.messages;
 
 import com.cmov.bombermanandroid.app.model.Bomberman;
+import com.cmov.bombermanandroid.app.model.Movable;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerGameInfo;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -65,6 +66,63 @@ public class MessageFactory {
         json.addProperty("type", "update");
         // TODO : update the message with the game updates
         return json.toString();
+    }
+
+    public static String createPlayerMoveUpMessage(int playerNumber) {
+        return createPlayerMoveMessage(playerNumber, "up");
+    }
+
+    public static String createPlayerMoveDownMessage(int playerNumber) {
+        return createPlayerMoveMessage(playerNumber, "down");
+    }
+
+    public static String createPlayerMoveLeftMessage(int playerNumber) {
+        return createPlayerMoveMessage(playerNumber, "left");
+    }
+
+    public static String createPlayerMoveRightMessage(int playerNumber) {
+        return createPlayerMoveMessage(playerNumber, "right");
+    }
+    public static String createEnemyMoveUpMessage(int playerNumber) {
+        return createEnemyMoveMessage(playerNumber, "up");
+    }
+
+    public static String createEnemyMoveDownMessage(int playerNumber) {
+        return createEnemyMoveMessage(playerNumber, "down");
+    }
+
+    public static String createEnemyMoveLeftMessage(int playerNumber) {
+        return createEnemyMoveMessage(playerNumber, "left");
+    }
+
+    public static String createEnemyMoveRightMessage(int playerNumber) {
+        return createEnemyMoveMessage(playerNumber, "right");
+    }
+
+    private static String createPlayerMoveMessage(int playerNumber, String direction) {
+        return createUpdateJson(createMoveUpdateJson("player", playerNumber, direction));
+    }
+
+    private static String createEnemyMoveMessage(int enemyIndex, String direction) {
+        return createUpdateJson(createMoveUpdateJson("enemy", enemyIndex, direction));
+    }
+
+    private static String createUpdateJson(JsonObject updateJson) {
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "update");
+        json.add("update", updateJson);
+
+        return json.toString();
+    }
+
+    private static JsonObject createMoveUpdateJson(String movable, int number, String direction) {
+        JsonObject json = new JsonObject();
+        json.addProperty("type", "move");
+        json.addProperty("movable", movable);
+        json.addProperty("number", number);
+        json.addProperty("direction", direction);
+
+        return json;
     }
 
     public static String createJoinRefuseGameMessage() {
