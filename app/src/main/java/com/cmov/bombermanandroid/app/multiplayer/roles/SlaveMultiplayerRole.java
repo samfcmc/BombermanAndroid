@@ -66,22 +66,22 @@ public class SlaveMultiplayerRole extends MultiplayerRole {
 
     @Override
     public void upPressed() {
-
+        MultiplayerManager.sendToMaster(MessageFactory.createPlayerMoveUpMessage(Game.getLocalPlayer().getPlayerNumber()));
     }
 
     @Override
     public void downPressed() {
-
+        MultiplayerManager.sendToMaster(MessageFactory.createPlayerMoveDownMessage(Game.getLocalPlayer().getPlayerNumber()));
     }
 
     @Override
     public void leftPressed() {
-
+        MultiplayerManager.sendToMaster(MessageFactory.createPlayerMoveLeftMessage(Game.getLocalPlayer().getPlayerNumber()));
     }
 
     @Override
     public void rightPressed() {
-
+        MultiplayerManager.sendToMaster(MessageFactory.createPlayerMoveRightMessage(Game.getLocalPlayer().getPlayerNumber()));
     }
 
     @Override

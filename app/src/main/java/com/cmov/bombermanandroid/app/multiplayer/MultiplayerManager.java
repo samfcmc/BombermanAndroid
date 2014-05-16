@@ -29,6 +29,7 @@ public class MultiplayerManager {
     private static MultiplayerRole currentRole;
     private static CommunicationManager communicationManager;
     private static JoinedMultiplayerGameInfo currentJoinedGame;
+    private static CommunicationChannel masterCommunicationChannel;
     private static int localPlayer;
 
     public static void init(CommunicationManager communicationManager) {
@@ -52,6 +53,7 @@ public class MultiplayerManager {
     public static void joinAccepted(JoinedMultiplayerGameInfo gameInfo) {
         currentJoinedGame = gameInfo;
         currentRole = new SlaveMultiplayerRole();
+        masterCommunicationChannel = gameInfo.getCommunicationChannel();
         cleanFoundGames();
         Game.getEventBus().post(new JoinedMultiplayerGameEvent(gameInfo));
     }
@@ -100,10 +102,18 @@ public class MultiplayerManager {
     }
 
     public static void sendToSlaves(JsonObject jsonUpdateNotify) {
+        sendToSlaves(jsonUpdateNotify.toString());
+    }
+
+    public static void sendToSlaves(String messageUpdateNotify) {
         for(CommunicationChannel slaveCommunicationChannel : currentPlayers.values()) {
             communicationManager.sendMessage(slaveCommunicationChannel,
-                    jsonUpdateNotify.toString());
+                    messageUpdateNotify);
 
         }
+    }
+
+    public static void sendToMaster(String playerMoveDownMessage) {
+        communicationManager.sendMessage(masterCommunicationChannel, playerMoveDownMessage);
     }
 }

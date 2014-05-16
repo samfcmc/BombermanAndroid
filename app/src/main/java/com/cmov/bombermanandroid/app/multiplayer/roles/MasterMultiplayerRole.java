@@ -3,10 +3,15 @@ package com.cmov.bombermanandroid.app.multiplayer.roles;
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.commands.CharacterCommand;
 import com.cmov.bombermanandroid.app.commands.Command;
+import com.cmov.bombermanandroid.app.commands.DownCommand;
+import com.cmov.bombermanandroid.app.commands.LeftCommand;
+import com.cmov.bombermanandroid.app.commands.RightCommand;
+import com.cmov.bombermanandroid.app.commands.UpCommand;
 import com.cmov.bombermanandroid.app.model.Bomberman;
 import com.cmov.bombermanandroid.app.model.Enemy;
 import com.cmov.bombermanandroid.app.model.Grid;
 import com.cmov.bombermanandroid.app.model.Movable;
+import com.cmov.bombermanandroid.app.modes.GameMode;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
 import com.google.gson.JsonObject;
@@ -72,26 +77,38 @@ public class MasterMultiplayerRole extends MultiplayerRole {
 
     @Override
     public void upPressed() {
-
+        String message = MessageFactory.createPlayerMoveUpMessage(Game.getLocalPlayer().getPlayerNumber());
+        MultiplayerManager.sendToSlaves(message);
+        CharacterCommand command = new UpCommand(Game.getLocalPlayer());
+        Game.sendCommandToLocalPlayer(command);
     }
 
     @Override
     public void downPressed() {
-
+        String message = MessageFactory.createPlayerMoveDownMessage(Game.getLocalPlayer()
+                .getPlayerNumber());
+        MultiplayerManager.sendToSlaves(message);
+        CharacterCommand command = new DownCommand(Game.getLocalPlayer());
+        Game.sendCommandToLocalPlayer(command);
     }
 
     @Override
     public void leftPressed() {
-
+        String message = MessageFactory.createPlayerMoveLeftMessage(Game.getLocalPlayer().getPlayerNumber());
+        MultiplayerManager.sendToSlaves(message);
+        CharacterCommand command = new LeftCommand(Game.getLocalPlayer());
+        Game.sendCommandToLocalPlayer(command);
     }
 
     @Override
     public void rightPressed() {
-
+        String message = MessageFactory.createPlayerMoveRightMessage(Game.getLocalPlayer().getPlayerNumber());
+        MultiplayerManager.sendToSlaves(message);
+        CharacterCommand command = new RightCommand(Game.getLocalPlayer());
+        Game.sendCommandToLocalPlayer(command);
     }
 
     @Override
     public void bombPressed() {
-
     }
 }
