@@ -441,6 +441,10 @@ public class Game {
         }
     }
 
+    public static void sendCommandToLocalPlayer(CharacterCommand command) {
+        trySendCommand(getLocalPlayer(), command);
+    }
+
     public static void sendUpCommand() {
         currentGameMode.getManager().upPressed();
     }

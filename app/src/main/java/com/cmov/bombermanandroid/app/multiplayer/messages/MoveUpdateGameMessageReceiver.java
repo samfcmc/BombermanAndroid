@@ -92,6 +92,6 @@ public class MoveUpdateGameMessageReceiver implements MessageReceiver {
 
     private static abstract class CommandGetter {
 
-        public abstract CharacterCommand getCommand(Movable moavable);
+        public abstract CharacterCommand getCommand(Movable movable);
     }
 }
