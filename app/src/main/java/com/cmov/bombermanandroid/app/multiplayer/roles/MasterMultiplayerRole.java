@@ -3,7 +3,9 @@ package com.cmov.bombermanandroid.app.multiplayer.roles;
 import com.cmov.bombermanandroid.app.Game;
 import com.cmov.bombermanandroid.app.commands.CharacterCommand;
 import com.cmov.bombermanandroid.app.commands.Command;
+import com.cmov.bombermanandroid.app.model.Bomberman;
 import com.cmov.bombermanandroid.app.model.Enemy;
+import com.cmov.bombermanandroid.app.model.Grid;
 import com.cmov.bombermanandroid.app.model.Movable;
 import com.cmov.bombermanandroid.app.multiplayer.MultiplayerManager;
 import com.cmov.bombermanandroid.app.multiplayer.messages.MessageFactory;
@@ -60,7 +62,11 @@ public class MasterMultiplayerRole extends MultiplayerRole {
     }
 
     @Override
-    public void receiveBombUpdate(Movable movable) {
-
+    public void receiveBombUpdate(Bomberman bomberman) {
+        JsonObject jsonUpdateNotify = new JsonObject();
+        jsonUpdateNotify.addProperty("type", "update");
+        jsonUpdateNotify.addProperty("update", "bomb");
+        jsonUpdateNotify.addProperty("player", bomberman.getPlayerNumber());
+        MultiplayerManager.sendToSlaves(jsonUpdateNotify);
     }
 }
